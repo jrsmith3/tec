@@ -3,16 +3,24 @@
 import math
 import Constants
 
+__author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
+__version__ = ""
+__date__ = ""
+__copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
+__license__ = 
+
 class Electrode(dict):
   
   """
   Thermionic electrode.
   
-  An Electrode object is instantiated by a dict which defines the Electrode's 
-  data. The dict which instantiates an Electrode must have the keys listed 
-  below which adhere to the noted constraints. Additional keys will be 
-  ignored, and there are no default values for instantiation. When setting 
-  Electrode data, values are assumed to be TEC units.
+  An Electrode object is instantiated by a dict. The dict which instantiates an 
+  Electrode must have the keys listed below which adhere to the noted 
+  constraints. Additional keys will be ignored, and there are no default values 
+  for instantiation. When setting Electrode data, values are assumed to be TEC 
+  units. The user can set either temp or richardson equal to zero to "switch 
+  off" the electrode -- the calc_saturation_current method will return a value
+  of zero in both cases.
   
   Data with constraints and units:
     temp       >  0 [K]
@@ -22,32 +30,26 @@ class Electrode(dict):
     richardson >= 0 [A cm^{-2} K^{-2}]
     emissivity < 1 & > 0
     nea        >= 0 [eV] (optional)
-    
-  Internally, the class deals with the data in SI units.
   """
   
   def __init__(self,input_params):
-    """
-    Instantiation of Electrode object.
-    """
-    
-    # Is input_params a dict?
+    # Ensure input_params is of type dict.
     if input_params.__class__ is not dict:
       raise TypeError("Inputs must be of type dict.")
     
-    # Does input_params have the correct fields?
-    correct_fields = ["temp","barrier_ht","voltage","position",\
-      "richardson","emissivity"]
+    # Ensure that the minimum required fields are present in input_params.
+    req_fields = ["temp","barrier_ht","voltage","position","richardson",\
+      "emissivity"]
     input_param_keys = set(input_params.keys())
     
-    if not set(correct_fields).issubset(input_param_keys):
-      raise KeyError("Input dictionary missing a key.")
+    if not set(req_fields).issubset(input_param_keys):
+      raise KeyError("Input dict is missing one or more keys.")
     
     if "nea" in input_param_keys:
-      correct_fields.append("nea")
+      req_fields.append("nea")
 
     # Try to set the object's attributes:
-    for key in correct_fields:
+    for key in req_fields:
       self[key] = input_params[key]
 
   
