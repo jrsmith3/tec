@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-Defines the various physical constants relevant to the TEC calculations.
+Dict of physical constants used in TEC calculations.
   
-This class defines boltzmann's constant, the electron charge, the
-electron mass, and the Stefan-Boltzmann constant in SI units.
+TEC calculations are performed using SI units. The TEC API uses a different set
+of units. Both are given below.
 
 SI
 --
@@ -16,11 +16,17 @@ sigma0 = 5.67050e-8               [W m^{-2} K^{-4}]
 
 TEC units
 ---------
-boltzmann = 8.6173423e-5
+boltzmann = 8.6173423e-5          [eV K^{-1}]
 electron_charge = 1
 electron_mass = 1
-permittivity0 = 8.85418781762e-12 #[F/m] - I'm almost sure these units are wrong.
+permittivity0 = 8.85418781762e-12 [F/m] - I'm almost sure these units are wrong.
 """
+
+__author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
+__version__ = ""
+__date__ = ""
+__copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
+__license__ = 
 
 physical_constants = {boltzmann = 1.380657e-23, \
                       permittivity0 = 8.85418781762e-12
