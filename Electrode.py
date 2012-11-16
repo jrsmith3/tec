@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import math
-import Constants
+from Constants import physical_constants
 
 __author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
 __version__ = ""
 __date__ = ""
 __copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
-__license__ = 
+__license__ = ""
 
 class Electrode(dict):
   
@@ -65,8 +65,8 @@ class Electrode(dict):
       raise TypeError("Argument must be of real numeric type.")
     
     # Check to see if constraints are met.
-    if key == "temp" and item <= 0:
-      raise ValueError("temp must be positive.")
+    if key == "temp" and item < 0:
+      raise ValueError("temp must be greater than or equal to zero.")
     if key == "barrier_ht" and item < 0:
       raise ValueError("barrier_ht must be non-negative.")
     if key == "richardson" and item < 0:
@@ -97,8 +97,11 @@ class Electrode(dict):
     Calculates the output current density according to the Richardson-Dushman
     equation using the values of the Electrode object.
     """
-    saturation_current = self["richardson"] * math.pow(self["temp"],2) * \
-    math.exp(-self["barrier_ht"]/(physical_constants["boltzmann"] * self["temp"]))
+    if self["temp"] == 0:
+      saturation_current = 0
+    else:
+      saturation_current = self["richardson"] * math.pow(self["temp"],2) * \
+      math.exp(-self["barrier_ht"]/(physical_constants["boltzmann"] * self["temp"]))
     
     return saturation_current
 

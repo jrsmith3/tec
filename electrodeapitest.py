@@ -9,9 +9,9 @@ __author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
 __version__ = ""
 __date__ = ""
 __copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
-__license__ = 
+__license__ = ""
 
-from tec import Electrode
+from Electrode import Electrode
 import unittest
 
 class InstantiationBadInput(unittest.TestCase):
@@ -24,14 +24,14 @@ class InstantiationBadInput(unittest.TestCase):
     Set up a dictionary that can properly instantiate an Electrode object.
     """
 
-    inputParams = {"temperature":1,\
-                   "barrierHeight":1,\
+    input_params = {"temp":1,\
+                   "barrier_ht":1,\
                    "voltage":1,\
                    "position":0,\
                    "richardson":10,\
                    "emissivity":0.5}
                    
-    self.inputParams = inputParams
+    self.input_params = input_params
     
 
   # No input argument.
@@ -42,61 +42,95 @@ class InstantiationBadInput(unittest.TestCase):
   # Non-dict input argument.
   def test_Electrode_non_dict_input_arg(self):
     """Attempt to instantiate Electrode with a non-dict input argument."""
-    self.assertRaises(TypeError,Electrode,"this is a string")
+    self.assertRaises(TypeError,Electrode,"this string is not a dict.")
 
   # Missing required fields in input dict.
   def test_Electrode_input_arg_sans_temp(self):
-    pass
+    """Instantiating argument missing temp."""
+    del(self.input_params["temp"])
+    self.assertRaises(KeyError,Electrode,self.input_params)
 
   def test_Electrode_input_arg_sans_barrier_ht(self):
-    pass
+    """Instantiating argument missing barrier_ht."""
+    del(self.input_params["barrier_ht"])
+    self.assertRaises(KeyError,Electrode,self.input_params)
 
   def test_Electrode_input_arg_sans_voltage(self):
-    pass
+    """Instantiating argument missing voltage."""
+    del(self.input_params["voltage"])
+    self.assertRaises(KeyError,Electrode,self.input_params)
 
   def test_Electrode_input_arg_sans_position(self):
-    pass
+    """Instantiating argument missing position."""
+    del(self.input_params["position"])
+    self.assertRaises(KeyError,Electrode,self.input_params)
 
   def test_Electrode_input_arg_sans_richardson(self):
-    pass
+    """Instantiating argument missing richardson."""
+    del(self.input_params["richardson"])
+    self.assertRaises(KeyError,Electrode,self.input_params)
 
   def test_Electrode_input_arg_sans_emissivity(self):
-    pass
+    """Instantiating argument missing emissivity."""
+    del(self.input_params["emissivity"])
+    self.assertRaises(KeyError,Electrode,self.input_params)
 
   # Input dict values are non-numeric.
   def test_Electrode_input_temp_non_numeric(self):
-    pass
+    """Instantiating argument temp is non-numeric."""
+    self.input_params["temp"] = "this string is non-numeric."
+    self.assertRaises(TypeError,Electrode,self.input_params)
 
   def test_Electrode_input_barrier_ht_non_numeric(self):
-    pass
+    """Instantiating argument barrier_ht is non-numeric."""
+    self.input_params["barrier_ht"] = "this string is non-numeric."
+    self.assertRaises(TypeError,Electrode,self.input_params)
 
   def test_Electrode_input_voltage_non_numeric(self):
-    pass
+    """Instantiating argument voltage is non-numeric."""
+    self.input_params["voltage"] = "this string is non-numeric."
+    self.assertRaises(TypeError,Electrode,self.input_params)
 
   def test_Electrode_input_position_non_numeric(self):
-    pass
+    """Instantiating argument position is non-numeric."""
+    self.input_params["position"] = "this string is non-numeric."
+    self.assertRaises(TypeError,Electrode,self.input_params)
 
   def test_Electrode_input_richardson_non_numeric(self):
-    pass
+    """Instantiating argument richardson is non-numeric."""
+    self.input_params["richardson"] = "this string is non-numeric."
+    self.assertRaises(TypeError,Electrode,self.input_params)
 
   def test_Electrode_input_emissivit_non_numeric(self):
-    pass
+    """Instantiating argument emissivity is non-numeric."""
+    self.input_params["emissivity"] = "this string is non-numeric."
+    self.assertRaises(TypeError,Electrode,self.input_params)
 
   # Input dict values are outside their constraints.
   def test_Electrode_input_temp_less_than_zero(self):
-    pass
+    """Instantiating argument temp < 0."""
+    self.input_params["temp"] = -1.1
+    self.assertRaises(ValueError,Electrode,self.input_params)
   
   def test_Electrode_input_barrier_ht_less_than_zero(self):
-    pass
+    """Instantiating argument barrier_ht < 0."""
+    self.input_params["barrier_ht"] = -1.1
+    self.assertRaises(ValueError,Electrode,self.input_params)
   
   def test_Electrode_input_richardson_less_than_zero(self):
-    pass
+    """Instantiating argument richardson < 0."""
+    self.input_params["richardson"] = -1.1
+    self.assertRaises(ValueError,Electrode,self.input_params)
   
   def test_Electrode_input_emissivity_less_than_zero(self):
-    pass
+    """Instantiating argument emissivity < 0."""
+    self.input_params["emissivity"] = -1.1
+    self.assertRaises(ValueError,Electrode,self.input_params)
   
   def test_Electrode_input_emissivity_greater_than_one(self):
-    pass
+    """Instantiating argument emissivity > 1."""
+    self.input_params["emissivity"] = 1.1
+    self.assertRaises(ValueError,Electrode,self.input_params)
   
   def test_Electrode_input_nea_less_than_zero(self):
     pass

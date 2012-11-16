@@ -26,10 +26,10 @@ __author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
 __version__ = ""
 __date__ = ""
 __copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
-__license__ = 
+__license__ = ""
 
-physical_constants = {boltzmann = 1.380657e-23, \
-                      permittivity0 = 8.85418781762e-12
-                      electron_charge = 1.60217738e-19  
-                      electron_mass = 9.1093897e-31     
-                      sigma0 = 5.67050e-8}
+physical_constants = {"boltzmann" : 1.380657e-23, \
+                      "permittivity0" : 8.85418781762e-12, \
+                      "electron_charge" : 1.60217738e-19, \
+                      "electron_mass" : 9.1093897e-31, \
+                      "sigma0" : 5.67050e-8}
