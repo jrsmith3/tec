@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from Electrode import Electrode
+from electrode import Electrode
+from constants import physical_constants

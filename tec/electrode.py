@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import math
-from Constants import physical_constants
+from constants import physical_constants
 
 __author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
 __version__ = ""
