@@ -11,7 +11,7 @@ __date__ = ""
 __copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
 __license__ = ""
 
-from Electrode import Electrode
+from tec import Electrode
 import unittest
 
 class MethodsSpecialCase(unittest.TestCase):
