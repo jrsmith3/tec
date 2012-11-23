@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -13,6 +13,7 @@ __license__ = ""
 
 from tec import Electrode
 import unittest
+import pickle
 
 class MethodsSpecialCase(unittest.TestCase):
   """
@@ -60,7 +61,16 @@ class MethodsValues(unittest.TestCase):
     print "test not implemented."
   
   def test_saturation_current_values(self):
-    print "test not implemented."
+    """Compares the output against a list of standard values."""
+    f = open("test/electrode_output_current_std.dat","r")
+    standard_values = pickle.load(f)
+    f.close()
+    
+    for params in standard_values:
+      el = Electrode(params)
+      # Multiplying like this to fix the units is sooooo hacky.
+      self.assertAlmostEqual(1e-4 * el.calc_saturation_current(),\
+	params["outpt_cur"])
 
 if __name__ == '__main__':
   unittest.main()
