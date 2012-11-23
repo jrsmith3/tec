@@ -4,11 +4,10 @@
 Generates a list of standard data to verify the Electrode 
 calc_saturation_current method is returning numerically accurate values.
 
-As of 2012.11.22 20:38 EST, the sha256 checksum of the resulting data is:
+As of 2012.11.22 20:47 EST, the sha256 checksum of the resulting data is:
 153886103db759defb34adb25d9b55da783257fd3929400c31bb17badbd4926e  electrode_output_current_std.dat
-f5f75ea23ca2daf16e68b173e38a1183b0b9814dd5862a47e0db4718b9885ec5  electrode_vac_energy_no_nea_std.dat
-64b3b65a0946fdf005c4054b272e3788f12e471af5f7092023e536281dd59b5d  electrode_vac_energy_with_nea_std.dat
-
+0ab781b6431f1f82f0ca890a263964c043bca33b3d94e9c40fe5c8adb808a603  electrode_vac_energy_no_nea_std.dat
+33d8ca7783cc90675f011e22ea2662e9bf66bf89eea87cb6a2498d6ffa02fa10  electrode_vac_energy_with_nea_std.dat
 """
 
 __author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
@@ -71,6 +70,7 @@ test_values = []
 for barrier_ht in barrier_hts:
   params["barrier_ht"] = barrier_ht
   vac_energy = params["voltage"] * electron_charge + params["barrier_ht"]
+  params["vac_energy"] = vac_energy
   test_values.append(params.copy())
 
 #pickle the results and write it to a file electrode_output_current_std.dat.
@@ -98,6 +98,7 @@ for barrier_ht in barrier_hts:
     params["nea"] = nea
     vac_energy = params["voltage"] * electron_charge + \
       params["barrier_ht"] - params["nea"]
+    params["vac_energy"] = vac_energy
     test_values.append(params.copy())
 
 #pickle the results and write it to a file electrode_output_current_std.dat.
