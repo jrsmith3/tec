@@ -52,13 +52,28 @@ class MethodsValues(unittest.TestCase):
   """
   
   def test_vacuum_energy_without_nea(self):
-    """
-    I still need to be able to accurately calculate the vacuum energy when there is no nea attribute.
-    """
-    print "test not implemented."
+    """Compares the output against a list of standard values."""
+    f = open("test/electrode_vac_energy_no_nea_std.dat","r")
+    standard_values = pickle.load(f)
+    f.close()
+    
+    for params in standard_values:
+      el = Electrode(params)
+      # Multiplying like this to fix the units is sooooo hacky.
+      self.assertAlmostEqual(el.calc_vacuum_energy(),\
+	params["vac_energy"])
   
   def test_vacuum_energy_with_nea(self):
-    print "test not implemented."
+    """Compares the output against a list of standard values."""
+    f = open("test/electrode_vac_energy_with_nea_std.dat","r")
+    standard_values = pickle.load(f)
+    f.close()
+    
+    for params in standard_values:
+      el = Electrode(params)
+      # Multiplying like this to fix the units is sooooo hacky.
+      self.assertAlmostEqual(el.calc_vacuum_energy(),\
+	params["vac_energy"])
   
   def test_saturation_current_values(self):
     """Compares the output against a list of standard values."""
