@@ -101,9 +101,14 @@ class InstantiationBadInput(unittest.TestCase):
     self.input_params["richardson"] = "this string is non-numeric."
     self.assertRaises(TypeError,Electrode,self.input_params)
 
-  def test_Electrode_input_emissivit_non_numeric(self):
+  def test_Electrode_input_emissivity_non_numeric(self):
     """Instantiating argument emissivity is non-numeric."""
     self.input_params["emissivity"] = "this string is non-numeric."
+    self.assertRaises(TypeError,Electrode,self.input_params)
+
+  def test_Electrode_input_nea_non_numeric(self):
+    """Instantiating argument nea is non-numeric."""
+    self.input_params["nea"] = "this string is non-numeric."
     self.assertRaises(TypeError,Electrode,self.input_params)
 
   # Input dict values are outside their constraints.
