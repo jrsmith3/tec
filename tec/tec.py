@@ -4,7 +4,7 @@ from tec import Electrode
 from tec import physical_constants
 import math
 import numpy as np
-from scipy import optimize
+from scipy import interpolate
 
 class TEC(dict):
   
@@ -122,37 +122,73 @@ class TEC(dict):
       return np.nan
   
   # Methods regarding motive --------------------------------------------------
-  def calc_motive(self, arrayLength = 100):
+  def __calc_motive(self):
     """
-    Return the motive vs. position as a dict.
+    Calculates the motive and metadata and populates a dict with the data.
+    """
+    motive_array = np.array([self["Emitter"].calc_vacuum_energy(), \
+      self["Collector"].calc_vacuum_energy()])
+    position_array = np.array([self["Emitter"]["position"], \
+      self["Collector"]["position"]])
+    motive_interp = interpolate.interp1d(motive_array,position_array)
     
-    The returned dict has two fields, "motive" and "position". Each field
-    contains a 1D numpy array of length defined by the int input argument
-    arrayLength. The default value for arrayLength is 100.
+    self["motive_data"] = {"motive_array":motive_array, \
+                           "position_array":position_array, \
+                           "motive_interp":motive_interp}
+                           
+  def get_motive(self, position):
     """
-    return {"position": np.ones(arrayLength) ,\
-            "motive": np.ones(arrayLength)}
+    Returns value of motive for a given value of position.
+    
+    Position must be of numerical type or numpy array. Returns None if position 
+    falls outside of the interelectrode space.
+    """
+    
+    # Test input type.
+    if type(position) is int:
+      pass
+    elif type(position) is float:
+      pass
+    elif type(position) is numpy.ndarray:
+      pass
+    else:
+      raise TypeError("Inputs must be of numeric or numpy array.")
+      # What happens if position is a numpy array with non-numerical values?
+    
+    return self["motive_data"]["motive_interp"](position)
+    
   
-  def calc_max_motive_height(self):
+  def get_max_motive(self, with_position=False):
     """
-    Returns the value of the maximum motive height in [eV]. 
+    Returns the value of the maximum motive height in [eV].
+    
+    If with_position is True, return a tuple where the first element is the 
+    maximum motive value and the second element is the corresponding position.
     
     This value should not be confused with the maximum motive given in 
     "Thermionic Energy Conversion Vol. 1" by Hatsopoulos and Gyftopoulos as 
     \psi_{m}. The value returned by this method is equivalent to 
     \psi_{m} - \mu_{E}.
     """
-    motive = self.calc_motive()
-    return float(motive["motive"].max())
-  
-  #def calc_position_at_max_motive(self):
-    #"""
-    #Position at which the max. motive occurs [um]
-    #"""
-    #motive = self.calc_motive()
-    #indx = motive[:,1].argmax()
-    #return float(motive[indx,0])
-  
+    
+    position, motive, ierr, numfunc = \
+      optimize.fminbound(self["motive_data"]["motive_interp"],\
+                         self["Emitter"]["position"], \
+                         self["Collector"]["position"], \
+                         full_output = True)
+                         
+    if with_position:
+      return motive, position
+    else:
+      return motive
+      
+  def get_motive_details(self):
+    """
+    Returns motive dict which includes motive data and metadata.
+    """
+    
+    return self["motive_data"]
+    
   
   # Methods regarding efficiency ----------------------------------------------
   def calc_carnot_efficiency(self):
