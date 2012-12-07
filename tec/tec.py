@@ -47,6 +47,9 @@ class TEC(dict):
     
     position_array: A two-element array containing hte vaclues of position 
                     corresponding to the values in motive_array.
+                    
+    motive_interp:  A scipy.interpolate.interp1d object that interpolates the 
+                    two arrays described above.
   """
   
   def __init__(self,input_params):
@@ -77,76 +80,6 @@ class TEC(dict):
     # Set value.
     dict.__setitem__(self,key,ElecItem)
     
-  # Methods ==================================================================
-  def calc_interelectrode_spacing(self):
-    """
-    Return distance between Collector and Emitter [um].
-    """
-    return self["Collector"]["position"] - self["Emitter"]["position"]
-  
-  def calc_output_voltage(self):
-    """
-    Return potential difference between Emitter and Collector [V].
-    """
-    return self["Collector"]["voltage"] - self["Emitter"]["voltage"]
-  
-  def calc_contact_potential(self):
-    """
-    Return contact potential [V].
-    
-    The contact potential is defined as the difference in barrier height between
-    the emitter and collector. This value should not be confused with the output
-    voltage which is the voltage difference between the collector and emitter.
-    """
-    return (self["Emitter"]["barrier_ht"] - \
-      self["Collector"]["barrier_ht"])/physical_constants["electron_charge"]
-    
-  def calc_forward_current_density(self):
-    """
-    Return forward current density [A cm^{-2}].
-    """
-    
-    if self["Emitter"]["barrier_ht"] < self.calc_max_motive_height():
-      return self["Emitter"].calc_saturation_current() * \
-        math.exp(-(self.calc_max_motive_height()-self["Emitter"]["barrier_ht"])/\
-          (physical_constants["boltzmann"] * self["Emitter"]["temp"]))
-    else:
-      return self["Emitter"].calc_saturation_current()
-  
-  def calc_back_current_density(self):
-    """
-    Return back current density [A cm^{-2}].
-    """
-    
-    if self["Collector"]["barrier_ht"] < self.calc_max_motive_height():
-      return self["Collector"].calc_saturation_current() * \
-        math.exp(-(self.calc_max_motive_height()-self["Collector"]["barrier_ht"]-self.calc_output_voltage())/ \
-          (physical_constants["boltzmann"] * self["Collector"]["temp"]))
-    else:
-      return self["Collector"].calc_saturation_current()
-  
-  def calc_output_current_density(self):
-    """
-    Return output current density: diff. between forward and back current [A cm^{-2}].
-    """
-    return self.calc_forward_current_density() - self.calc_back_current_density()
-  
-  def calc_output_power_density(self):
-    """
-    Return output power density [W cm^{-2}].
-    """
-    return self.calc_output_current_density() * self.calc_output_voltage()
-  
-  # This method needs work: voltage/current density is not resistance
-  def calc_load_resistance(self):
-    """
-    Return load resistance [Ohms].
-    """
-    # There is something fishy about the units in this calculation.
-    if self.calc_output_current_density() != 0:
-      return self.calc_output_voltage() / self.calc_output_current_density()
-    else:
-      return np.nan
   
   # Methods regarding motive --------------------------------------------------
   def __calc_motive(self):
@@ -187,7 +120,7 @@ class TEC(dict):
   
   def get_max_motive(self, with_position=False):
     """
-    Returns the value of the maximum motive height in [eV].
+    Returns the value of the maximum motive height in eV.
     
     If with_position is True, return a tuple where the first element is the 
     maximum motive value and the second element is the corresponding position.
@@ -198,16 +131,14 @@ class TEC(dict):
     \psi_{m} - \mu_{E}.
     """
     
-    position, motive, ierr, numfunc = \
-      optimize.fminbound(self["motive_data"]["motive_interp"],\
-                         self["Emitter"]["position"], \
-                         self["Collector"]["position"], \
-                         full_output = True)
-                         
+    max_motive = self["motive_data"]["motive_array"].max()
+    max_motive_indx = self["motive_data"]["motive_array"].argmax()
+    position_at_max_motive = self["motive_data"]["position_array"][motive_indx]
+    
     if with_position:
-      return motive, position
+      return max_motive, position_at_max_motive
     else:
-      return motive
+      return max_motive
       
   def get_motive_details(self):
     """
@@ -217,6 +148,81 @@ class TEC(dict):
     return self["motive_data"]
     
   
+  # Methods returning basic data about the TEC --------------------------------
+  def calc_interelectrode_spacing(self):
+    """
+    Return distance between Collector and Emitter in m.
+    """
+    return self["Collector"]["position"] - self["Emitter"]["position"]
+  
+  def calc_output_voltage(self):
+    """
+    Return potential difference between Emitter and Collector in V.
+    """
+    return self["Collector"]["voltage"] - self["Emitter"]["voltage"]
+  
+  def calc_contact_potential(self):
+    """
+    Return contact potential in V.
+    
+    The contact potential is defined as the difference in barrier height between
+    the emitter and collector. This value should not be confused with the output
+    voltage which is the voltage difference between the collector and emitter.
+    """
+    return (self["Emitter"]["barrier_ht"] - \
+      self["Collector"]["barrier_ht"])/physical_constants["electron_charge"]
+    
+    
+  # Methods regarding current and power ---------------------------------------
+  def calc_forward_current_density(self):
+    """
+    Return forward current density in A m^{-2}.
+    """
+    
+    if self["Emitter"]["barrier_ht"] < self.calc_max_motive_height():
+      return self["Emitter"].calc_saturation_current() * \
+        math.exp(-(self.calc_max_motive_height()-self["Emitter"]["barrier_ht"])/\
+          (physical_constants["boltzmann"] * self["Emitter"]["temp"]))
+    else:
+      return self["Emitter"].calc_saturation_current()
+  
+  def calc_back_current_density(self):
+    """
+    Return back current density in A m^{-2}.
+    """
+    
+    if self["Collector"]["barrier_ht"] < self.calc_max_motive_height():
+      return self["Collector"].calc_saturation_current() * \
+        math.exp(-(self.calc_max_motive_height()-self["Collector"]["barrier_ht"]-self.calc_output_voltage())/ \
+          (physical_constants["boltzmann"] * self["Collector"]["temp"]))
+    else:
+      return self["Collector"].calc_saturation_current()
+  
+  def calc_output_current_density(self):
+    """
+    Return difference between forward and back current density in A m^{-2}.
+    """
+    return self.calc_forward_current_density() - \
+      self.calc_back_current_density()
+  
+  def calc_output_power_density(self):
+    """
+    Return output power density in W m^{-2}.
+    """
+    return self.calc_output_current_density() * self.calc_output_voltage()
+  
+  # This method needs work: voltage/current density is not resistance
+  def calc_load_resistance(self):
+    """
+    Return load resistance in ohms.
+    """
+    # There is something fishy about the units in this calculation.
+    if self.calc_output_current_density() != 0:
+      return self.calc_output_voltage() / self.calc_output_current_density()
+    else:
+      return np.nan
+  
+
   # Methods regarding efficiency ----------------------------------------------
   def calc_carnot_efficiency(self):
     """
