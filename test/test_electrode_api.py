@@ -192,7 +192,7 @@ class SetInputWrongType(unittest.TestCase):
 
   def setUp(self):
     """
-    Set up a dictionary that can properly instantiate an Electrode object.
+    Set up an Electrode object for the tests.
     """
 
     input_params = {"temp":1,\
@@ -251,7 +251,7 @@ class SetInputOutsideConstraints(unittest.TestCase):
   
   def setUp(self):
     """
-    Set up a dictionary that can properly instantiate an Electrode object.
+    Set up an Electrode object for the tests.
     """
 
     input_params = {"temp":1,\
@@ -287,6 +287,35 @@ class SetInputOutsideConstraints(unittest.TestCase):
   def test_Electrode_set_nea_less_than_zero(self):
     """Instantiating argument nea < 0."""
     self.assertRaises(ValueError,Electrode["nea"],-1.1)
+    
+
+class CalculatorsReturnType(unittest.TestCase):
+  """
+  Tests output types of the Electrode calculator methods.
+  """
+
+  def setUp(self):
+    """
+    Set up an Electrode object for the tests.
+    """
+
+    input_params = {"temp":1,\
+                   "barrier_ht":1,\
+                   "voltage":1,\
+                   "position":0,\
+                   "richardson":10,\
+                   "emissivity":0.5, \
+                   "nea":1.0}
+                   
+    self.El = Electrode(input_params)
+    
+  def test_Electrode_calc_saturation_current_type(self):
+    """calc_saturation_current should return a number."""
+    self.assertIsInstance(self.El.calc_saturation_current(),(int,long,float))
+
+  def test_Electrode_calc_vacuum_energy_type(self):
+    """calc_vacuum_energy should return a number."""
+    self.assertIsInstance(self.El.calc_vacuum_energy(),(int,long,float))
 
 
 if __name__ == '__main__':
