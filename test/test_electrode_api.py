@@ -14,9 +14,23 @@ __license__ = ""
 from tec import Electrode
 import unittest
 
-class InstantiationBadInput(unittest.TestCase):
+class InstantiationInputNonDict(unittest.TestCase):
   """
-  Tests the instantiation with bad input.
+  Tests instantiation when non-dict data is used.
+  """
+
+  def test_Electrode_no_input_arg(self):
+    """Attempt to instantiate Electrode with no input argument."""
+    self.assertRaises(TypeError,Electrode,None)
+  
+  def test_Electrode_non_dict_input_arg(self):
+    """Attempt to instantiate Electrode with a non-dict input argument."""
+    self.assertRaises(TypeError,Electrode,"this string is not a dict.")
+
+
+class InstantiationInputIncomplete(unittest.TestCase):
+  """
+  Tests instantiating when input dict is missing required data.
   """
   
   def setUp(self):
@@ -32,19 +46,7 @@ class InstantiationBadInput(unittest.TestCase):
                    "emissivity":0.5}
                    
     self.input_params = input_params
-    
 
-  # No input argument.
-  def test_Electrode_no_input_arg(self):
-    """Attempt to instantiate Electrode with no input argument."""
-    self.assertRaises(TypeError,Electrode,None)
-  
-  # Non-dict input argument.
-  def test_Electrode_non_dict_input_arg(self):
-    """Attempt to instantiate Electrode with a non-dict input argument."""
-    self.assertRaises(TypeError,Electrode,"this string is not a dict.")
-
-  # Missing required fields in input dict.
   def test_Electrode_input_arg_sans_temp(self):
     """Instantiating argument missing temp."""
     del(self.input_params["temp"])
@@ -74,8 +76,27 @@ class InstantiationBadInput(unittest.TestCase):
     """Instantiating argument missing emissivity."""
     del(self.input_params["emissivity"])
     self.assertRaises(KeyError,Electrode,self.input_params)
+    
+    
+class InstantiationInputFieldsWrongType(unittest.TestCase):
+  """
+  Tests instantiating when input dict has non-numeric data items.
+  """
 
-  # Input dict values are non-numeric.
+  def setUp(self):
+    """
+    Set up a dictionary that can properly instantiate an Electrode object.
+    """
+
+    input_params = {"temp":1,\
+                   "barrier_ht":1,\
+                   "voltage":1,\
+                   "position":0,\
+                   "richardson":10,\
+                   "emissivity":0.5}
+                   
+    self.input_params = input_params
+
   def test_Electrode_input_temp_non_numeric(self):
     """Instantiating argument temp is non-numeric."""
     self.input_params["temp"] = "this string is non-numeric."
@@ -111,7 +132,29 @@ class InstantiationBadInput(unittest.TestCase):
     self.input_params["nea"] = "this string is non-numeric."
     self.assertRaises(TypeError,Electrode,self.input_params)
 
-  # Input dict values are outside their constraints.
+
+class InstantiationInputOutsideConstraints(unittest.TestCase):
+  """
+  Tests instantiating when input dict values are outside their constraints.
+  
+  See the Electrode class docstring for information about the constraints on 
+  the input data.
+  """
+
+  def setUp(self):
+    """
+    Set up a dictionary that can properly instantiate an Electrode object.
+    """
+
+    input_params = {"temp":1,\
+                   "barrier_ht":1,\
+                   "voltage":1,\
+                   "position":0,\
+                   "richardson":10,\
+                   "emissivity":0.5}
+                   
+    self.input_params = input_params
+
   def test_Electrode_input_temp_less_than_zero(self):
     """Instantiating argument temp < 0."""
     self.input_params["temp"] = -1.1
@@ -138,7 +181,9 @@ class InstantiationBadInput(unittest.TestCase):
     self.assertRaises(ValueError,Electrode,self.input_params)
   
   def test_Electrode_input_nea_less_than_zero(self):
-    pass
+    """Instantiating argument nea < 0."""
+    self.input_params["nea"] = -1.0
+    self.assertRaises(ValueError,Electrode,self.input_params)
   
 
 if __name__ == '__main__':
