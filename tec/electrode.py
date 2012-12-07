@@ -71,21 +71,22 @@ class Electrode(dict):
                                            level moves ever lower from the 
                                            conduction band minimum.
                                            
-    Here's an example.
-    >>> input_params = {"temp":1000,
-    ...                 "barrier_ht":1,
-    ...                 "voltage":0,
-    ...                 "position":0,
-    ...                 "richardson":10,
-    ...                 "emissivity":0.5}
-    >>> El = Electrode(input_params)
-    >>> El
-    {'barrier_ht': 1.6021764600000001e-19,
-     'emissivity': 0.5,
-     'position': 0.0,
-     'richardson': 100000.0,
-     'temp': 1000.0,
-     'voltage': 0.0}
+  Here's an example.
+  
+  >>> input_params = {"temp":1000,
+  ...                 "barrier_ht":1,
+  ...                 "voltage":0,
+  ...                 "position":0,
+  ...                 "richardson":10,
+  ...                 "emissivity":0.5}
+  >>> El = Electrode(input_params)
+  >>> El
+  {'barrier_ht': 1.6021764600000001e-19,
+   'emissivity': 0.5,
+   'position': 0.0,
+   'richardson': 100000.0,
+   'temp': 1000.0,
+   'voltage': 0.0}
   """
   
   def __init__(self,input_params):
