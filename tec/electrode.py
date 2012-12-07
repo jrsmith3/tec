@@ -155,7 +155,8 @@ class Electrode(dict):
     Return value of the saturation current in A m^{-2}.
   
     Calculates the output current density according to the Richardson-Dushman
-    equation using the values of the Electrode object.
+    equation. If either temp or barrier_ht are equal to 0, this  method returns
+    a value of 0.
     """
     if self["temp"] == 0:
       saturation_current = 0
