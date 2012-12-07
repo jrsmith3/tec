@@ -168,19 +168,20 @@ class Electrode(dict):
 
   def calc_vacuum_energy(self):
     """
-    Position of the vacuum energy relative to the arbitrary voltage ground.
+    Position of the vacuum energy relative to the voltage ground in J.
     
-    Note that this method is used to determine the electrostatic boundary 
-    condition in order to calculate the solution to Poisson's equation. 
-    The quantities are scaled appropriately for proper dimensionality.
+    If the Electrode has no nea attribute, the vacuum energy is simply the sum 
+    of barrier_ht and voltage, normalized to the proper units. If the Electrode 
+    does have an nea attribute, the result is the sum of barrier_ht and voltage, 
+    reduced by the value of nea.
     """
     
     if "nea" in self.keys():
-      vacuum_energy = physical_constants["electron_charge"] * self["voltage"] + \
-        self["barrier_ht"] + self["nea"]
+      vacuum_energy = (1.60217646e-19 * physical_constants["electron_charge"] * 
+      self["voltage"]) + self["barrier_ht"] - self["nea"]
     else:
-      vacuum_energy = physical_constants["electron_charge"] * self["voltage"] + \
-        self["barrier_ht"]
+      vacuum_energy = (1.60217646e-19 * physical_constants["electron_charge"] * 
+      self["voltage"]) + self["barrier_ht"]
       
     return vacuum_energy
       
