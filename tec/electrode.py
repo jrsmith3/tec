@@ -134,12 +134,16 @@ class Electrode(dict):
     
     # Convert the pertinant values to SI:
     if key is "barrier_ht":
+      # Update to J
       item = 1.60217646e-19 * item
     if key is "nea":
+      # Update to J
       item = 1.60217646e-19 * item
     if key is "position":
+      # Update to m
       item = 1e-6 * item
     if key is "richardson":
+      # Update to A m^{-2} K^{-2}
       item = 1e4 * item
       
     # Set value.
