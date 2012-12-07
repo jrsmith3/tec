@@ -9,17 +9,44 @@ from scipy import interpolate
 class TEC(dict):
   
   """
-  Parent class for TEC objects: template for TEC functionality.
+  Thermionic energy conversion device.
   
-  This class is meant to be a template for particular implementations of TEC
-  models and as such it should only be subclassed, not instantiated directly. 
-  The TEC class has two attributes, both of type Electrode: Emitter and 
-  Collector. A TEC object is instantiated with a dict with two fields: "Emitter"
-  and "Collector". Each must contain a dict suitable for instantiating an 
-  Electrode object. The TEC class has no default values for instantiation.
+  The TEC class is instantiated by a dict; this dict has two keys, "Emitter" and 
+  "Collector" (case insensitive). Both keys have data that is also of type dict; 
+  configured to instantiate an Electrode object. Additional keys will be ignored 
+  and there are no default values for instantiation.
   
-  See the individual methods for details. Methods returning values show the
-  units of the returned quantity in brackets: [].
+  Here's an example.
+  
+  >>> em_dict = {"temp":1000,
+  ...            "barrier_ht":1,
+  ...            "voltage":0,
+  ...            "position":0,
+  ...            "richardson":10,
+  ...            "emissivity":0.5}
+  >>> co_dict = {"temp":300,
+  ...            "barrier_ht":0.8,
+  ...            "voltage":0,
+  ...            "position":10,
+  ...            "richardson":10,
+  ...            "emissivity":0.5}
+  >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
+  >>> example_tec = TEC(input_dict)
+  
+  This class implements the most basic model for electron transport across a 
+  TEC: the negative space charge effect is completely ignored. As such, the 
+  motive is simply a linear function between the emitter and collector vacuum 
+  energy.
+  
+  The data and metadata that is calculated during the motive calculation is as 
+  follows:
+  
+    motive_array:   A two-element array containing the electrostatic boundary 
+                    conditions, i.e. the vacuum level of the emitter and 
+                    collector, respectively.
+    
+    position_array: A two-element array containing hte vaclues of position 
+                    corresponding to the values in motive_array.
   """
   
   def __init__(self,input_params):
