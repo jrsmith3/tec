@@ -14,22 +14,78 @@ class Electrode(dict):
   """
   Thermionic electrode.
   
-  An Electrode object is instantiated by a dict. The dict which instantiates an 
-  Electrode must have the keys listed below which adhere to the noted 
-  constraints. Additional keys will be ignored, and there are no default values 
-  for instantiation. When setting Electrode data, values are assumed to be TEC 
-  units. The user can set either temp or richardson equal to zero to "switch 
-  off" the electrode -- the calc_saturation_current method will return a value
-  of zero in both cases.
+  An Electrode object is instantiated by a dict. The dict must have the keys 
+  listed below which adhere to the noted constraints and units (what I'm calling 
+  "TEC units"). Additional keys will be ignored, and there are no default values 
+  for instantiation. 
   
-  Data with constraints and units:
-    temp       >  0 [K]
-    barrier_ht >= 0 [eV]
-    voltage         [V]
-    position        [\mu m]
-    richardson >= 0 [A cm^{-2} K^{-2}]
-    emissivity < 1 & > 0
-    nea        >= 0 [eV] (optional)
+  The user can set either temp or richardson equal to zero to "switch off" the 
+  electrode -- the calc_saturation_current method will return a value of zero in 
+  either case. See the docstring of that method for more info.
+  
+  It is assumed that all input parameters are to machine precision despite the 
+  explicit number of significant figures defined by the user. For example, if 
+  the machine has fifteen digits of precision, an explicit value of
+  
+    1.4
+    
+  for barrier_ht is understood to be
+  
+    1.40000000000000
+  
+  Keys for instantiating dict:
+    Key        Constraint Unit             Description
+    ---        ---------- ----             -----------
+    temp       >  0       K
+    
+    barrier_ht >= 0       eV               Sometimes referred to as work 
+                                           function. In the case of a metal and 
+                                           a positive electron affinity 
+                                           semiconductor, the barrier height is 
+                                           the difference between the vacuum 
+                                           energy and the Fermi level. In the 
+                                           case of a negative electron affinity 
+                                           semiconductor, the barrier_ht is the 
+                                           difference between the conduction 
+                                           band minimum and Fermi level.
+                                           
+    voltage               V                Explicitly sets the bias of the 
+                                           electrode with respect to ground. 
+                                           Disambiguates the potential between 
+                                           the Emitter and Collector in a TEC 
+                                           object.
+                                           
+    position              \mu m            Explicitly sets the position of the 
+                                           electrode. Disambiguates the relative 
+                                           positions of the Emitter and 
+                                           Collector in a TEC object.
+                                           
+    richardson >= 0       A cm^{-2} K^{-2} 
+    
+    emissivity < 1 & > 0  
+    
+    nea        >= 0       eV               Optional. In some semiconductors, the 
+                                           vacuum level falls below the 
+                                           conduction band minimum. An increase 
+                                           in this value implies the vacuum 
+                                           level moves ever lower from the 
+                                           conduction band minimum.
+                                           
+    Here's an example.
+    >>> input_params = {"temp":1000,
+    ...                 "barrier_ht":1,
+    ...                 "voltage":0,
+    ...                 "position":0,
+    ...                 "richardson":10,
+    ...                 "emissivity":0.5}
+    >>> El = Electrode(input_params)
+    >>> El
+    {'barrier_ht': 1.6021764600000001e-19,
+     'emissivity': 0.5,
+     'position': 0.0,
+     'richardson': 100000.0,
+     'temp': 1000.0,
+     'voltage': 0.0}
   """
   
   def __init__(self,input_params):
