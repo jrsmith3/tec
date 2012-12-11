@@ -51,41 +51,88 @@ class MethodsValues(unittest.TestCase):
   Tests the output of the methods match some expected values.
   """
   
-  def test_vacuum_energy_without_nea(self):
-    """Compares the output against a list of standard values."""
-    f = open("test/electrode_vac_energy_no_nea_std.dat","r")
+  def test_saturation_current_values(self):
+    """
+    Compares the output against a list of standard values.
+    
+    This method follows the numerical testing strategy as laid out in the README 
+    document. The script 
+    
+      Electrode.calc_saturation_current_STANDARD.py
+      
+    was used to generate the standard data which can be found in the 
+    corresponding .dat file.
+    
+    The uncertainty of this method is ~1e-5.
+
+    Uncertainty analysis
+    ====================
+    
+    The return value of this method is given by the Richardson Dushman equation. 
+    According to Taylor (ISBN: 978-0-935702-42-2) p. 75, the uncertainty of the 
+    value of the output current density is
+    
+      δJ/J = ( (δA/A)**2 + 2*(δT/T)**2 + 
+        exp(-2ϕ/kT)((δT/T)**2 + (δϕ/ϕ)**2 + (δk/k)**2) )**(1/2)        (1)
+        
+    Where
+      J: output current density
+      A: Richardson's constant
+      T: temperature
+      ϕ: barrier height
+      k: Boltzmann's constant
+      
+    The uncertainty of the output current depends on the uncertainties of the 
+    quantities listed above. I assume that the Richardson's constant, 
+    temperature, and barrier height all have machine precision. According to 
+    NIST [1], Boltzmann's constant has a precision of ~1e-6 which I interpret as 
+    I can believe the values of numerals up to and including 1e-5 places behind 
+    the decimal in scientific notation.
+    
+    The Eq. 1 above breaks down into two parts: the sum of the first two terms, 
+    and the product of the exponentiation. The uncertainty of the output current 
+    depends on the value of the exponentiation. The maximum limit of the 
+    exponentiation is unity. This condition implies that either ϕ -> 0 or 
+    T -> inf. In this case, Eq. 1 becomes
+    
+      δJ/J = ( (δA/A)**2 + 3*(δT/T)**2 + (δϕ/ϕ)**2 + (δk/k)**2 )**(1/2)
+    
+    The largest term is the uncertainty in Boltzmann's constant. Therefore the 
+    uncertainty in output current density is set by the uncertainty in 
+    Boltzmann's constant.
+    
+    The minimum limit of exponentiation is zero. This condition implies that 
+    either ϕ -> inf or T -> 0. In this case, Eq. 1 becomes
+    
+      δJ/J = ( (δA/A)**2 + 2*(δT/T)**2 )**(1/2)
+      
+    Both the Richardson's constant and temperature are assumed to have machine 
+    precision, so the uncertainty in the output current is slightly worse than 
+    machine precision.
+    
+    Since the uncertainty of Boltzmann's constant is greater than the 
+    uncertainty of 64 bit floats, the output current will have a maximum 
+    uncertainty given by the uncertainty of Boltzmann's constant.
+    
+    [1] http://physics.nist.gov/cgi-bin/cuu/Value?tkev|search_for=boltzmann
+    """
+    f = open("test/Electrode.calc_saturation_current_STANDARD.dat","r")
     standard_values = pickle.load(f)
     f.close()
     
     for params in standard_values:
       el = Electrode(params)
-      # Multiplying like this to fix the units is sooooo hacky.
-      self.assertAlmostEqual(el.calc_vacuum_energy(),\
-	params["vac_energy"])
+      self.assertAlmostEqual(el.calc_saturation_current(),params["outpt_cur"])
+
+
+
+  def test_vacuum_energy_without_nea(self):
+    """Compares the output against a list of standard values."""
+    pass
   
   def test_vacuum_energy_with_nea(self):
     """Compares the output against a list of standard values."""
-    f = open("test/electrode_vac_energy_with_nea_std.dat","r")
-    standard_values = pickle.load(f)
-    f.close()
-    
-    for params in standard_values:
-      el = Electrode(params)
-      # Multiplying like this to fix the units is sooooo hacky.
-      self.assertAlmostEqual(el.calc_vacuum_energy(),\
-	params["vac_energy"])
+    pass
   
-  def test_saturation_current_values(self):
-    """Compares the output against a list of standard values."""
-    f = open("test/electrode_output_current_std.dat","r")
-    standard_values = pickle.load(f)
-    f.close()
-    
-    for params in standard_values:
-      el = Electrode(params)
-      # Multiplying like this to fix the units is sooooo hacky.
-      self.assertAlmostEqual(1e-4 * el.calc_saturation_current(),\
-	params["outpt_cur"])
-
 if __name__ == '__main__':
   unittest.main()
