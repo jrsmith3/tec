@@ -51,7 +51,7 @@ class MethodsValues(unittest.TestCase):
   Tests the output of the methods match some expected values.
   """
   
-  def test_saturation_current_values(self):
+  def test_calc_saturation_current_values(self):
     """
     Compares the output against a list of standard values.
     
@@ -126,13 +126,64 @@ class MethodsValues(unittest.TestCase):
 
 
 
-  def test_vacuum_energy_without_nea(self):
-    """Compares the output against a list of standard values."""
-    pass
+  def test_calc_vacuum_energy_values(self):
+    """
+    Compares the output against a list of standard values.
+    
+    This method follows the numerical testing strategy as laid out in the README 
+    document. The script 
+    
+      xx.py
+      
+    was used to generate the standard data which can be found in the 
+    corresponding .dat file.
+    
+    The uncertainty of this method is ~1e-7.
+
+    Uncertainty analysis
+    ====================
+    
+    The return value of this method is given by a simple sum of terms shown in 
+    Eq. 1
+    
+      Evac = eV + ξ - χ         (1)
+      
+    Where 
+      e is the fundamental charge
+      V is the voltage at which the electrode is held
+      ξ is the barrier height
+      χ is the negative electron affinity, if one exists
+      
+    It is important to note that the values of ξ and χ have been converted to 
+    units of joules from units of electron volts. This conversion was done by 
+    multiplying the value in eV by the value of the fundamental charge. I assume 
+    that ξ and χ are input to machine precision, but this conversion reduces the 
+    precision since there is uncertainty in the value of the electron charge. 
+    With this conversion in mind, Eq. 1 is essentially
+    
+      Evac = e(V + ξ - χ)         (2)
+    
+    Where V, ξ, and χ are all machine precision. The uncertainty analysis of 
+    this case is very simple, boiling down to the product of two uncertainties 
+    as
+    
+      δEvac/Evac = ( (δe/e)**2 + (δV/V)**2 )**(1/2)               (3)
+      
+    Where I have suppressed the effects of ξ and χ since they don't actually 
+    make a big difference in the result. The uncertainty in Evac is therefore 
+    equal to the uncertainty in e. According to NIST [1], the uncertainty in e 
+    is ~1e-7.
+    
+    [1] http://physics.nist.gov/cgi-bin/cuu/Value?e|search_for=electron+charge
+    """
+    f = open("test/Electrode.calc_vacuum_energy_STANDARD.dat","r")
+    standard_values = pickle.load(f)
+    f.close()
+    
+    for params in standard_values:
+      el = Electrode(params)
+      self.assertAlmostEqual(el.calc_saturation_current(),params["e_vac"])
   
-  def test_vacuum_energy_with_nea(self):
-    """Compares the output against a list of standard values."""
-    pass
-  
+
 if __name__ == '__main__':
   unittest.main()
