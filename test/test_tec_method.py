@@ -40,6 +40,11 @@ class MethodsValues(unittest.TestCase):
       tec = TEC(params)
       self.assertAlmostEqual(tec.calc_interelectrode_spacing(),params["d"])
       
+  def test_calc_output_voltage(self):
+    """
+    """
+    pass
+      
   def test_calc_contact_potential(self):
     """
     Compares the output against a list of standard values.
