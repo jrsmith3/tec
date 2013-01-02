@@ -7,50 +7,10 @@ Generates the standard data for the TEC calc_forward_current_density method.
 This script was generated from an ipython notebook session.
 """
 
-
 # <codecell>
 
 import numpy as np
 import pickle
-
-# <codecell>
-
-em_richardsons = [0.01,100]
-em_barrier_hts = [0.5,5.0]
-em_temps = [200,2000]
-em_voltages = [-10,10]
-
-co_barrier_hts = [0.5,5.0]
-co_voltages = [-10,10]
-
-std = []
-
-# <codecell>
-
-for em_richardson in em_richardsons:
-    for em_barrier_ht in em_barrier_hts:
-        for em_temp in em_temps:
-            for em_voltage in em_voltages:
-                for co_barrier_ht in co_barrier_hts:
-                    for co_voltage in co_voltages:
-                        params = {"em_richardson":em_richardson,
-                                  "em_barrier_ht":em_barrier_ht,
-                                  "em_temp":em_temp,
-                                  "em_voltage":em_voltage,
-                                  "co_barrier_ht":co_barrier_ht,
-                                  "co_voltage":co_voltage}
-                        params = calc_special_case(params)
-                        std.append(params)                        
-
-# <codecell>
-
-pickle.dump(std,open("TEC.calc_forward_current_density_STANDARD.dat","w"))
-
-# <codecell>
-
-#srt = sorted(std, key=lambda itm: itm["forward_current_density"])
-#for itm in srt:
-   #print_results(itm)
 
 # <codecell>
 
@@ -127,5 +87,41 @@ def print_results(params):
     print "forward_current_density:", params["forward_current_density"]
     print "========================================"
     
+# <codecell>
 
+em_richardsons = [0.01,100]
+em_barrier_hts = [0.5,5.0]
+em_temps = [200,2000]
+em_voltages = [-10,10]
 
+co_barrier_hts = [0.5,5.0]
+co_voltages = [-10,10]
+
+std = []
+
+# <codecell>
+
+for em_richardson in em_richardsons:
+    for em_barrier_ht in em_barrier_hts:
+        for em_temp in em_temps:
+            for em_voltage in em_voltages:
+                for co_barrier_ht in co_barrier_hts:
+                    for co_voltage in co_voltages:
+                        params = {"em_richardson":em_richardson,
+                                  "em_barrier_ht":em_barrier_ht,
+                                  "em_temp":em_temp,
+                                  "em_voltage":em_voltage,
+                                  "co_barrier_ht":co_barrier_ht,
+                                  "co_voltage":co_voltage}
+                        params = calc_special_case(params)
+                        std.append(params)                        
+
+# <codecell>
+
+pickle.dump(std,open("TEC.calc_forward_current_density_STANDARD.dat","w"))
+
+# <codecell>
+
+#srt = sorted(std, key=lambda itm: itm["forward_current_density"])
+#for itm in srt:
+   #print_results(itm)
