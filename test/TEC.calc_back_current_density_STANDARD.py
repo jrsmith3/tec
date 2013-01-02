@@ -15,45 +15,6 @@ import pickle
 
 # <codecell>
 
-co_richardsons = [0.01,100]
-co_barrier_hts = [0.5,5.0]
-co_temps = [200,2000]
-co_voltages = [-10,10]
-
-em_barrier_hts = [0.5,5.0]
-em_voltages = [-10,10]
-
-std = []
-
-# <codecell>
-
-for co_richardson in co_richardsons:
-    for co_barrier_ht in co_barrier_hts:
-        for co_temp in co_temps:
-            for co_voltage in co_voltages:
-                for em_barrier_ht in em_barrier_hts:
-                    for em_voltage in em_voltages:
-                        params = {"co_richardson":co_richardson,
-                                  "co_barrier_ht":co_barrier_ht,
-                                  "co_temp":co_temp,
-                                  "co_voltage":co_voltage,
-                                  "em_barrier_ht":em_barrier_ht,
-                                  "em_voltage":em_voltage}
-                        params = calc_special_case(params)
-                        std.append(params)                        
-
-# <codecell>
-
-#pickle.dump(std,open("TEC.calc_back_current_density_STANDARD.dat","w"))
-
-# <codecell>
-
-srt = sorted(std, key=lambda itm: itm["back_current_density"])
-for itm in srt:
-   print_results(itm)
-
-# <codecell>
-
 def calc_special_case(params):
     """
     Calculate nearest special case; adjust and return params and intermediates.
@@ -127,5 +88,41 @@ def print_results(params):
     print "back_current_density:", params["back_current_density"]
     print "========================================"
     
+# <codecell>
 
+co_richardsons = [0.01,100]
+co_barrier_hts = [0.5,5.0]
+co_temps = [200,2000]
+co_voltages = [-10,10]
 
+em_barrier_hts = [0.5,5.0]
+em_voltages = [-10,10]
+
+std = []
+
+# <codecell>
+
+for co_richardson in co_richardsons:
+    for co_barrier_ht in co_barrier_hts:
+        for co_temp in co_temps:
+            for co_voltage in co_voltages:
+                for em_barrier_ht in em_barrier_hts:
+                    for em_voltage in em_voltages:
+                        params = {"co_richardson":co_richardson,
+                                  "co_barrier_ht":co_barrier_ht,
+                                  "co_temp":co_temp,
+                                  "co_voltage":co_voltage,
+                                  "em_barrier_ht":em_barrier_ht,
+                                  "em_voltage":em_voltage}
+                        params = calc_special_case(params)
+                        std.append(params)                        
+
+# <codecell>
+
+#pickle.dump(std,open("TEC.calc_back_current_density_STANDARD.dat","w"))
+
+# <codecell>
+
+srt = sorted(std, key=lambda itm: itm["back_current_density"])
+for itm in srt:
+   print_results(itm)
