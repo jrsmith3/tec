@@ -21,7 +21,12 @@ def complement(tecparams):
 	em = tecparams["Emitter"].copy()
 	co = tecparams["Collector"].copy()
 
-	return {"Emitter": co.copy(), "Collector": em.copy()}
+	outparams = {"Emitter": co.copy(), "Collector": em.copy()}
+
+	if "output_current_density" in tecparams.keys():
+		outparams["output_current_density"] = -1 * tecparams["output_current_density"]
+
+	return outparams
 
 	
 
