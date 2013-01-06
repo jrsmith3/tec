@@ -83,5 +83,10 @@ for tecparams in nonsymhfcomp:
 		nonsymhfcompnontrivial.append(copy.deepcopy(tecparams))
 
 # Deal with nonsymhfcomptrivial
+eqparams = ["barrier_ht", "voltage"]
+for el in tecparams.keys():
+    print "==", el, "=="
+    for eqparam in eqparams:
+        print eqparam, ":", tecparams[el][eqparam] == fcdparams[el][eqparam]
 
 # Deal with nonsymhfcompnontrivial
