@@ -71,3 +71,17 @@ for tecparams in sym:
 	trivparams["output_current_density"] = 0.
 	symtrivial.append(trivparams)
 	
+# Perturb symmetric cases
+
+# Sort nonsymhfcomp into trivial and not obviously trivial.
+nonsymhfcomptrivial = []
+nonsymhfcompnontrivial = []
+for tecparams in nonsymhfcomp:
+	if tecparams["Emitter"]["voltage"] != tecparams["Collector"]["voltage"]:
+		nonsymhfcomptrivial.append(copy.deepcopy(tecparams))
+	else:
+		nonsymhfcompnontrivial.append(copy.deepcopy(tecparams))
+
+# Deal with nonsymhfcomptrivial
+
+# Deal with nonsymhfcompnontrivial
