@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 
 def issymmetric(tecparams):
 	"""
@@ -18,10 +19,10 @@ def complement(tecparams):
 	Returns the complement of a set of tecparams.
 	"""
 
-	em = tecparams["Emitter"].copy()
-	co = tecparams["Collector"].copy()
+	em = copy.deepcopy(tecparams["Emitter"])
+	co = copy.deepcopy(tecparams["Collector"])
 
-	outparams = {"Emitter": co.copy(), "Collector": em.copy()}
+	outparams = {"Emitter": co, "Collector": em}
 
 	if "output_current_density" in tecparams.keys():
 		outparams["output_current_density"] = -1 * tecparams["output_current_density"]
@@ -46,11 +47,12 @@ for richardson in richardsons:
 							 "temp": temp, \
 							 "barrier_ht": barrier_ht, \
 							 "voltage": voltage}
-				electrodes.append(electrode.copy())
+				electrodes.append(electrode)
 
 for emitter in electrodes:
 	for collector in electrodes:
-		std.append({"Emitter": emitter.copy(), "Collector": collector.copy()})
+		std.append({"Emitter": copy.deepcopy(emitter), \
+					"Collector": copy.deepcopy(collector)})
 
 # Buckets for the symmetric entries and non-symmetric, half-complementary entries.
 sym = []
@@ -58,6 +60,14 @@ nonsymhfcomp = []
 
 for tecparams in std:
 	if issymmetric(tecparams):
-		sym.append(tecparams.copy())
+		sym.append(copy.deepcopy(tecparams))
 	elif complement(tecparams) not in nonsymhfcomp:
-		nonsymhfcomp.append(tecparams.copy())
+		nonsymhfcomp.append(copy.deepcopy(tecparams))
+
+# Deal with the symmetric trivial cases
+symtrivial = []
+for tecparams in sym:
+	trivparams = copy.deepcopy(tecparams)
+	trivparams["output_current_density"] = 0.
+	symtrivial.append(trivparams)
+	
