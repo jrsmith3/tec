@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+import pickle
 
 def issymmetric(tecparams):
 	"""
@@ -37,7 +38,7 @@ def compare_params(tecparams, fcdparams):
   """
   iseq = True
   eqparams = ["barrier_ht", "voltage"]
-  for el in tecparams.keys():
+  for el in ["Emitter","Collector"]:
     for eqparam in eqparams:
       iseq = iseq * (tecparams[el][eqparam] == fcdparams[el][eqparam])
       
@@ -46,8 +47,8 @@ def compare_params(tecparams, fcdparams):
       
   almost_eqparams = ["temp", "richardson"]
   for almost_eqparam in almost_eqparams:
-    if (tecparams[full_el][almost_eqparam]/fcdparams[full_el][almost_eqparam] < 2) && \
-       (tecparams[full_el][almost_eqparam]/fcdparams[full_el][almost_eqparam] > 0.5):
+    ratio = tecparams[full_el][almost_eqparam]/fcdparams[full_el][almost_eqparam]
+    if (ratio < 2) & (ratio > 0.5):
 	 iseq = iseq * True
     else:
       iseq = iseq * False
@@ -74,10 +75,12 @@ def merge_params(tecparams, fcdparams):
   Please note that this method does no comparisons between tecparams and fcdparams, it just clobbers whatever data is in tecparams.
   """
   full_el = find_full_params(fcdparams)
-  
   tecparams[full_el] = copy.deepcopy(fcdparams[full_el])
-
-#fcdstd = pickle.load("TEC.calc_forward_current_density_STANDARD.dat")
+  
+  # Merge in the keys and data of fcdparams that aren't the electrodes.
+  els = set(["Emitter","Collector"])
+  for key in set(fcdparams.keys()) - els:
+    tecparams[key] = fcdparams[key]
 
 richardsons = [0.01, 100]
 temps = [200, 2000]
@@ -122,12 +125,19 @@ for tecparams in sym:
 # Perturb symmetric cases
 
 # Fill out data for each set of params in nonsymhfcomp using data from the forward current density standard data.
+
+fcdstd = pickle.load(open("TEC.calc_forward_current_density_STANDARD.dat","r"))
+bcdstd = pickle.load(open("TEC.calc_back_current_density_STANDARD.dat","r"))
+
 for tecparams in nonsymhfcomp:
   for fcdparams in fcdstd:
     if compare_params(tecparams, fcdparams):
       merge_params(tecparams, fcdparams)
-    elif compare_params(tecparams, complement(fcdparams)):
-      merge_params(tecparams, complement(fcdparams))
+  for bcdparams in bcdstd:    
+    if compare_params(tecparams, bcdparams):
+      merge_params(tecparams, bcdparams)
+  tecparams["output_current_density"] = tecparams["forward_current_density"] - \
+    tecparams["back_current_density"]
 
 # Sort nonsymhfcomp into trivial and not obviously trivial.
 nonsymhfcomptrivial = []
