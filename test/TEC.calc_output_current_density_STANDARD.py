@@ -81,6 +81,28 @@ def merge_params(tecparams, fcdparams):
   els = set(["Emitter","Collector"])
   for key in set(fcdparams.keys()) - els:
     tecparams[key] = fcdparams[key]
+    
+def print_result(tecparams):
+  """
+  Nicely prints the parameters and output quantities.
+  """
+  print "Emitter"
+  print "", "richardson:", tecparams["Emitter"]["richardson"]
+  print "", "temp      :", tecparams["Emitter"]["temp"]
+  print "", "barrier_ht:", tecparams["Emitter"]["barrier_ht"]
+  print "", "voltage   :", tecparams["Emitter"]["voltage"]
+  print "Collector"
+  print "", "richardson:", tecparams["Collector"]["richardson"]
+  print "", "temp      :", tecparams["Collector"]["temp"]
+  print "", "barrier_ht:", tecparams["Collector"]["barrier_ht"]
+  print "", "voltage   :", tecparams["Collector"]["voltage"]
+  print "\r"
+  print "forward_current_density:", tecparams["forward_current_density"]
+  print "back_current_density   :", tecparams["back_current_density"]
+  print "output_current_density :", tecparams["output_current_density"]
+  print "----------------------------------------"
+  print "\r"
+
 
 richardsons = [0.01, 100]
 temps = [200, 2000]
@@ -91,45 +113,25 @@ electrodes = []
 std = []
 
 for richardson in richardsons:
-	for temp in temps:
-		for barrier_ht in barrier_hts:
-			for voltage in voltages:
-				electrode = {"richardson": richardson, \
-							 "temp": temp, \
-							 "barrier_ht": barrier_ht, \
-							 "voltage": voltage}
-				electrodes.append(electrode)
+  for temp in temps:
+    for barrier_ht in barrier_hts:
+      for voltage in voltages:
+        electrode = {"richardson": richardson, \
+                     "temp": temp, \
+                     "barrier_ht": barrier_ht, \
+                     "voltage": voltage}
+        electrodes.append(electrode)
 
 for emitter in electrodes:
-	for collector in electrodes:
-		std.append({"Emitter": copy.deepcopy(emitter), \
-					"Collector": copy.deepcopy(collector)})
+  for collector in electrodes:
+    std.append({"Emitter": copy.deepcopy(emitter), \
+                "Collector": copy.deepcopy(collector)})
 
-# Buckets for the symmetric entries and non-symmetric, half-complementary entries.
-sym = []
-nonsymhfcomp = []
-
-for tecparams in std:
-	if issymmetric(tecparams):
-		sym.append(copy.deepcopy(tecparams))
-	elif complement(tecparams) not in nonsymhfcomp:
-		nonsymhfcomp.append(copy.deepcopy(tecparams))
-
-# Deal with the symmetric trivial cases
-symtrivial = []
-for tecparams in sym:
-	trivparams = copy.deepcopy(tecparams)
-	trivparams["output_current_density"] = 0.
-	symtrivial.append(trivparams)
-	
-# Perturb symmetric cases
-
-# Fill out data for each set of params in nonsymhfcomp using data from the forward current density standard data.
-
+# Pull in data that's already been calculated.
 fcdstd = pickle.load(open("TEC.calc_forward_current_density_STANDARD.dat","r"))
 bcdstd = pickle.load(open("TEC.calc_back_current_density_STANDARD.dat","r"))
 
-for tecparams in nonsymhfcomp:
+for tecparams in std:
   for fcdparams in fcdstd:
     if compare_params(tecparams, fcdparams):
       merge_params(tecparams, fcdparams)
@@ -139,15 +141,40 @@ for tecparams in nonsymhfcomp:
   tecparams["output_current_density"] = tecparams["forward_current_density"] - \
     tecparams["back_current_density"]
 
+# Buckets for the symmetric entries and non-symmetric, half-complementary entries.
+sym = []
+nonsymhfcomp = []
+
+for tecparams in std:
+  if issymmetric(tecparams):
+    sym.append(copy.deepcopy(tecparams))
+  elif complement(tecparams) not in nonsymhfcomp:
+    nonsymhfcomp.append(copy.deepcopy(tecparams))
+
+# Perturb symmetric cases
+
 # Sort nonsymhfcomp into trivial and not obviously trivial.
 nonsymhfcomptrivial = []
 nonsymhfcompnontrivial = []
 for tecparams in nonsymhfcomp:
-	if tecparams["Emitter"]["voltage"] != tecparams["Collector"]["voltage"]:
-		nonsymhfcomptrivial.append(copy.deepcopy(tecparams))
-	else:
-		nonsymhfcompnontrivial.append(copy.deepcopy(tecparams))
+  if tecparams["Emitter"]["voltage"] != tecparams["Collector"]["voltage"]:
+    nonsymhfcomptrivial.append(copy.deepcopy(tecparams))
+  else:
+    nonsymhfcompnontrivial.append(copy.deepcopy(tecparams))
 
-# Deal with nonsymhfcomptrivial
+# Print the results
+# Symmetric
+print "============ Symmetric Cases ==========="
+print "\r"
+for tecparams in sym:
+  print_result(tecparams)
+  
+print "====== Trivial Non-symmetric Cases ====="
+print "\r"
+for tecparams in nonsymhfcomptrivial:
+  print_result(tecparams)
 
-# Deal with nonsymhfcompnontrivial
+print "==== Non-trivial Non-symmetric Cases ==="
+print "\r"
+for tecparams in nonsymhfcompnontrivial:
+  print_result(tecparams)
