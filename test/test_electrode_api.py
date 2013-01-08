@@ -266,27 +266,27 @@ class SetInputOutsideConstraints(unittest.TestCase):
     
   def test_Electrode_set_temp_less_than_zero(self):
     """Set argument temp < 0."""
-    self.assertRaises(ValueError,self.El["temp"], -1.1)
+    self.assertRaises(ValueError,self.El.__setitem__, "temp", -1.1)
   
   def test_Electrode_set_barrier_ht_less_than_zero(self):
     """Set argument barrier_ht < 0."""
-    self.assertRaises(ValueError,self.El["barrier_ht"],-1.1)
+    self.assertRaises(ValueError,self.El.__setitem__,"barrier_ht",-1.1)
   
   def test_Electrode_set_richardson_less_than_zero(self):
     """Set argument richardson < 0."""
-    self.assertRaises(ValueError,self.El["richardson"],-1.1)
+    self.assertRaises(ValueError,self.El.__setitem__,"richardson",-1.1)
   
   def test_Electrode_set_emissivity_less_than_zero(self):
     """Set argument emissivity < 0."""
-    self.assertRaises(ValueError,self.El["emissivity"],-1.1)
+    self.assertRaises(ValueError,self.El.__setitem__,"emissivity",-1.1)
   
   def test_Electrode_set_emissivity_greater_than_one(self):
     """Set argument emissivity > 1."""
-    self.assertRaises(ValueError,self.El["emissivity"],1.1)
+    self.assertRaises(ValueError,self.El.__setitem__,"emissivity",1.1)
   
   def test_Electrode_set_nea_less_than_zero(self):
     """Set argument nea < 0."""
-    self.assertRaises(ValueError,self.El["nea"],-1.1)
+    self.assertRaises(ValueError,self.El.__setitem__,"nea",-1.1)
     
 
 class CalculatorsReturnType(unittest.TestCase):
