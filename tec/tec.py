@@ -54,7 +54,7 @@ class TEC(dict):
   
   def __init__(self,input_params):
     # is input_params a dict?
-    if input_params.__class__ is dict:
+    if input_params.__class__ is not dict:
       raise TypeError("Inputs must be of type dict.")
 
     # Ensure that the required fields are present in input_params.
