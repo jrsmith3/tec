@@ -102,7 +102,7 @@ class Electrode(dict):
     if not set(req_fields).issubset(input_param_keys):
       missing_keys = set(req_fields) - input_param_keys
       raise KeyError("Input dict is missing the following keys:" + \
-      list(missing_keys))
+      str(list(missing_keys)))
     
     if "nea" in input_param_keys:
       req_fields.append("nea")
