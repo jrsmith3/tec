@@ -6,51 +6,42 @@ Generates the standard data for the TEC calc_interelectrode_spacing method.
 """
 
 import pickle
+import copy
+
 std = []
 
-Emitter_position = 0
-Collector_position = 1
+em = {"position": 0}
+co = {"position": 1}
 
-interelectrode_spacing = Collector_position - Emitter_position
-interelectrode_spacing
+params = {"Emitter": copy.deepcopy(em), "Collector": copy.deepcopy(co)}
+
+params["interelectrode_spacing"] = params["Collector"]["position"] - params["Emitter"]["position"]
+params["interelectrode_spacing"]
 #[Out]# 1
-result = {"Emitter_position":Emitter_position, "Collector_position":Collector_position, "interelectrode_spacing":interelectrode_spacing}
-std.append(result)
+std.append(copy.deepcopy(params))
 
-Collector_position = 100
+params["Collector"]["position"] = 100
 
-interelectrode_spacing = Collector_position - Emitter_position
-interelectrode_spacing
+params["interelectrode_spacing"] = params["Collector"]["position"] - params["Emitter"]["position"]
+params["interelectrode_spacing"]
 #[Out]# 100
-result = {"Emitter_position":Emitter_position, "Collector_position":Collector_position, "interelectrode_spacing":interelectrode_spacing}
-std.append(result)
+std.append(copy.deepcopy(params))
 
-Emitter_position = 10
+params["Emitter"]["position"] = 10
 
-interelectrode_spacing = Collector_position - Emitter_position
-interelectrode_spacing
+params["interelectrode_spacing"] = params["Collector"]["position"] - params["Emitter"]["position"]
+params["interelectrode_spacing"]
 #[Out]# 90
-result = {"Emitter_position":Emitter_position, "Collector_position":Collector_position, "interelectrode_spacing":interelectrode_spacing}
-std.append(result)
+std.append(copy.deepcopy(params))
 
-Emitter_position = 99
+params["Emitter"]["position"] = 99
 
-interelectrode_spacing = Collector_position - Emitter_position
-interelectrode_spacing
+params["interelectrode_spacing"] = params["Collector"]["position"] - params["Emitter"]["position"]
+params["interelectrode_spacing"]
 #[Out]# 1
-result = {"Emitter_position":Emitter_position, "Collector_position":Collector_position, "interelectrode_spacing":interelectrode_spacing}
-std.append(result)
+std.append(copy.deepcopy(params))
 
 std
-#[Out]# [{'Collector_position': 1, 'Emitter_position': 0, 'interelectrode_spacing': 1},
-#[Out]#  {'Collector_position': 100,
-#[Out]#   'Emitter_position': 0,
-#[Out]#   'interelectrode_spacing': 100},
-#[Out]#  {'Collector_position': 100,
-#[Out]#   'Emitter_position': 10,
-#[Out]#   'interelectrode_spacing': 90},
-#[Out]#  {'Collector_position': 100,
-#[Out]#   'Emitter_position': 99,
-#[Out]#   'interelectrode_spacing': 1}]
+#[Out]# [{'interelectrode_spacing': 1, 'Collector': {'position': 1}, 'Emitter': {'position': 0}}, {'interelectrode_spacing': 100, 'Collector': {'position': 100}, 'Emitter': {'position': 0}}, {'interelectrode_spacing': 90, 'Collector': {'position': 100}, 'Emitter': {'position': 10}}, {'interelectrode_spacing': 1, 'Collector': {'position': 100}, 'Emitter': {'position': 99}}]
 
 pickle.dump(std, open("TEC.calc_interelectrode_spacing_STANDARD.dat","w"))
