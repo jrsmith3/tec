@@ -192,13 +192,11 @@ class MethodsValues(unittest.TestCase):
     
     [1] http://physics.nist.gov/cgi-bin/cuu/Value?e|search_for=electron+charge
     """
-    f = open("test/Electrode.calc_vacuum_energy_STANDARD.dat","r")
-    standard_values = pickle.load(f)
-    f.close()
+    std = pickle.load(open("test/Electrode.calc_vacuum_energy_STANDARD.dat","r"))
     
-    for params in standard_values:
+    for params in std:
       el = Electrode(params)
-      self.assertAlmostEqual(el.calc_saturation_current(),params["e_vac"])
+      self.assertAlmostEqual(el.calc_saturation_current(),params["vacuum_energy"])
   
 
 if __name__ == '__main__':
