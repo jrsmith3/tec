@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from tec import Electrode
-from tec import physical_constants
+from electrode import Electrode
+from constants import physical_constants
 import math
 import numpy as np
 from scipy import interpolate
