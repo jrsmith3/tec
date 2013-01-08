@@ -130,15 +130,11 @@ class MethodsValues(unittest.TestCase):
     
     [1] http://physics.nist.gov/cgi-bin/cuu/Value?tkev|search_for=boltzmann
     """
-    f = open("test/Electrode.calc_saturation_current_STANDARD.dat","r")
-    standard_values = pickle.load(f)
-    f.close()
+    std = pickle.load(open("test/Electrode.calc_saturation_current_STANDARD.dat","r"))
     
-    for stdparams in standard_values:
-      # Concatenate the parameters from std with the dummy input_params.
-      params = dict(list(self.input_params.items()) + list(stdparams.items()))
+    for params in std:
       el = Electrode(params)
-      self.assertAlmostEqual(el.calc_saturation_current(),params["outpt_cur"])
+      self.assertAlmostEqual(el.calc_saturation_current(),params["saturation_current"])
 
 
 
