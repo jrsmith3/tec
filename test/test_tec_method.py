@@ -36,7 +36,7 @@ class MethodsValues(unittest.TestCase):
     
     for params in std:
       tec = TEC(params)
-      self.assertAlmostEqual(tec.calc_interelectrode_spacing(),params["d"])
+      self.assertAlmostEqual(tec.calc_interelectrode_spacing(),params["interelectrode_spacing"])
       
   def test_calc_output_voltage(self):
     """
