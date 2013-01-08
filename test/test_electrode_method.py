@@ -51,9 +51,23 @@ class MethodsValues(unittest.TestCase):
   Tests the output of the methods match some expected values.
   """
   
+  def setUp(self):
+    """
+    Set up a dictionary that can properly instantiate an Electrode object.
+    """
+
+    input_params = {"temp":1,\
+                   "barrier_ht":1,\
+                   "voltage":1,\
+                   "position":0,\
+                   "richardson":10,\
+                   "emissivity":0.5}
+                   
+    self.input_params = input_params
+    
   def test_calc_saturation_current_values(self):
     """
-    Compares the output against a list of standard values.
+    Saturation current values test.
     
     This method follows the numerical testing strategy as laid out in the README 
     document. The script 
@@ -120,7 +134,9 @@ class MethodsValues(unittest.TestCase):
     standard_values = pickle.load(f)
     f.close()
     
-    for params in standard_values:
+    for stdparams in standard_values:
+      # Concatenate the parameters from std with the dummy input_params.
+      params = dict(list(self.input_params.items()) + list(stdparams.items()))
       el = Electrode(params)
       self.assertAlmostEqual(el.calc_saturation_current(),params["outpt_cur"])
 
@@ -128,7 +144,7 @@ class MethodsValues(unittest.TestCase):
 
   def test_calc_vacuum_energy_values(self):
     """
-    Compares the output against a list of standard values.
+    Vacuum energy values test.
     
     This method follows the numerical testing strategy as laid out in the README 
     document. The script 
