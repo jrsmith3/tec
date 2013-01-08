@@ -115,34 +115,34 @@ class MethodsValues(unittest.TestCase):
     pass
   
   def test_calc_output_power_density(self):
-  """
-  In most cases, the relative uncertainty of the output power density is 1e-5.
+    """
+    In most cases, the relative uncertainty of the output power density is 1e-5.
   
-  Care must be taken when the forward and back current densities approach the same value. 
+    Care must be taken when the forward and back current densities approach the same value. 
   
-  The relative uncertainty of the output power density can be written
+    The relative uncertainty of the output power density can be written
   
-    δw/w = ( (δJ/J)**2 + (δV/V)**2 )**(1/2)
+      δw/w = ( (δJ/J)**2 + (δV/V)**2 )**(1/2)
     
-  Substituting the expression for the relative uncertainty of the output current density
+    Substituting the expression for the relative uncertainty of the output current density
   
-    δw/w = ( (δJF/JF)**2 * (JF**2 + JB**2)/(JF - JB)**2 + (δV/V)**2 )**(1/2)
+      δw/w = ( (δJF/JF)**2 * (JF**2 + JB**2)/(JF - JB)**2 + (δV/V)**2 )**(1/2)
     
-  From this expression it is clear that the relative uncertainty of the output power density blows up as JF and JB approach the same value. Since the upper limit of the relative uncertainty is unity, we can calculate values of JF and JB for which the relative uncertainty is greater than unity.
+    From this expression it is clear that the relative uncertainty of the output power density blows up as JF and JB approach the same value. Since the upper limit of the relative uncertainty is unity, we can calculate values of JF and JB for which the relative uncertainty is greater than unity.
   
-    <2012.12.24 p2>
+      <2012.12.24 p2>
     
-  The roots of this expression show the ratios of JB/JF for which the relative uncertainty of the output power density makes no sense.
+    The roots of this expression show the ratios of JB/JF for which the relative uncertainty of the output power density makes no sense.
   
-  An expression for the absolute uncertainty of the output power density can be derived from the expression for the relative uncertainty.
+    An expression for the absolute uncertainty of the output power density can be derived from the expression for the relative uncertainty.
   
-    δw/w = ( (δJF/JF)**2 * (JF**2 + JB**2)/(JF - JB)**2 + (δV/V)**2 )**(1/2)
-    δw = w * ( (δJF/JF)**2 * (JF**2 + JB**2)/(JF - JB)**2 + (δV/V)**2 )**(1/2)
-       = (V**2 * (δJF/JF)**2 * (JF**2 + JB**2) + J**2 * V**2 * (δV/V)**2 )**(1/2)
+      δw/w = ( (δJF/JF)**2 * (JF**2 + JB**2)/(JF - JB)**2 + (δV/V)**2 )**(1/2)
+      δw = w * ( (δJF/JF)**2 * (JF**2 + JB**2)/(JF - JB)**2 + (δV/V)**2 )**(1/2)
+	 = (V**2 * (δJF/JF)**2 * (JF**2 + JB**2) + J**2 * V**2 * (δV/V)**2 )**(1/2)
        
-  Pretty much all the caveats about uncertainty near zero of the output current density apply to this quantity.
-  """
-
+    Pretty much all the caveats about uncertainty near zero of the output current density apply to this quantity.
+    """
+    pass
 
 if __name__ == '__main__':
   unittest.main()
