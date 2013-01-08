@@ -28,15 +28,13 @@ class MethodsValues(unittest.TestCase):
   
   def test_calc_interelectrode_spacing(self):
     """
-    Compares the output against a list of standard values.
+    Compares the output against a list of standard values of interelectrode spacing.
     
     This method has machine precision since it is a difference between to machine precise values.
     """
-    f = open("test/TEC.calc_interelectrode_spacing_STANDARD.dat","r")
-    standard_values = pickle.load(f)
-    f.close()
+    std = pickle.load(open("test/TEC.calc_interelectrode_spacing_STANDARD.dat","r"))
     
-    for params in standard_values:
+    for params in std:
       tec = TEC(params)
       self.assertAlmostEqual(tec.calc_interelectrode_spacing(),params["d"])
       

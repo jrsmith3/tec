@@ -208,37 +208,37 @@ class SetInputWrongType(unittest.TestCase):
   def test_Electrode_set_temp_non_numeric(self):
     """Set argument temp non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,Electrode["temp"],non_num)
+    self.assertRaises(TypeError,self.El["temp"],non_num)
 
   def test_Electrode_set_barrier_ht_non_numeric(self):
     """Set argument barrier_ht non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,Electrode["barrier_ht"],non_num)
+    self.assertRaises(TypeError,self.El["barrier_ht"],non_num)
 
   def test_Electrode_set_voltage_non_numeric(self):
     """Set argument voltage non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,Electrode["voltage"],non_num)
+    self.assertRaises(TypeError,self.El["voltage"],non_num)
 
   def test_Electrode_set_position_non_numeric(self):
     """Set argument position non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,Electrode["position"],non_num)
+    self.assertRaises(TypeError,self.El["position"],non_num)
 
   def test_Electrode_set_richardson_non_numeric(self):
     """Set argument richardson non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,Electrode["richardson"],non_num)
+    self.assertRaises(TypeError,self.El["richardson"],non_num)
 
   def test_Electrode_set_emissivity_non_numeric(self):
     """Set argument emissivity non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,Electrode["emissivity"],non_num)
+    self.assertRaises(TypeError,self.El["emissivity"],non_num)
 
   def test_Electrode_set_nea_non_numeric(self):
     """Set argument nea non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,Electrode["nea"],non_num)
+    self.assertRaises(TypeError,self.El["nea"],non_num)
 
 
 class SetInputOutsideConstraints(unittest.TestCase):
@@ -265,28 +265,28 @@ class SetInputOutsideConstraints(unittest.TestCase):
     self.El = Electrode(input_params)
     
   def test_Electrode_set_temp_less_than_zero(self):
-    """Instantiating argument temp < 0."""
-    self.assertRaises(ValueError,Electrode["temp"],-1.1)
+    """Set argument temp < 0."""
+    self.assertRaises(ValueError,self.El["temp"], -1.1)
   
   def test_Electrode_set_barrier_ht_less_than_zero(self):
-    """Instantiating argument barrier_ht < 0."""
-    self.assertRaises(ValueError,Electrode["barrier_ht"],-1.1)
+    """Set argument barrier_ht < 0."""
+    self.assertRaises(ValueError,self.El["barrier_ht"],-1.1)
   
   def test_Electrode_set_richardson_less_than_zero(self):
-    """Instantiating argument richardson < 0."""
-    self.assertRaises(ValueError,Electrode["richardson"],-1.1)
+    """Set argument richardson < 0."""
+    self.assertRaises(ValueError,self.El["richardson"],-1.1)
   
   def test_Electrode_set_emissivity_less_than_zero(self):
-    """Instantiating argument emissivity < 0."""
-    self.assertRaises(ValueError,Electrode["emissivity"],-1.1)
+    """Set argument emissivity < 0."""
+    self.assertRaises(ValueError,self.El["emissivity"],-1.1)
   
   def test_Electrode_set_emissivity_greater_than_one(self):
-    """Instantiating argument emissivity > 1."""
-    self.assertRaises(ValueError,Electrode["emissivity"],1.1)
+    """Set argument emissivity > 1."""
+    self.assertRaises(ValueError,self.El["emissivity"],1.1)
   
   def test_Electrode_set_nea_less_than_zero(self):
-    """Instantiating argument nea < 0."""
-    self.assertRaises(ValueError,Electrode["nea"],-1.1)
+    """Set argument nea < 0."""
+    self.assertRaises(ValueError,self.El["nea"],-1.1)
     
 
 class CalculatorsReturnType(unittest.TestCase):

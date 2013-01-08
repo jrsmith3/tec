@@ -142,14 +142,14 @@ class SetInputWrongType(unittest.TestCase):
   def test_TEC_set_Emitter_non_numeric(self):
     """Set argument Emitter non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,self.tec_obj["Emitter"],non_num)
+    self.assertRaises(TypeError,self.TEC_obj["Emitter"],non_num)
 
   def test_TEC_set_Collector_non_numeric(self):
     """Set argument Collector non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,self.tec_obj["Collector"],non_num)
+    self.assertRaises(TypeError,self.TEC_obj["Collector"],non_num)
     
-class CalculatorsReturnType(self):
+class CalculatorsReturnType(unittest.TestCase):
   """
   Tests output types of the TEC calculator methods.
   """
