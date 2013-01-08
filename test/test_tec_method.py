@@ -28,7 +28,7 @@ class MethodsValues(unittest.TestCase):
   
   def test_calc_interelectrode_spacing(self):
     """
-    Compares the output against a list of standard values of interelectrode spacing.
+    Interelectrode spacing values test.
     
     This method has machine precision since it is a difference between to machine precise values.
     """
@@ -40,12 +40,13 @@ class MethodsValues(unittest.TestCase):
       
   def test_calc_output_voltage(self):
     """
+    Output voltage values test.
     """
     pass
       
   def test_calc_contact_potential(self):
     """
-    Compares the output against a list of standard values.
+    Contact potential values test.
     
     This method has machine precision. When the barrier_ht attribute of an Electrode object is set, the quantity is converted from eV to J by multiplying by the value of the fundamental charge. Even though the machine does a machine precision multiplication, the value of  the fundamental charge has a lower relative precision than the mahcine. So there are a bunch of digits that get carried around that are insignificant. However, this calc_contact_potential calculation, the result is divided by the value of the fundamental charge to get the result in V. This division recovers the original precision of  the values of barrier_ht and therefore the result is of machine precision.
     """
