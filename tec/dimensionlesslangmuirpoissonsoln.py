@@ -28,8 +28,11 @@ class DimensionlessLangmuirPoissonSoln(dict):
     position_array = np.linspace(0, endpoint, num_points)
     motive_array = integrate.odeint(self.langmuir_poisson_eq,ics,position_array)
     
-    # NOTE: the InterpolatedUnivariateSpline class requires that the abscissae are monotonically increasing. That is not necessarily the case here.
-    # FWIW, here's an easy way to flip a numpy array around: ar[::-1]
+    # Flip things around if position_array isn't monotonically increasing.
+    if position_array[0] > position_array[-1]:
+      position_array = np.flipud(position_array)
+      motive_array = np.flipud(motive_array)
+    
     motive_v_position = \
       interpolate.InterpolatedUnivariateSpline(position_array,motive_array[:,0])
     position_v_motive = \
