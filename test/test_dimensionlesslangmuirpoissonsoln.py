@@ -28,7 +28,7 @@ class MethodsOutputSanityCheck(unittest.TestCase):
 
   def test_get_motive_outside_asymptote(self):
     """
-    Return value should be NaN.
+    Beyond asymptote return value should be NaN.
     """
     self.assertTrue(np.isnan(self.dlps.get_motive(-10)))
 
@@ -104,20 +104,20 @@ class MethodsOutputSanityCheck(unittest.TestCase):
     """
     lhs branch of the get_position method should fail for negative arguments.
     """
-    self.assertRaises(self.dlps.get_position(-10), ValueError)
+    self.assertRaises(ValueError, self.dlps.get_position, -10, "lhs")
   
   def test_get_position_lhs_zero_at_origin(self):
     """
     The lhs branch should be zero at the origin.
     """
-    self.assertEqual(self.dlps.get_position(0), 0)
+    self.assertEqual(self.dlps.get_position(0, "lhs"), 0)
   
   def test_get_position_lhs_negative(self):
     """
     The position for all values of defined motive should be negative.
     """
     rand_mot = 100. * np.random.random_sample(10)
-    self.assertTrue(all(self.get_position(mot) < 0 for mot in rand_mot))
+    self.assertTrue(all(self.dlps.get_position(mot,"lhs") < 0 for mot in rand_mot))
   
   def test_get_position_lhs_monotonic_decreasing(self):
     """
@@ -126,39 +126,43 @@ class MethodsOutputSanityCheck(unittest.TestCase):
     rand_mot = 100. * np.random.random_sample(10)
     rand_pos = []
     for mot in rand_mot:
-      rand_pos.append(self.dlps.get_position(mot))
+      rand_pos.append(self.dlps.get_position(mot,"lhs"))
     self.assertTrue(all(x>y for x, y in zip(rand_mot, rand_mot[1:])))
   
   def test_get_position_lhs_asymptote(self):
     """
     Beyond a large value of motive, the position should be single-valued.
     """
-    self.assertEqual(self.dlps.get_position(100), self.dlps.get_position(200))
+    self.assertEqual(self.dlps.get_position(100,"lhs"), self.dlps.get_position(200,"lhs"))
   
   def test_get_position_rhs_negative_input_error(self):
     """
     rhs branch of the get_position method should fail for negative arguments.
     """
-    #self.assertRaises(self.dlps.get_position(-10), ValueError)
-    pass
+    self.assertRaises(ValueError, self.dlps.get_position, -10, "rhs")
   
   def test_get_position_rhs_zero_at_origin(self):
     """
     The rhs branch should be zero at the origin.
     """
-    pass
+    self.assertEqual(self.dlps.get_position(0,"rhs"), 0)
   
   def test_get_position_rhs_positive(self):
     """
     The position for all values of motive should be positive.
     """
-    pass
+    rand_mot = 100. * np.random.random_sample(10)
+    self.assertTrue(all(self.dlps.get_position(mot,"rhs") > 0 for mot in rand_mot))
   
   def test_get_position_rhs_monotonic_increasing(self):
     """
     The rhs branch position should monotonically increase with motive.
     """
-    pass
+    rand_mot = 100. * np.random.random_sample(10)
+    rand_pos = []
+    for mot in rand_mot:
+      rand_pos.append(self.dlps.get_position(mot,"rhs"))
+    self.assertTrue(all(x<y for x, y in zip(rand_mot, rand_mot[1:])))
   
   
   

@@ -36,19 +36,21 @@ class DimensionlessLangmuirPoissonSoln(dict):
     motive_v_position = \
       interpolate.InterpolatedUnivariateSpline(position_array,motive_array[:,0])
     position_v_motive = \
-      interpolate.InterpolatedUnivariateSpline(motive_array[:,0],position_array)
+      interpolate.InterpolatedUnivariateSpline(motive_array[:,0],position_array,k=1)
       
     return {"motive_v_position": motive_v_position, \
             "position_v_motive": position_v_motive}
   
-  def get_position(self, motive, branch = -1):
+  def get_position(self, motive, branch = "lhs"):
     """
     Return position, default negative, given a value of motive.
     """
-    if branch == -1:
+    if branch is "lhs":
       return self["rhs"]["position_v_motive"](motive)
-    elif branch == 1:
+    elif branch == "rhs":
       return self["lhs"]["position_v_motive"](motive)
+    else:
+      raise valueError("branch must either be 'lhs' or 'rhs'.")
   
   def get_motive(self, position):
     """
