@@ -100,7 +100,7 @@ class MethodsOutputSanityCheck(unittest.TestCase):
     pass
     
     
-  def test_get_position_lhs_negative_input_error(self):
+  def test_get_position_lhs_negative_input(self):
     """
     get_position method should be NaN for negative motive and lhs branch.
     """
@@ -135,7 +135,7 @@ class MethodsOutputSanityCheck(unittest.TestCase):
     """
     self.assertEqual(self.dlps.get_position(100,"lhs"), self.dlps.get_position(200,"lhs"))
   
-  def test_get_position_rhs_negative_input_error(self):
+  def test_get_position_rhs_negative_input(self):
     """
     get_position method should be NaN for negative motive and rhs branch.
     """
