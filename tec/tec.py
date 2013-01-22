@@ -48,6 +48,10 @@ class TEC(dict):
   ...            "emissivity":0.5}
   >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
   >>> example_tec = TEC(input_dict)
+  
+  Notes
+  -----
+  "motive_data" contains the interp1d object because there's no sense in re-instantiating it every time I call the associated methods.
 
   Bibliography
   ------------
