@@ -84,9 +84,9 @@ class TEC(dict):
     
   
   # Methods regarding motive --------------------------------------------------
-  def __calc_motive(self):
+  def calc_motive(self):
     """
-    Calculates the motive and metadata and populates a dict with the data.
+    Calculates the motive (meta)data and populates the 'motive_data' attribute.
     """
     motive_array = np.array([self["Emitter"].calc_vacuum_energy(), \
       self["Collector"].calc_vacuum_energy()])
@@ -100,9 +100,9 @@ class TEC(dict):
                            
   def get_motive(self, position):
     """
-    Returns value of motive for a given value of position.
+    Returns value of motive for given value(s) of position.
     
-    Position must be of numerical type or numpy array. Returns None if position 
+    Position must be of numerical type or numpy array. Returns NaN if position 
     falls outside of the interelectrode space.
     """
     
@@ -122,15 +122,10 @@ class TEC(dict):
   
   def get_max_motive(self, with_position=False):
     """
-    Returns the value of the maximum motive height in eV.
+    Returns value of the maximum motive relative to emitter Fermi energy in eV.
     
     If with_position is True, return a tuple where the first element is the 
     maximum motive value and the second element is the corresponding position.
-    
-    This value should not be confused with the maximum motive given in 
-    "Thermionic Energy Conversion Vol. 1" by Hatsopoulos and Gyftopoulos as 
-    \psi_{m}. The value returned by this method is equivalent to 
-    \psi_{m} - \mu_{E}.
     """
     
     max_motive = self["motive_data"]["motive_array"].max()
