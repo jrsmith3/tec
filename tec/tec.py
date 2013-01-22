@@ -142,13 +142,6 @@ class TEC(dict):
     else:
       return max_motive
       
-  def get_motive_details(self):
-    """
-    Returns motive dict which includes motive data and metadata.
-    """
-    
-    return self["motive_data"]
-    
   
   # Methods returning basic data about the TEC --------------------------------
   def calc_interelectrode_spacing(self):
