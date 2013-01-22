@@ -9,15 +9,31 @@ from scipy import interpolate
 class TEC(dict):
   
   """
-  Thermionic energy conversion device.
-  
-  The TEC class is instantiated by a dict; this dict has two keys, "Emitter" and 
-  "Collector" (case insensitive). Both keys have data that is also of type dict; 
-  configured to instantiate an Electrode object. Additional keys will be ignored 
-  and there are no default values for instantiation.
-  
-  Here's an example.
-  
+  Thermionic engine simulator. Ignores space charge, considers NEA.
+
+  dict-like object that implements a model of electron transport; ignores the negative space charge effect. This class calculates a motive between the vacuum levels of the two elecrodes which may or may not feature NEA. The model is based on [1]. 
+
+  Attributes
+  ----------
+  The attributes of the object are accessed like a dictionary. The object has three attributes, "Emitter" and "Collector" are both Electrode objects. "motive_data" is a dictionary containing (meta)data calculated during the motive calculation. "motive_data" should usually be accessed via the class's convenience methods. "motive_data" contains the following data:
+
+    motive_array:   A two-element array containing the electrostatic boundary 
+                    conditions, i.e. the vacuum level of the emitter and 
+                    collector, respectively.
+    
+    position_array: A two-element array containing the values of position 
+                    corresponding to the values in motive_array.
+                    
+    motive_interp:  A scipy.interpolate.interp1d object that interpolates the 
+                    two arrays described above used in the class's convenience 
+                    methods.
+
+  Parameters
+  ----------
+  The TEC class is instantiated by a dict with two keys, "Emitter" and "Collector" (case insensitive). Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.
+
+  Examples
+  --------
   >>> em_dict = {"temp":1000,
   ...            "barrier_ht":1,
   ...            "voltage":0,
@@ -32,24 +48,10 @@ class TEC(dict):
   ...            "emissivity":0.5}
   >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
   >>> example_tec = TEC(input_dict)
-  
-  This class implements the most basic model for electron transport across a 
-  TEC: the negative space charge effect is completely ignored. As such, the 
-  motive is simply a linear function between the emitter and collector vacuum 
-  energy.
-  
-  The data and metadata that is calculated during the motive calculation is as 
-  follows:
-  
-    motive_array:   A two-element array containing the electrostatic boundary 
-                    conditions, i.e. the vacuum level of the emitter and 
-                    collector, respectively.
-    
-    position_array: A two-element array containing hte vaclues of position 
-                    corresponding to the values in motive_array.
-                    
-    motive_interp:  A scipy.interpolate.interp1d object that interpolates the 
-                    two arrays described above.
+
+  Bibliography
+  ------------
+  [1] "Thermionic Energy Conversion, Vol. I." Hatsopoulous and Gyftopoulous. p. 48.
   """
   
   def __init__(self,input_params):
