@@ -83,10 +83,11 @@ class TEC(dict):
     # Try to turn the argument into an Electrode. The Electrode class has a lot
     # of error checking and if the argument can't make it through that checking,
     # its not worth proceeding.
-    ElecItem = Electrode(item)
+    if key in ["Emitter","Collector"]:
+      item = Electrode(item)
     
     # Set value.
-    dict.__setitem__(self,key,ElecItem)
+    dict.__setitem__(self,key,item)
     
   
   # Methods regarding motive --------------------------------------------------
@@ -136,7 +137,7 @@ class TEC(dict):
     
     max_motive = self["motive_data"]["motive_array"].max()
     max_motive_indx = self["motive_data"]["motive_array"].argmax()
-    position_at_max_motive = self["motive_data"]["position_array"][motive_indx]
+    position_at_max_motive = self["motive_data"]["position_array"][max_motive_indx]
     
     if with_position:
       return max_motive, position_at_max_motive
