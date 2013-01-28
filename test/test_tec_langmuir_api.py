@@ -98,66 +98,7 @@ class motive_dataInterface(unittest.TestCase):
     """
     TECL["motive_data"]["saturation_pt"] should exist.
     """
-    self.assertTrue("saturation_pt",self.TECL["motive_data"])
-    
-  def test_motive_data_saturation_pt_is_dict(self):
-    """
-    TECL["motive_data"]["saturation_pt"] is a dictionary.
-    """
-    self.assertTrue(isinstance(self.TECL["motive_data"]["saturation_pt"],dict))
-    
-  def test_motive_data_saturation_pt_output_voltage_exists(self):
-    """
-    TECL["motive_data"]["saturation_pt"]["output_voltage"] exists.
-    """
-    self.assertTrue("output_voltage",self.TECL["motive_data"]["saturation_pt"])
-    
-  def test_motive_data_saturation_pt_output_voltage_is_num(self):
-    """
-    TECL["motive_data"]["saturation_pt"]["output_voltage"] is a number.
-    """
-    self.assertTrue(isinstance(\
-      self.TECL["motive_data"]["saturation_pt"]["output_voltage"],(float,int,long)))
-    
-  def test_motive_data_saturation_pt_output_current_density_exists(self):
-    """
-    TECL["motive_data"]["saturation_pt"]["output_current_density"] exists.
-    """
-    self.assertTrue("output_current_density",self.TECL["motive_data"]["saturation_pt"])
-    
-  def test_motive_data_saturation_pt_output_current_density_is_num(self):
-    """
-    TECL["motive_data"]["saturation_pt"]["output_current_density"] is a number.
-    """
-    self.assertTrue(isinstance(\
-      self.TECL["motive_data"]["saturation_pt"]["output_current_density"],(float,int,long)))
-    
-  def test_motive_data_saturation_pt_co_motive_exists(self):
-    """
-    TECL["motive_data"]["saturation_pt"]["co_motive"] exists.
-    """
-    self.assertTrue("co_motive",self.TECL["motive_data"]["saturation_pt"])
-    
-  def test_motive_data_saturation_pt_co_motive_is_num(self):
-    """
-    TECL["motive_data"]["saturation_pt"]["co_motive"] is a number.
-    """
-    self.assertTrue(isinstance(\
-      self.TECL["motive_data"]["saturation_pt"]["co_motive"],(float,int,long)))
-    
-  def test_motive_data_saturation_pt_co_position_exists(self):
-    """
-    TECL["motive_data"]["saturation_pt"]["co_position"] exists.
-    """
-    self.assertTrue("co_position",self.TECL["motive_data"]["saturation_pt"])
-    
-  def test_motive_data_saturation_pt_co_position_is_num(self):
-    """
-    TECL["motive_data"]["saturation_pt"]["co_position"] is a number.
-    """
-    self.assertTrue(isinstance(\
-      self.TECL["motive_data"]["saturation_pt"]["co_position"],(float,int,long)))
-    
+    self.assertTrue("saturation_pt" in self.TECL["motive_data"])
 
 
 if __name__ == '__main__':
