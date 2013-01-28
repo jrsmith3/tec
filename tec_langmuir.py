@@ -26,30 +26,33 @@ class TEC_Langmuir(TEC):
                     
     saturation_pt:  Dict containing saturation point data described below. Only 
                     contains dimensionless quantities at the collector since the
-                    emitter dimensionless quantities are all zero by definition.
+                    emitter dimensionless quantities are all zero by definition. 
+                    For brevity, "dimensionless" prefix omitted from "position" 
+                    and "motive" variable names.
     
-      voltage:      Voltage at which the saturation point occurs.
+      output_voltage:         Voltage at which the saturation point occurs.
       
-      current:      Current at which the saturation point occurs.
+      output_current_density: Current at which the saturation point occurs.
       
-      co_motive:    Dimensionless motive at the collector.
+      co_motive:              Dimensionless motive at the collector.
       
-      co_position:  Dimensionless position at the collector.
+      co_position:            Dimensionless position at the collector.
     
     critical_pt:    Dict containing critical point data described below. Only 
                     contains dimensionless quantities at the emitter since the
                     collector dimensionless quantities are all zero by 
-                    definition.
-    
-      voltage:      Voltage at which the critical point occurs.
-      
-      current:      Current at which the critical point occurs.
-      
-      em_motive:    Dimensionless motive at the emitter.
-      
-      em_position:  Dimensionless position at the emitter.
+                    definition. For brevity, "dimensionless" prefix omitted from 
+                    "position" and "motive" variable names.
 
-                    
+    
+      output_voltage:         Voltage at which the critical point occurs.
+      
+      output_current_density: Current at which the critical point occurs.
+      
+      em_motive:              Dimensionless motive at the emitter.
+      
+      em_position:            Dimensionless position at the emitter.
+    
     motive_interp:  A scipy.interpolate.interp1d object that interpolates the 
                     two arrays described above used in the class's convenience 
                     methods.
@@ -88,7 +91,7 @@ class TEC_Langmuir(TEC):
     """
     return 0.0
     
-  def calc_saturation_point(self):
+  def calc_saturation_pt(self):
     """
     Calculate saturation point condition and populate motive_data.
     """    
@@ -108,13 +111,13 @@ class TEC_Langmuir(TEC):
       physical_constants["electron_charge"]
     
     # Populate motive_data.
-    self["motive_data"]["saturation_point"] = \
-      {"dimenisonless_position":position,
-       "dimensionless_motive":motive,
+    self["motive_data"]["saturation_pt"] = \
+      {"position":position,
+       "motive":motive,
        "output_voltage":output_voltage,
        "output_current_density":output_current_density}
   
-  def calc_critical_point(self):
+  def calc_critical_pt(self):
     """
     Calculate critical point condition and populate motive_data.
     """
@@ -136,9 +139,9 @@ class TEC_Langmuir(TEC):
       physical_constants["electron_charge"]
     
     # Populate motive_data.
-    self["motive_data"]["saturation_point"] = \
-      {"dimenisonless_position":position,
-       "dimensionless_motive":motive,
+    self["motive_data"]["saturation_pt"] = \
+      {"position":position,
+       "motive":motive,
        "output_voltage":output_voltage,
        "output_current_density":output_current_density}
        
