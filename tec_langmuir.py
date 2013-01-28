@@ -17,13 +17,6 @@ class TEC_Langmuir(TEC):
   ----------
   The attributes of the object are accessed like a dictionary. The object has three attributes; "Emitter" and "Collector" are both Electrode objects. "motive_data" is a dictionary containing (meta)data calculated during the motive calculation. "motive_data" should usually be accessed via the class's convenience methods. "motive_data" contains the following data:
 
-    motive_array:   A two-element array containing the electrostatic boundary 
-                    conditions, i.e. the vacuum level of the emitter and 
-                    collector, respectively.
-    
-    position_array: A two-element array containing the values of position 
-                    corresponding to the values in motive_array.
-                    
     saturation_pt:  Dict containing saturation point data described below. Only 
                     contains dimensionless quantities at the collector since the
                     emitter dimensionless quantities are all zero by definition. 
@@ -53,9 +46,10 @@ class TEC_Langmuir(TEC):
       
       em_position:            Dimensionless position at the emitter.
     
-    motive_interp:  A scipy.interpolate.interp1d object that interpolates the 
-                    two arrays described above used in the class's convenience 
-                    methods.
+    motive_interp:  A scipy.interpolate.interp1d object that approximates the 
+                    motive in the interelectrode space. Note that this object 
+                    represents the actual motive -- not the dimensionless 
+                    motive.
 
   Parameters
   ----------
@@ -154,11 +148,13 @@ class TEC_Langmuir(TEC):
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
     # Rootfinder to get output current density corresponding to output voltage.
-    output_current_density = 0.0
+    #output_current_density = 1.0
     
-    em_motive = np.log(self["Emitter"].calc_output_current()/output_current_density)
+    #em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
     
     # NOTE: At this point I pretty much have what I need. I can get the other dimensionless parameters simply by knowing the value of output current. I can get the emitter and collector dimensionless motives and positions.
+    self["motive_data"] = {}
+    
   
   def critical_point_target_function(self,output_current_density):
     """
