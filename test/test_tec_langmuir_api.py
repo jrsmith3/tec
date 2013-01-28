@@ -16,17 +16,17 @@ __copyright__ = "Copyright (c) 2013 Joshua Ryan Smith"
 __license__ = ""
 
 from tec import TEC_Langmuir
+from scipy import interpolate
 import unittest
 
-    
-class CalculatorsReturnType(unittest.TestCase):
+class Instantiation(unittest.TestCase):
   """
-  Tests output types of the TEC calculator methods.
+  Tests to see if the object can even be created.
   """
-
+  
   def setUp(self):
     """
-    Set up a TEC object for the tests
+    Set up a dictionary that can properly instantiate a TEC_Langmuir object.
     """
 
     em_params = {"temp":1,\
@@ -39,116 +39,126 @@ class CalculatorsReturnType(unittest.TestCase):
     co_params = {"temp":1,\
                  "barrier_ht":1,\
                  "voltage":1,\
-                 "position":1,\
+                 "position":0,\
                  "richardson":10,\
                  "emissivity":0.5}
                  
     input_params = {"Emitter":em_params, "Collector":co_params}
                    
-    self.TEC_obj = TEC_Langmuir(input_params)
+    self.input_params = input_params
     
-  #def test_get_motive_numeric(self):
-    #"""
-    #get_motive returns numeric type.
-    #"""
-    #self.assertTrue(isinstance(self.TEC_obj.get_motive(0.5),float))
+  def test_TEC_Langmuir_instantiation_type(self):
+    """
+    Tests instantation and proper return type of TEC_Langmuir object.
+    """
+    TECL = TEC_Langmuir(self.input_params)
+    self.assertTrue(isinstance(TECL,TEC_Langmuir))
+    
+class motive_dataInterface(unittest.TestCase):
+  """
+  TEC_Langmuir motive_data interface implements description in class docstring.
+  """
+  def setUp(self):
+    """
+    Set up a generic TEC_Langmuir object.
+    """
+    
+    # TEC_Langmuir test object.
+    em_params = {"temp":1,\
+                 "barrier_ht":1,\
+                 "voltage":1,\
+                 "position":0,\
+                 "richardson":10,\
+                 "emissivity":0.5}
+                   
+    co_params = {"temp":1,\
+                 "barrier_ht":1,\
+                 "voltage":1,\
+                 "position":0,\
+                 "richardson":10,\
+                 "emissivity":0.5}
+                 
+    input_params = {"Emitter":em_params, "Collector":co_params}
+    self.TECL = TEC_Langmuir(input_params)
+    
+  def test_motive_data_exists(self):
+    """
+    motive_data should exist.
+    """
+    self.assertTrue("motive_data" in self.TECL)
   
-  #def test_get_motive_numpy_array(self):
-    #"""
-    #get_motive returns numpy array type.
-    #"""
-    #pass
-  
-  def test_get_max_motive(self):
+  def test_motive_data_is_dict(self):
     """
-    get_max_motive returns numeric type.
+    motive_data is a dictionary.
     """
-    self.assertTrue(isinstance(self.TEC_obj.get_max_motive(),float))
-  
-  def test_get_max_motive_with_position(self):
+    self.assertTrue(isinstance(self.TECL["motive_data"],dict))
+    
+  # What follows is possibly the jankiest way to test the interface of motive_data
+  def test_motive_data_saturation_pt_exists(self):
     """
-    get_max_motive returns tuple.
+    TECL["motive_data"]["saturation_pt"] should exist.
     """
-    self.assertTrue(isinstance(self.TEC_obj.get_max_motive(with_position=1),tuple))
-  
-  def test_get_max_motive_with_position_tuple_items(self):
+    self.assertTrue("saturation_pt",self.TECL["motive_data"])
+    
+  def test_motive_data_saturation_pt_is_dict(self):
     """
-    get_max_motive returns tuple with numeric items.
+    TECL["motive_data"]["saturation_pt"] is a dictionary.
     """
-    tup = self.TEC_obj.get_max_motive(with_position=1)
-    self.assertTrue(all( isinstance(indx,float) for indx in tup ))
-  
-  def test_calc_interelectrode_spacing(self):
+    self.assertTrue(isinstance(self.TECL["motive_data"]["saturation_pt"],dict))
+    
+  def test_motive_data_saturation_pt_output_voltage_exists(self):
     """
-    calc_interelectrode_spacing returns numeric.
+    TECL["motive_data"]["saturation_pt"]["output_voltage"] exists.
     """
-    self.assertTrue(isinstance(self.TEC_obj.calc_interelectrode_spacing(),float))
+    self.assertTrue("output_voltage",self.TECL["motive_data"]["saturation_pt"])
+    
+  def test_motive_data_saturation_pt_output_voltage_is_num(self):
+    """
+    TECL["motive_data"]["saturation_pt"]["output_voltage"] is a number.
+    """
+    self.assertTrue(isinstance(\
+      self.TECL["motive_data"]["saturation_pt"]["output_voltage"],(float,int,long)))
+    
+  def test_motive_data_saturation_pt_output_current_density_exists(self):
+    """
+    TECL["motive_data"]["saturation_pt"]["output_current_density"] exists.
+    """
+    self.assertTrue("output_current_density",self.TECL["motive_data"]["saturation_pt"])
+    
+  def test_motive_data_saturation_pt_output_current_density_is_num(self):
+    """
+    TECL["motive_data"]["saturation_pt"]["output_current_density"] is a number.
+    """
+    self.assertTrue(isinstance(\
+      self.TECL["motive_data"]["saturation_pt"]["output_current_density"],(float,int,long)))
+    
+  def test_motive_data_saturation_pt_co_motive_exists(self):
+    """
+    TECL["motive_data"]["saturation_pt"]["co_motive"] exists.
+    """
+    self.assertTrue("co_motive",self.TECL["motive_data"]["saturation_pt"])
+    
+  def test_motive_data_saturation_pt_co_motive_is_num(self):
+    """
+    TECL["motive_data"]["saturation_pt"]["co_motive"] is a number.
+    """
+    self.assertTrue(isinstance(\
+      self.TECL["motive_data"]["saturation_pt"]["co_motive"],(float,int,long)))
+    
+  def test_motive_data_saturation_pt_co_position_exists(self):
+    """
+    TECL["motive_data"]["saturation_pt"]["co_position"] exists.
+    """
+    self.assertTrue("co_position",self.TECL["motive_data"]["saturation_pt"])
+    
+  def test_motive_data_saturation_pt_co_position_is_num(self):
+    """
+    TECL["motive_data"]["saturation_pt"]["co_position"] is a number.
+    """
+    self.assertTrue(isinstance(\
+      self.TECL["motive_data"]["saturation_pt"]["co_position"],(float,int,long)))
+    
 
-  def test_calc_output_voltage(self):
-    """
-    calc_output_voltage returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_output_voltage(),float))
-
-  def test_calc_contact_potential(self):
-    """
-    calc_contact_potential returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_contact_potential(),float))
-
-  def test_calc_forward_current_density(self):
-    """
-    calc_forward_current_density returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_forward_current_density(),float))
-
-  def test_calc_back_current_density(self):
-    """
-    calc_back_current_density returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_back_current_density(),float))
-
-  def test_calc_output_current_density(self):
-    """
-    calc_output_current_density returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_output_current_density(),float))
-
-  def test_calc_output_power_density(self):
-    """
-    calc_output_power_density returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_output_power_density(),float))
-
-  def test_calc_load_resistance(self):
-    """
-    calc_load_resistance returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_load_resistance(),float))
-
-  def test_calc_carnot_efficiency(self):
-    """
-    calc_carnot_efficiency returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_carnot_efficiency(),float))
-
-  def test_calc_radiation_efficiency(self):
-    """
-    calc_radiation_efficiency returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_radiation_efficiency(),float))
-
-  def test_calc_electronic_efficiency(self):
-    """
-    calc_electronic_efficiency returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_electronic_efficiency(),float))
-
-  def test_calc_total_efficiency(self):
-    """
-    calc_total_efficiency returns numeric.
-    """
-    self.assertTrue(isinstance(self.TEC_obj.calc_total_efficiency(),float))
 
 if __name__ == '__main__':
   unittest.main()
