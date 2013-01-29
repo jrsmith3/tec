@@ -2,10 +2,10 @@
 
 from electrode import Electrode
 from constants import physical_constants
-import math
+from dimensionlesslangmuirpoissonsoln import DimensionlessLangmuirPoissonSoln
+from tec import TEC
 import numpy as np
 from scipy import interpolate
-from tec import TEC
 
 class TEC_Langmuir(TEC):
   """
@@ -26,10 +26,6 @@ class TEC_Langmuir(TEC):
       output_voltage:         Voltage at which the saturation point occurs.
       
       output_current_density: Current at which the saturation point occurs.
-      
-      co_motive:              Dimensionless motive at the collector.
-      
-      co_position:            Dimensionless position at the collector.
     
     critical_pt:    Dict containing critical point data described below. Only 
                     contains dimensionless quantities at the emitter since the
@@ -42,10 +38,6 @@ class TEC_Langmuir(TEC):
       
       output_current_density: Current at which the critical point occurs.
       
-      em_motive:              Dimensionless motive at the emitter.
-      
-      em_position:            Dimensionless position at the emitter.
-    
     motive_interp:  A scipy.interpolate.interp1d object that approximates the 
                     motive in the interelectrode space. Note that this object 
                     represents the actual motive -- not the dimensionless 
@@ -57,6 +49,7 @@ class TEC_Langmuir(TEC):
 
   Examples and interface testing
   ------------------------------
+  >>> from tec_langmuir import TEC_Langmuir
   >>> em_dict = {"temp":1000,
   ...            "barrier_ht":1,
   ...            "voltage":0,
@@ -70,7 +63,9 @@ class TEC_Langmuir(TEC):
   ...            "richardson":10,
   ...            "emissivity":0.5}
   >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
-  >>> example_tec = TEC(input_dict)
+  >>> example_tec = TEC_Langmuir(input_dict)
+  
+  Make sure that the motive_data interface matches the above description.
   
   >>> type(example_tec["motive_data"]["motive_interp"])
   scipy.interpolate.interp1d
@@ -78,18 +73,11 @@ class TEC_Langmuir(TEC):
   True
   >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["output_current_density"]),float)
   True
-  >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["co_motive"]),float)
-  True
-  >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["co_position"]),float)
-  True
   >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["output_voltage"]),float)
   True
   >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["output_current_density"]),float)
   True
-  >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["em_motive"]),float)
-  True
-  >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["em_position"]),float)
-  True
+  
 
   Notes
   -----
@@ -97,23 +85,39 @@ class TEC_Langmuir(TEC):
   Bibliography
   ------------
   [1] Langmuir
-  """  
+  """
+  
   def calc_back_current_density(self):
     """
     Return back current density in A m^{-2}.
     """
     return 0.0
     
+  def calc_motive(self):
+    """
+    Calculate the motive parameters and populate "motive_data".
+    """
+    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    
+    self["motive_data"] = {}
+    self["motive_data"]["dps"] = DimensionlessLangmuirPoissonSoln()
+    
+    # In fact, this attribute probably isn't necessary.
+    self["motive_data"]["motive_interp"] = []
+    
+    self.calc_saturation_pt()
+    self.calc_critical_pt()
+    
   def calc_saturation_pt(self):
     """
     Calculate saturation point condition and populate motive_data.
     """    
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    output_current_density = self["Emitter"].calc_output_current()
+    output_current_density = self["Emitter"].calc_saturation_current()
     
     position = self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
-      (physical_constants["epsilon_0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
+      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
       (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
       
     motive = self["motive_data"]["dps"].get_motive(position)
@@ -137,14 +141,14 @@ class TEC_Langmuir(TEC):
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
     # Rootfinder to get critical point output current density.
-    output_current_density = 0.0
+    output_current_density = 1.0
     
     position = -self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
-      (physical_constants["epsilon_0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
+      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
       (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
       
-    motive = np.log(self["Emitter"].calc_output_current()/output_current_density)
+    motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
     
     output_voltage = (self["Emitter"]["barrier_ht"] - \
       self["Collector"]["barrier_ht"] + \
@@ -152,28 +156,12 @@ class TEC_Langmuir(TEC):
       physical_constants["electron_charge"]
     
     # Populate motive_data.
-    self["motive_data"]["saturation_pt"] = \
+    self["motive_data"]["critical_pt"] = \
       {"position":position,
        "motive":motive,
        "output_voltage":output_voltage,
        "output_current_density":output_current_density}
        
-  def calc_motive(self):
-    """
-    Calculate the motive parameters.
-    
-    I'm not really sure where this method is going to go or if it will keep this name, but I know I will need all this code somewhere.
-    """
-    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    
-    # Rootfinder to get output current density corresponding to output voltage.
-    #output_current_density = 1.0
-    
-    #em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
-    
-    # NOTE: At this point I pretty much have what I need. I can get the other dimensionless parameters simply by knowing the value of output current. I can get the emitter and collector dimensionless motives and positions.
-    self["motive_data"] = {}
-    
   
   def critical_point_target_function(self,output_current_density):
     """
@@ -181,13 +169,13 @@ class TEC_Langmuir(TEC):
     """
     position = -self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
-      (physical_constants["epsilon_0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
+      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
       (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
       
     if output_current_density == 0:
       motive = np.inf
     else:
-      motive = np.log(self["Emitter"].calc_output_current()/output_current_density)
+      motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
     
     return position - self["dps"].get_position(motive)
 
