@@ -91,7 +91,6 @@ class TEC_Langmuir(TEC):
   >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["em_position"]),float)
   True
 
-
   Notes
   -----
 
