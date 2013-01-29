@@ -64,13 +64,13 @@ class TEC_Langmuir(TEC):
   
   Make sure that the motive_data interface matches the above description.
   
-  >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["output_voltage"]),float)
+  >>> isinstance(example_tec["motive_data"]["saturation_pt"]["output_voltage"],float)
   True
-  >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["output_current_density"]),float)
+  >>> isinstance(example_tec["motive_data"]["saturation_pt"]["output_current_density"],float)
   True
-  >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["output_voltage"]),float)
+  >>> isinstance(example_tec["motive_data"]["critical_pt"]["output_voltage"],float)
   True
-  >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["output_current_density"]),float)
+  >>> isinstance(example_tec["motive_data"]["critical_pt"]["output_current_density"],float)
   True
   >>> type(example_tec["motive_data"]["dps"])
   <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
@@ -122,9 +122,7 @@ class TEC_Langmuir(TEC):
     
     # Populate motive_data.
     self["motive_data"]["saturation_pt"] = \
-      {"position":position,
-       "motive":motive,
-       "output_voltage":output_voltage,
+      {"output_voltage":output_voltage,
        "output_current_density":output_current_density}
   
   def calc_critical_pt(self):
@@ -150,9 +148,7 @@ class TEC_Langmuir(TEC):
     
     # Populate motive_data.
     self["motive_data"]["critical_pt"] = \
-      {"position":position,
-       "motive":motive,
-       "output_voltage":output_voltage,
+      {"output_voltage":output_voltage,
        "output_current_density":output_current_density}
        
   
