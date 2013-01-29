@@ -19,5 +19,11 @@ from tec import TEC_Langmuir
 from scipy import interpolate
 import unittest
 
+class CalculatorsReturnType(unittest.TestCase):
+  """
+  Tests output types of the TEC_Langmuir calculator methods.
+  """
+  pass
+
 if __name__ == '__main__':
   unittest.main()
