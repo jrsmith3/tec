@@ -2,7 +2,6 @@
 
 from electrode import Electrode
 from constants import physical_constants
-import math
 import numpy as np
 from scipy import interpolate
 
