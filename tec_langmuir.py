@@ -17,32 +17,29 @@ class TEC_Langmuir(TEC):
   ----------
   The attributes of the object are accessed like a dictionary. The object has three attributes; "Emitter" and "Collector" are both Electrode objects. "motive_data" is a dictionary containing (meta)data calculated during the motive calculation. "motive_data" should usually be accessed via the class's convenience methods. "motive_data" contains the following data:
 
-    saturation_pt:  Dict containing saturation point data described below. Only 
-                    contains dimensionless quantities at the collector since the
-                    emitter dimensionless quantities are all zero by definition. 
-                    For brevity, "dimensionless" prefix omitted from "position" 
-                    and "motive" variable names.
+    saturation_pt: Dict containing saturation point data described below. Only 
+                   contains dimensionless quantities at the collector since the
+                   emitter dimensionless quantities are all zero by definition. 
+                   For brevity, "dimensionless" prefix omitted from "position" 
+                   and "motive" variable names.
     
       output_voltage:         Voltage at which the saturation point occurs.
       
       output_current_density: Current at which the saturation point occurs.
     
-    critical_pt:    Dict containing critical point data described below. Only 
-                    contains dimensionless quantities at the emitter since the
-                    collector dimensionless quantities are all zero by 
-                    definition. For brevity, "dimensionless" prefix omitted from 
-                    "position" and "motive" variable names.
+    critical_pt:   Dict containing critical point data described below. Only 
+                   contains dimensionless quantities at the emitter since the
+                   collector dimensionless quantities are all zero by 
+                   definition. For brevity, "dimensionless" prefix omitted from 
+                   "position" and "motive" variable names.
 
     
       output_voltage:         Voltage at which the critical point occurs.
       
       output_current_density: Current at which the critical point occurs.
       
-    motive_interp:  A scipy.interpolate.interp1d object that approximates the 
-                    motive in the interelectrode space. Note that this object 
-                    represents the actual motive -- not the dimensionless 
-                    motive.
-
+    dps:           Langmuir's dimensionless Poisson's equation solution object.
+      
   Parameters
   ----------
   The TEC_Langmuir class is instantiated by a dict with two keys, "Emitter" and "Collector" (case insensitive). Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.
@@ -67,8 +64,6 @@ class TEC_Langmuir(TEC):
   
   Make sure that the motive_data interface matches the above description.
   
-  >>> type(example_tec["motive_data"]["motive_interp"])
-  scipy.interpolate.interp1d
   >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["output_voltage"]),float)
   True
   >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["output_current_density"]),float)
@@ -77,7 +72,8 @@ class TEC_Langmuir(TEC):
   True
   >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["output_current_density"]),float)
   True
-  
+  >>> type(example_tec["motive_data"]["dps"])
+  <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
 
   Notes
   -----
@@ -101,9 +97,6 @@ class TEC_Langmuir(TEC):
     
     self["motive_data"] = {}
     self["motive_data"]["dps"] = DimensionlessLangmuirPoissonSoln()
-    
-    # In fact, this attribute probably isn't necessary.
-    self["motive_data"]["motive_interp"] = []
     
     self.calc_saturation_pt()
     self.calc_critical_pt()
