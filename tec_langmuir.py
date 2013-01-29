@@ -55,8 +55,8 @@ class TEC_Langmuir(TEC):
   ----------
   The TEC_Langmuir class is instantiated by a dict with two keys, "Emitter" and "Collector" (case insensitive). Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.
 
-  Examples
-  --------
+  Examples and interface testing
+  ------------------------------
   >>> em_dict = {"temp":1000,
   ...            "barrier_ht":1,
   ...            "voltage":0,
@@ -71,6 +71,26 @@ class TEC_Langmuir(TEC):
   ...            "emissivity":0.5}
   >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
   >>> example_tec = TEC(input_dict)
+  
+  >>> type(example_tec["motive_data"]["motive_interp"])
+  scipy.interpolate.interp1d
+  >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["output_voltage"]),float)
+  True
+  >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["output_current_density"]),float)
+  True
+  >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["co_motive"]),float)
+  True
+  >>> isinstance(type(example_tec["motive_data"]["saturation_pt"]["co_position"]),float)
+  True
+  >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["output_voltage"]),float)
+  True
+  >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["output_current_density"]),float)
+  True
+  >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["em_motive"]),float)
+  True
+  >>> isinstance(type(example_tec["motive_data"]["critical_pt"]["em_position"]),float)
+  True
+
 
   Notes
   -----
