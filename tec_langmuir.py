@@ -101,6 +101,24 @@ class TEC_Langmuir(TEC):
     self.calc_saturation_pt()
     self.calc_critical_pt()
     
+  def get_motive(self):
+    """
+    Returns value of motive for given value(s) of position.
+    
+    Position must be of numerical type or numpy array. Returns NaN if position 
+    falls outside of the interelectrode space.
+    """
+    pass
+  
+  def get_max_motive(self, with_position=False):
+    """
+    Returns value of the maximum motive relative to emitter Fermi energy in eV.
+    
+    If with_position is True, return a tuple where the first element is the 
+    maximum motive value and the second element is the corresponding position.
+    """
+    pass
+  
   def calc_saturation_pt(self):
     """
     Calculate saturation point condition and populate motive_data.
