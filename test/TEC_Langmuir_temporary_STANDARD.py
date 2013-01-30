@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pickle
 import copy
 import csv
@@ -54,13 +55,13 @@ for dat in data:
   params = copy.deepcopy(input_params)
   
   # I am following the description of the data found above.
-  params["Collector"]["voltage"] = dat[0]
-  params["output_current_density"] = dat[1]
+  params["Collector"]["voltage"] = float(dat[0])
+  params["output_current_density"] = float(dat[1])
   # I ignore item 2 because its just the product of items 0 and 1.
-  params["Emitter"]["dimensionless_motive"] = dat[3]
-  params["Emitter"]["dimensionless_distance"] = dat[4]
-  params["Collector"]["dimensionless_motive"] = dat[5]
-  params["Collector"]["dimensionless_distance"] = dat[6]
+  params["Emitter"]["dimensionless_motive"] = float(dat[3])
+  params["Emitter"]["dimensionless_distance"] = float(dat[4])
+  params["Collector"]["dimensionless_motive"] = float(dat[5])
+  params["Collector"]["dimensionless_distance"] = float(dat[6])
   # I ignore item 7 because I don't care about efficiency at this point.
   
   reformatted_data_list.append(copy.deepcopy(params))
