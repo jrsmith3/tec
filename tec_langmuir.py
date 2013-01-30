@@ -7,8 +7,6 @@ from tec import TEC
 import numpy as np
 from scipy import interpolate,optimize
 
-import pdb
-
 class TEC_Langmuir(TEC):
   """
   Thermionic engine simulator. Considers space charge, ignores NEA.
@@ -102,8 +100,6 @@ class TEC_Langmuir(TEC):
     
     self["motive_data"]["saturation_pt"] = self.calc_saturation_pt()
     self["motive_data"]["critical_pt"] = self.calc_critical_pt()
-    
-    #pdb.set_trace()
     
     if self.calc_output_voltage() < self["motive_data"]["saturation_pt"]["output_voltage"]:
       # Accelerating mode.
