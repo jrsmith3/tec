@@ -5,7 +5,9 @@ from constants import physical_constants
 from dimensionlesslangmuirpoissonsoln import DimensionlessLangmuirPoissonSoln
 from tec import TEC
 import numpy as np
-from scipy import interpolate
+from scipy import interpolate,optimize
+
+import pdb
 
 class TEC_Langmuir(TEC):
   """
@@ -101,6 +103,26 @@ class TEC_Langmuir(TEC):
     self["motive_data"]["saturation_pt"] = self.calc_saturation_pt()
     self["motive_data"]["critical_pt"] = self.calc_critical_pt()
     
+    #pdb.set_trace()
+    
+    if self.calc_output_voltage() < self["motive_data"]["saturation_pt"]["output_voltage"]:
+      # Accelerating mode.
+      self["motive_data"]["max_motive"] = self["Emitter"].calc_vacuum_energy()
+    elif self.calc_output_voltage() > self["motive_data"]["critical_pt"]["output_voltage"]:
+      # Retarding mode.
+      self["motive_data"]["max_motive"] = self["Collector"].calc_vacuum_energy()
+    else:
+      # Space charge limited mode.
+      #output_current_density = 0.33525035699999999
+      output_current_density = optimize.brentq(self.output_voltage_target_function,\
+        self["motive_data"]["saturation_pt"]["output_current_density"],\
+        self["motive_data"]["critical_pt"]["output_current_density"])
+        
+      # Problem below this line.
+      em_dimensionless_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+      self["motive_data"]["max_motive"] = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
+        em_dimensionless_motive
+    
   def get_motive(self):
     """
     Returns value of motive for given value(s) of position.
@@ -117,7 +139,7 @@ class TEC_Langmuir(TEC):
     If with_position is True, return a tuple where the first element is the 
     maximum motive value and the second element is the corresponding position.
     """
-    pass
+    return self["motive_data"]["max_motive"]
   
   def calc_saturation_pt(self):
     """
@@ -152,7 +174,9 @@ class TEC_Langmuir(TEC):
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
     # Rootfinder to get critical point output current density.
-    output_current_density = 1.0
+    output_current_density = optimize.brentq(self.critical_point_target_function,\
+      self["Emitter"].calc_saturation_current(),0)
+    #output_current_density = 1.0
     
     position = -self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
@@ -184,22 +208,25 @@ class TEC_Langmuir(TEC):
     else:
       motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
     
-    return position - self["dps"].get_position(motive)
+    return position - self["motive_data"]["dps"].get_position(motive)
 
   def output_voltage_target_function(self,output_current_density):
     """
     Target function for the output voltage rootfinder.
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    em_motive = np.log(self["Emitter"].calc_saturation_current/output_current_density)
+    em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
     em_position = self["motive_data"]["dps"].get_position(em_motive)
     
-    # NOTE: I haven't yet defined x0. Probably it will end up as a helper method.
+    x0 = ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3) / \
+      (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4) * \
+      self["Emitter"]["temp"]**(3./4) / output_current_density**(1./2)
+    
     co_position = self.calc_interelectrode_spacing()/x0 + em_position
     co_motive = self["motive_data"]["dps"].get_motive(co_position)
     
-    return ((self["Emitter"]["barrier_ht"] + \
-      em_motive * physical_constants["boltzmann"] * self["Emitter"]["temperature"]) - \
+    return self.calc_output_voltage() - ((self["Emitter"]["barrier_ht"] + \
+      em_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) - \
       (self["Collector"]["barrier_ht"] + \
-      co_motive * physical_constants["boltzmann"] * self["Emitter"]["temperature"]))/ \
+      co_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]))/ \
       physical_constants["electron_charge"]

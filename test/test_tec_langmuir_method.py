@@ -37,48 +37,49 @@ class MethodsValues(unittest.TestCase):
     """
     calc_saturation_pt output_voltage matches standard values.
     """
-    TECL = TEC_Langmuir(std[0])
+    TECL = TEC_Langmuir(self.std[0])
     output_params = TECL.calc_saturation_pt()
     output_voltage = output_params["output_voltage"]
     # Set the following to a very low precision.
-    self.assertAlmostEqual(self.std[0]["Collector"]["Voltage"],output_voltage)
+    self.assertAlmostEqual(self.std[0]["Collector"]["voltage"]/output_voltage,1,places=4)
 
   def test_calc_saturation_pt_output_current_density(self):
     """
     calc_saturation_pt output_current_density matches standard values.
     """
-    TECL = TEC_Langmuir(std[0])
+    TECL = TEC_Langmuir(self.std[0])
     output_params = TECL.calc_saturation_pt()
     output_current_density = output_params["output_current_density"]
     # Set the following to a very low precision.
-    self.assertAlmostEqual(self.std[0]["output_current_density"],output_current_density)
+    self.assertAlmostEqual(1e4*self.std[0]["output_current_density"]/output_current_density,1,places=3)
 
   def test_calc_critical_pt_output_voltage(self):
     """
     calc_critical_pt output_voltage matches standard values.
     """
-    TECL = TEC_Langmuir(std[-1])
+    TECL = TEC_Langmuir(self.std[-1])
     output_params = TECL.calc_critical_pt()
     output_voltage = output_params["output_voltage"]
     # Set the following to a very low precision.
-    self.assertAlmostEqual(self.std[-1]["Collector"]["Voltage"],output_voltage)
+    self.assertAlmostEqual(self.std[-1]["Collector"]["voltage"]/output_voltage,1,places=4)
 
   def test_calc_critical_pt_output_current_density(self):
     """
     calc_critical_pt output_current_density matches standard values.
     """
-    TECL = TEC_Langmuir(std[-1])
+    TECL = TEC_Langmuir(self.std[-1])
     output_params = TECL.calc_critical_pt()
     output_current_density = output_params["output_current_density"]
     # Set the following to a very low precision.
-    self.assertAlmostEqual(self.std[-1]["output_current_density"],output_current_density)
+    self.assertAlmostEqual(1e4*self.std[-1]["output_current_density"]/output_current_density,1,places=3)
     
   def test_calc_output_current_density(self):
     """
     calc_output_current_density matches standard values.
     """
-    for data in std:
+    for data in self.std:
       TECL = TEC_Langmuir(data)
       # Set the following to a very low precision.
-      self.assertAlmostEqual(TECL.calc_output_current_density(),\
-	data["output_current_density"])
+      self.assertAlmostEqual(1e4*data["output_current_density"]/TECL.calc_output_current_density(),\
+        1,places=3)
+        
