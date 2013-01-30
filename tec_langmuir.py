@@ -99,7 +99,7 @@ class TEC_Langmuir(TEC):
     self["motive_data"]["dps"] = DimensionlessLangmuirPoissonSoln()
     
     self["motive_data"]["saturation_pt"] = self.calc_saturation_pt()
-    self.calc_critical_pt()
+    self["motive_data"]["critical_pt"] = self.calc_critical_pt()
     
   def get_motive(self):
     """
@@ -145,7 +145,9 @@ class TEC_Langmuir(TEC):
   
   def calc_critical_pt(self):
     """
-    Calculate critical point condition and populate motive_data.
+    Calculate and return critical point condition.
+    
+    Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
@@ -164,10 +166,8 @@ class TEC_Langmuir(TEC):
       motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
       physical_constants["electron_charge"]
     
-    # Populate motive_data.
-    self["motive_data"]["critical_pt"] = \
-      {"output_voltage":output_voltage,
-       "output_current_density":output_current_density}
+    return {"output_voltage":output_voltage,
+	    "output_current_density":output_current_density}
        
   
   def critical_point_target_function(self,output_current_density):
