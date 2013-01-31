@@ -56,7 +56,11 @@ class MethodsValues(unittest.TestCase):
     """
     This method has uncertainty equivalent to Electrode.calc_output_current() via an analogous argument.
     """
-    pass
+    std = pickle.load(open("test/TEC_temporary_STANDARD.dat","r"))
+    for params in std:
+      tec = TEC(params)
+      self.assertAlmostEqual(tec.calc_forward_current_density() / \
+        std["calc_output_current"]),1,places=4)
   
   def test_calc_back_current_density(self):
     """
@@ -107,7 +111,7 @@ class MethodsValues(unittest.TestCase):
     
     It bears repeating that for most cases of interest, the output current isn't close enough to zero for this detailed analysis to apply. WHen the output current is nearly zero, the absolute precision is taill probably pretty good. There's only a very limited set of cases where the output current is nearly zero, the uncertanty is poor, and someone is interested.
     
-    If the user does have an interest in the case where the ou4tput current is nearly zero, the user should first evaluate the output current of both electrodes. The smaller of the two fixes the upper limit of the absolute uncertatinty of the output current density. The user should then evaluate the magnitude of the forward or back current density at the potin where the output current is zero. If they are small, the absolute ucertainty of the otuptu current density is small. If not, then the user has a truly spacecial case and should proceed with caution.
+    If the user does have an interest in the case where the output current is nearly zero, the user should first evaluate the output current of both electrodes. The smaller of the two fixes the upper limit of the absolute uncertatinty of the output current density. The user should then evaluate the magnitude of the forward or back current density at the potin where the output current is zero. If they are small, the absolute ucertainty of the otuptu current density is small. If not, then the user has a truly spacecial case and should proceed with caution.
     
     The moral of this story: use care when the output current density is nearly zero.
     """
