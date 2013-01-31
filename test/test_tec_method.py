@@ -60,7 +60,7 @@ class MethodsValues(unittest.TestCase):
     for params in std:
       tec = TEC(params)
       self.assertAlmostEqual(tec.calc_forward_current_density() / \
-        std["calc_output_current"]),1,places=4)
+        1e4*params["output_current_density"],1,places=4)
   
   def test_calc_back_current_density(self):
     """
