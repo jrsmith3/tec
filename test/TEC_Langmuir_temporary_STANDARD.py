@@ -6,7 +6,7 @@ import csv
 """
 Convert data in jrsssl000059.dat to STANDARD format for testing.
 
-This script takes the data I used in paper \cite{}, Fig. \ref{} and converts it to a format that matches what I'm using to numerically test the methods for the classes in the rest of this package. Part of the conversion is by hand, and the other is programmatically.
+This script takes the data I used in paper 10.1116/2.3125282, Fig. 5 and converts it to a format that matches what I'm using to numerically test the methods for the classes in the rest of this package. Part of the conversion is by hand, and the other is programmatically.
 
 This data tests a very narrow range of values and therefore isn't comprehensive. I am mainly using it for TDD on the methods of the TEC_Langmuir class.
 """
