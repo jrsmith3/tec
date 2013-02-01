@@ -94,8 +94,8 @@ class TEC(dict):
     """
     Calculates the motive (meta)data and populates the 'motive_data' attribute.
     """
-    motive_array = np.array([self["Emitter"].calc_vacuum_energy(), \
-      self["Collector"].calc_vacuum_energy()])
+    motive_array = np.array([self["Emitter"].calc_motive_bc(), \
+      self["Collector"].calc_motive_bc()])
     position_array = np.array([self["Emitter"]["position"], \
       self["Collector"]["position"]])
     motive_interp = interpolate.interp1d(motive_array,position_array)
@@ -106,7 +106,7 @@ class TEC(dict):
                            
   def get_motive(self, position):
     """
-    Returns value of motive for given value(s) of position.
+    Value of motive relative to ground for given value(s) of position in J.
     
     Position must be of numerical type or numpy array. Returns NaN if position 
     falls outside of the interelectrode space.
@@ -128,7 +128,7 @@ class TEC(dict):
   
   def get_max_motive_ht(self, with_position=False):
     """
-    Returns value of the maximum motive relative to ground in eV.
+    Returns value of the maximum motive relative to ground in J.
     
     If with_position is True, return a tuple where the first element is the 
     maximum motive value and the second element is the corresponding position.
