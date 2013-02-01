@@ -171,25 +171,30 @@ class Electrode(dict):
 
   def calc_vacuum_energy(self):
     """
-    Position of the vacuum energy relative to the voltage ground in J.
+    Position of the vacuum energy relative to fermi energy in J.
     
-    If the Electrode has no nea attribute, the vacuum energy is simply the sum 
-    of barrier and voltage, normalized to the proper units. If the Electrode 
-    does have an nea attribute, the result is the sum of barrier and voltage, 
-    reduced by the value of nea.
+    If the Electrode does not have NEA, the vacuum energy occurs at the top of 
+    the barrier and is therefore equal to the barrier. If the Electrode does 
+    have NEA, the vacuum level is the barrier reduced by the value of the NEA.
     """
     
     if "nea" in self.keys():
-      vacuum_energy = (1.60217646e-19 * physical_constants["electron_charge"] * 
-      self["voltage"]) + self["barrier"] - self["nea"]
+      return self["barrier"] - self["nea"]
     else:
-      vacuum_energy = (1.60217646e-19 * physical_constants["electron_charge"] * 
-      self["voltage"]) + self["barrier"]
-      
-    return vacuum_energy
+      return self["barrier"]
       
   def calc_barrier_ht(self):
-      """
-      Returns value of barrier height relative to ground in J.
-      """
-      return self["barrier"] + physical_constants["electron_charge"] * self["voltage"]
+    """
+    Returns value of barrier height relative to ground in J.
+    """
+    return self["barrier"] + physical_constants["electron_charge"] * self["voltage"]
+      
+  def calc_motive_bc(self):
+    """
+    Returns the motive boundary condition in J. 
+    
+    It is worth remembering the boundary condition is relative to ground.
+    """
+    return self.calc_vacuum_energy() + \
+      physical_constants["electron_charge"] * self["voltage"]
+    
