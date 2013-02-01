@@ -126,9 +126,9 @@ class TEC(dict):
     return self["motive_data"]["motive_interp"](position)
     
   
-  def get_max_motive(self, with_position=False):
+  def get_max_motive_ht(self, with_position=False):
     """
-    Returns value of the maximum motive relative to emitter Fermi energy in eV.
+    Returns value of the maximum motive relative to ground in eV.
     
     If with_position is True, return a tuple where the first element is the 
     maximum motive value and the second element is the corresponding position.
@@ -175,10 +175,10 @@ class TEC(dict):
     Return forward current density in A m^{-2}.
     """
     
-    if self["Emitter"]["position"] >= self.get_max_motive():
+    if self["Emitter"]["position"] >= self.get_max_motive_ht():
       return self["Emitter"].calc_saturation_current()
     else:
-      barrier = (self.get_max_motive()-self["Emitter"]["position"])/\
+      barrier = (self.get_max_motive_ht()-self["Emitter"]["position"])/\
         (physical_constants["boltzmann"]*self["Emitter"].calc_saturation_current())
       return self["Emitter"].calc_saturation_current() * np.exp(-barrier)
   
@@ -187,10 +187,10 @@ class TEC(dict):
     Return back current density in A m^{-2}.
     """
     
-    if self["Collector"]["barrier"] >= self.get_max_motive():
+    if self["Collector"]["barrier"] >= self.get_max_motive_ht():
       return self["Collector"].calc_saturation_current()
     else:
-      barrier=(self.get_max_motive()-self["Collector"]["position"])/\
+      barrier=(self.get_max_motive_ht()-self["Collector"]["position"])/\
         (physical_constants["boltzmann"]*self["Emitter"].calc_saturation_current())
       return self["Collector"].calc_saturation_current() * np.exp(-barrier)
   
@@ -276,10 +276,10 @@ class TEC(dict):
     A description of electronic losses can be found on page 69 (eq. 2.57a) of
     "Thermionic Energy Conversion Vol. 1" by Hatsopoulous and Gyftopoulous.
     """
-    elecHeatTransportForward = self.calc_forward_current_density()*(self.get_max_motive()+\
+    elecHeatTransportForward = self.calc_forward_current_density()*(self.get_max_motive_ht()+\
       2 * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
       Constants.electronCharge
-    elecHeatTransportBackward = self.calc_back_current_density()*(self.get_max_motive()+\
+    elecHeatTransportBackward = self.calc_back_current_density()*(self.get_max_motive_ht()+\
       2 * physical_constants["boltzmann"] * self["Collector"]["temp"]) / \
       Constants.electronCharge
     return elecHeatTransportForward - elecHeatTransportBackward

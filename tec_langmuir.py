@@ -128,9 +128,9 @@ class TEC_Langmuir(TEC):
     """
     pass
   
-  def get_max_motive(self, with_position=False):
+  def get_max_motive_ht(self, with_position=False):
     """
-    Returns value of the maximum motive relative to emitter Fermi energy in eV.
+    Returns value of the maximum motive relative to ground in eV.
     
     If with_position is True, return a tuple where the first element is the 
     maximum motive value and the second element is the corresponding position.
