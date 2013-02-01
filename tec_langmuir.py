@@ -114,7 +114,7 @@ class TEC_Langmuir(TEC):
         self["motive_data"]["critical_pt"]["output_current_density"])
         
       barrier = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
-	np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+        np.log(self["Emitter"].calc_saturation_current()/output_current_density)
       self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
     
   def get_motive(self):
