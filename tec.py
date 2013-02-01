@@ -104,7 +104,7 @@ class TEC(dict):
                            "position_array":position_array, \
                            "motive_interp":motive_interp}
 
-    def get_motive(self, position):
+  def get_motive(self, position):
     """
     Value of motive relative to ground for given value(s) of position in J.
     
