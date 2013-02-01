@@ -103,25 +103,23 @@ class TEC_Langmuir(TEC):
     
     if self.calc_output_voltage() < self["motive_data"]["saturation_pt"]["output_voltage"]:
       # Accelerating mode.
-      self["motive_data"]["max_motive"] = self["Emitter"].calc_vacuum_energy()
+      self["motive_data"]["max_motive_ht"] = self["Emitter"].calc_motive_bc()
     elif self.calc_output_voltage() > self["motive_data"]["critical_pt"]["output_voltage"]:
       # Retarding mode.
-      self["motive_data"]["max_motive"] = self["Collector"].calc_vacuum_energy()
+      self["motive_data"]["max_motive_ht"] = self["Collector"].calc_motive_bc()
     else:
       # Space charge limited mode.
-      #output_current_density = 0.33525035699999999
       output_current_density = optimize.brentq(self.output_voltage_target_function,\
         self["motive_data"]["saturation_pt"]["output_current_density"],\
         self["motive_data"]["critical_pt"]["output_current_density"])
         
-      # Problem below this line.
-      em_dimensionless_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
-      self["motive_data"]["max_motive"] = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
-        em_dimensionless_motive
+      barrier = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
+	np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+      self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
     
   def get_motive(self):
     """
-    Returns value of motive for given value(s) of position.
+    Value of motive relative to ground for given value(s) of position in J.
     
     Position must be of numerical type or numpy array. Returns NaN if position 
     falls outside of the interelectrode space.
@@ -130,12 +128,12 @@ class TEC_Langmuir(TEC):
   
   def get_max_motive_ht(self, with_position=False):
     """
-    Returns value of the maximum motive relative to ground in eV.
+    Returns value of the maximum motive relative to ground in J.
     
     If with_position is True, return a tuple where the first element is the 
     maximum motive value and the second element is the corresponding position.
     """
-    return self["motive_data"]["max_motive"]
+    return self["motive_data"]["max_motive_ht"]
   
   def calc_saturation_pt(self):
     """
