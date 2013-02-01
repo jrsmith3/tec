@@ -189,23 +189,23 @@ class CalculatorsReturnType(unittest.TestCase):
     #"""
     #pass
   
-  def test_get_max_motive(self):
+  def test_get_max_motive_ht(self):
     """
-    get_max_motive returns numeric type.
+    get_max_motive_ht returns numeric type.
     """
-    self.assertTrue(isinstance(self.TEC_obj.get_max_motive(),float))
+    self.assertTrue(isinstance(self.TEC_obj.get_max_motive_ht(),float))
   
-  def test_get_max_motive_with_position(self):
+  def test_get_max_motive_ht_with_position(self):
     """
-    get_max_motive returns tuple.
+    get_max_motive_ht returns tuple.
     """
-    self.assertTrue(isinstance(self.TEC_obj.get_max_motive(with_position=1),tuple))
+    self.assertTrue(isinstance(self.TEC_obj.get_max_motive_ht(with_position=1),tuple))
   
-  def test_get_max_motive_with_position_tuple_items(self):
+  def test_get_max_motive_ht_with_position_tuple_items(self):
     """
-    get_max_motive returns tuple with numeric items.
+    get_max_motive_ht returns tuple with numeric items.
     """
-    tup = self.TEC_obj.get_max_motive(with_position=1)
+    tup = self.TEC_obj.get_max_motive_ht(with_position=1)
     self.assertTrue(all( isinstance(indx,float) for indx in tup ))
   
   def test_calc_interelectrode_spacing(self):
