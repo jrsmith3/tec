@@ -81,4 +81,4 @@ class MethodsValues(unittest.TestCase):
       TECL = TEC_Langmuir(data)
       # Set the following to a very low precision.
       self.assertAlmostEqual(1e4*data["output_current_density"]/TECL.calc_output_current_density(),\
-        1,places=3)
+        1,places=2)
