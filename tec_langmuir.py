@@ -48,13 +48,13 @@ class TEC_Langmuir(TEC):
   ------------------------------
   >>> from tec_langmuir import TEC_Langmuir
   >>> em_dict = {"temp":1000,
-  ...            "barrier_ht":1,
+  ...            "barrier":1,
   ...            "voltage":0,
   ...            "position":0,
   ...            "richardson":10,
   ...            "emissivity":0.5}
   >>> co_dict = {"temp":300,
-  ...            "barrier_ht":0.8,
+  ...            "barrier":0.8,
   ...            "voltage":0,
   ...            "position":10,
   ...            "richardson":10,
@@ -153,8 +153,8 @@ class TEC_Langmuir(TEC):
       
     motive = self["motive_data"]["dps"].get_motive(position)
     
-    output_voltage = (self["Emitter"]["barrier_ht"] - \
-      self["Collector"]["barrier_ht"] - \
+    output_voltage = (self["Emitter"]["barrier"] - \
+      self["Collector"]["barrier"] - \
       motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
       physical_constants["electron_charge"]
     
@@ -181,8 +181,8 @@ class TEC_Langmuir(TEC):
       
     motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
     
-    output_voltage = (self["Emitter"]["barrier_ht"] - \
-      self["Collector"]["barrier_ht"] + \
+    output_voltage = (self["Emitter"]["barrier"] - \
+      self["Collector"]["barrier"] + \
       motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
       physical_constants["electron_charge"]
     
@@ -221,8 +221,8 @@ class TEC_Langmuir(TEC):
     co_position = self.calc_interelectrode_spacing()/x0 + em_position
     co_motive = self["motive_data"]["dps"].get_motive(co_position)
     
-    return self.calc_output_voltage() - ((self["Emitter"]["barrier_ht"] + \
+    return self.calc_output_voltage() - ((self["Emitter"]["barrier"] + \
       em_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) - \
-      (self["Collector"]["barrier_ht"] + \
+      (self["Collector"]["barrier"] + \
       co_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]))/ \
       physical_constants["electron_charge"]

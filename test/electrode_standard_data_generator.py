@@ -25,25 +25,25 @@ electron_charge = 1.60217738e-19
 	  
 # Generate data for the calc_saturation_current method.
 params = {"temp": 1,
-	  "barrier_ht": 1,
+	  "barrier": 1,
 	  "richardson": 1,
 	  "emissivity": 0.5,
 	  "position": 0,
 	  "voltage": 0}
 	  
 temps = range(300,2050,50)
-barrier_hts = numpy.arange(0.5,5,0.1)
+barriers = numpy.arange(0.5,5,0.1)
 richardsons = [0.01,0.1,1,10,100]
 test_values = []
 
 for temp in temps:
   params["temp"] = temp
-  for barrier_ht in barrier_hts:
-    params["barrier_ht"] = barrier_ht
+  for barrier in barrier_hts:
+    params["barrier"] = barrier_ht
     for richardson in richardsons:
       params["richardson"] = richardson
       outpt_cur = params["richardson"] * math.pow(params["temp"],2) * \
-	math.exp(-params["barrier_ht"]/(boltzmann * params["temp"]))
+	math.exp(-params["barrier"]/(boltzmann * params["temp"]))
       params["outpt_cur"] = outpt_cur
       # You have to use the copy() method otherwise you end up with an array 
       # where every item points to the same object. When you pickle it, you
@@ -58,18 +58,18 @@ f.close()
 
 # Generate data for the calc_vacuum_energy method without NEA.
 params = {"temp": 1,
-	  "barrier_ht": 1,
+	  "barrier": 1,
 	  "richardson": 1,
 	  "emissivity": 0.5,
 	  "position": 0,
 	  "voltage": 0}
 
-barrier_hts = numpy.arange(0.5,5,0.1)
+barriers = numpy.arange(0.5,5,0.1)
 test_values = []
 
-for barrier_ht in barrier_hts:
-  params["barrier_ht"] = barrier_ht
-  vac_energy = params["voltage"] * electron_charge + params["barrier_ht"]
+for barrier in barrier_hts:
+  params["barrier"] = barrier_ht
+  vac_energy = params["voltage"] * electron_charge + params["barrier"]
   params["vac_energy"] = vac_energy
   test_values.append(params.copy())
 
@@ -81,23 +81,23 @@ f.close()
 
 # Generate data for the calc_vacuum_energy method with NEA.
 params = {"temp": 1,
-	  "barrier_ht": 1,
+	  "barrier": 1,
 	  "richardson": 1,
 	  "emissivity": 0.5,
 	  "position": 0,
 	  "voltage": 0,\
 	  "nea": 0}
 
-barrier_hts = numpy.arange(0.5,5,0.1)
+barriers = numpy.arange(0.5,5,0.1)
 neas = numpy.arange(0,1.5,0.1)
 test_values = []
 
-for barrier_ht in barrier_hts:
-  params["barrier_ht"] = barrier_ht
+for barrier in barrier_hts:
+  params["barrier"] = barrier_ht
   for nea in neas:
     params["nea"] = nea
     vac_energy = params["voltage"] * electron_charge + \
-      params["barrier_ht"] - params["nea"]
+      params["barrier"] - params["nea"]
     params["vac_energy"] = vac_energy
     test_values.append(params.copy())
 

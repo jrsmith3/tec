@@ -50,7 +50,7 @@ for params in std:
   for el in ["Emitter", "Collector"]:
     params[el]["richardson"] = 0.01
     params[el]["temp"] = 200
-    params[el]["barrier_ht"] = 0.5
+    params[el]["barrier"] = 0.5
     params[el]["voltage"] = 0
     params[el]["emissivity"] = 0.5
 

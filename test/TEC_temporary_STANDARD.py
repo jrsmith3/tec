@@ -24,14 +24,14 @@ def get_data():
   return data
 
 em_params = {"temp": 950,\
-	     "barrier_ht": 1.4,\
+	     "barrier": 1.4,\
 	     "voltage": 0,\
 	     "position": 0,\
 	     "richardson": 10,\
 	     "emissivity": 0.5}
 
 co_params = {"temp": 300,\
-	     "barrier_ht": 0.6,\
+	     "barrier": 0.6,\
 	     "position": 10,\
 	     "richardson": 10,\
 	     "emissivity": 0.5}

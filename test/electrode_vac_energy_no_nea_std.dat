@@ -12,7 +12,7 @@ I1
 sS'position'
 p5
 I0
-sS'barrier_ht'
+sS'barrier'
 p6
 cnumpy.core.multiarray
 scalar

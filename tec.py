@@ -34,13 +34,13 @@ class TEC(dict):
   Examples
   --------
   >>> em_dict = {"temp":1000,
-  ...            "barrier_ht":1,
+  ...            "barrier":1,
   ...            "voltage":0,
   ...            "position":0,
   ...            "richardson":10,
   ...            "emissivity":0.5}
   >>> co_dict = {"temp":300,
-  ...            "barrier_ht":0.8,
+  ...            "barrier":0.8,
   ...            "voltage":0,
   ...            "position":10,
   ...            "richardson":10,
@@ -165,8 +165,8 @@ class TEC(dict):
     the emitter and collector. This value should not be confused with the output
     voltage which is the voltage difference between the collector and emitter.
     """
-    return (self["Emitter"]["barrier_ht"] - \
-      self["Collector"]["barrier_ht"])/physical_constants["electron_charge"]
+    return (self["Emitter"]["barrier"] - \
+      self["Collector"]["barrier"])/physical_constants["electron_charge"]
     
     
   # Methods regarding current and power ---------------------------------------
@@ -175,11 +175,11 @@ class TEC(dict):
     Return forward current density in A m^{-2}.
     """
     
-    if self.get_motive(self["Emitter"]["position"]) >= self.get_max_motive():
+    if self["Emitter"]["position"] >= self.get_max_motive():
       return self["Emitter"].calc_saturation_current()
     else:
-      barrier = (self.get_max_motive()-self.get_motive(self["Emitter"]["position"]))/\
-        (physical_constants["boltzmann"]*self["Emitter"].calc_saturation_current()))
+      barrier = (self.get_max_motive()-self["Emitter"]["position"])/\
+        (physical_constants["boltzmann"]*self["Emitter"].calc_saturation_current())
       return self["Emitter"].calc_saturation_current() * np.exp(-barrier)
   
   def calc_back_current_density(self):
@@ -187,11 +187,11 @@ class TEC(dict):
     Return back current density in A m^{-2}.
     """
     
-    if self.get_motive(self["Collector"]["position"]) >= self.get_max_motive():
+    if self["Collector"]["barrier"] >= self.get_max_motive():
       return self["Collector"].calc_saturation_current()
     else:
-      barrier=(self.get_max_motive()-self.get_motive(self["Collector"]["position"]))/\
-        (physical_constants["boltzmann"]*self["Emitter"].calc_saturation_current()))
+      barrier=(self.get_max_motive()-self["Collector"]["position"])/\
+        (physical_constants["boltzmann"]*self["Emitter"].calc_saturation_current())
       return self["Collector"].calc_saturation_current() * np.exp(-barrier)
   
   def calc_output_current_density(self):

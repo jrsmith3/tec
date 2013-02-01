@@ -34,10 +34,10 @@ def compare_params(tecparams, fcdparams):
   """
   Compare a set of tecparams against forward current density standard data.
   
-  This method returns a value of True or False. It first method checks the voltage and barrier_ht attributes and ensures they are equal for both electrodes across the two sets of params. Only one of the electrodes in fcdparams will have richardson and temp attributes; this method finds which electrode has them, and compares them against the attributes of the corresponding electrode in tecparams. This comparison is fuzzy; the values have to match within a factor of two to be considered equal.
+  This method returns a value of True or False. It first method checks the voltage and barrier attributes and ensures they are equal for both electrodes across the two sets of params. Only one of the electrodes in fcdparams will have richardson and temp attributes; this method finds which electrode has them, and compares them against the attributes of the corresponding electrode in tecparams. This comparison is fuzzy; the values have to match within a factor of two to be considered equal.
   """
   iseq = True
-  eqparams = ["barrier_ht", "voltage"]
+  eqparams = ["barrier", "voltage"]
   for el in ["Emitter","Collector"]:
     for eqparam in eqparams:
       iseq = iseq * (tecparams[el][eqparam] == fcdparams[el][eqparam])
@@ -89,12 +89,12 @@ def print_result(tecparams):
   print "Emitter"
   print "", "richardson:", tecparams["Emitter"]["richardson"]
   print "", "temp      :", tecparams["Emitter"]["temp"]
-  print "", "barrier_ht:", tecparams["Emitter"]["barrier_ht"]
+  print "", "barrier:", tecparams["Emitter"]["barrier_ht"]
   print "", "voltage   :", tecparams["Emitter"]["voltage"]
   print "Collector"
   print "", "richardson:", tecparams["Collector"]["richardson"]
   print "", "temp      :", tecparams["Collector"]["temp"]
-  print "", "barrier_ht:", tecparams["Collector"]["barrier_ht"]
+  print "", "barrier:", tecparams["Collector"]["barrier_ht"]
   print "", "voltage   :", tecparams["Collector"]["voltage"]
   print "\r"
   print "forward_current_density:", tecparams["forward_current_density"]
@@ -106,7 +106,7 @@ def print_result(tecparams):
 
 richardsons = [0.01, 100]
 temps = [200, 2000]
-barrier_hts = [0.5, 5.0]
+barriers = [0.5, 5.0]
 voltages = [-10, 10]
 
 electrodes = []
@@ -114,11 +114,11 @@ std = []
 
 for richardson in richardsons:
   for temp in temps:
-    for barrier_ht in barrier_hts:
+    for barrier in barrier_hts:
       for voltage in voltages:
         electrode = {"richardson": richardson, \
                      "temp": temp, \
-                     "barrier_ht": barrier_ht, \
+                     "barrier": barrier_ht, \
                      "voltage": voltage}
         electrodes.append(electrode)
 

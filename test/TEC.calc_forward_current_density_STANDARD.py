@@ -18,11 +18,11 @@ def calc_special_case(params):
     boltzmann = 8.6173324e-5
     
     # Ignore the negative space charge effect and determine the maximum motive.    
-    if (params["Emitter"]["barrier_ht"] + params["Emitter"]["voltage"]) > \
-      (params["Collector"]["barrier_ht"] + params["Collector"]["voltage"]):
-        psi_m = params["Emitter"]["barrier_ht"]
+    if (params["Emitter"]["barrier"] + params["Emitter"]["voltage"]) > \
+      (params["Collector"]["barrier"] + params["Collector"]["voltage"]):
+        psi_m = params["Emitter"]["barrier"]
     else:
-        psi_m = params["Collector"]["barrier_ht"] + \
+        psi_m = params["Collector"]["barrier"] + \
           (params["Collector"]["voltage"] - params["Emitter"]["voltage"])
     
     # Adjust the emitter temperature to yield an argument for the exponent which is a natural number.
@@ -69,34 +69,34 @@ def print_results(params):
         
     print "Emitter"
     print " richardson:", params["Emitter"]["richardson"]
-    print " barrier_ht:", params["Emitter"]["barrier_ht"]
+    print " barrier:", params["Emitter"]["barrier_ht"]
     print " temp:      ", params["Emitter"]["temp"]
     print " voltage:   ", params["Emitter"]["voltage"]
     print "Collector"
-    print " barrier_ht:", params["Collector"]["barrier_ht"]
+    print " barrier:", params["Collector"]["barrier_ht"]
     print " voltage:   ", params["Collector"]["voltage"]
     print "\r"
     print "forward_current_density:", params["forward_current_density"]
     print "========================================"
     
 richardsons = [0.01,100]
-barrier_hts = [0.5,5.0]
+barriers = [0.5,5.0]
 temps = [200,2000]
 voltages = [-10,10]
 
 std = []
 
 for em_richardson in richardsons:
-    for em_barrier_ht in barrier_hts:
+    for em_barrier in barrier_hts:
         for em_temp in temps:
             for em_voltage in voltages:
-                for co_barrier_ht in barrier_hts:
+                for co_barrier in barrier_hts:
                     for co_voltage in voltages:
                       em = {"richardson": em_richardson,\
                             "temp": em_temp,\
-                            "barrier_ht": em_barrier_ht,\
+                            "barrier": em_barrier_ht,\
                             "voltage": em_voltage}
-                      co = {"barrier_ht": co_barrier_ht,\
+                      co = {"barrier": co_barrier_ht,\
                             "voltage": co_voltage}
                       params = {"Emitter": copy.deepcopy(em), "Collector": copy.deepcopy(co)}
                       calc_special_case(params)

@@ -3,10 +3,10 @@
 S'contact_potential'
 p2
 F0.0
-sS'Emitter_barrier_ht'
+sS'Emitter_barrier'
 p3
 F5.0
-sS'Collector_barrier_ht'
+sS'Collector_barrier'
 p4
 F5.0
 sa(dp5

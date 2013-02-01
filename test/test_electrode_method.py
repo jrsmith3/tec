@@ -26,7 +26,7 @@ class MethodsSpecialCase(unittest.TestCase):
     """
 
     input_params = {"temp":1,\
-                   "barrier_ht":1,\
+                   "barrier":1,\
                    "voltage":1,\
                    "position":0,\
                    "richardson":10,\
@@ -57,7 +57,7 @@ class MethodsValues(unittest.TestCase):
     """
 
     input_params = {"temp":1,\
-                   "barrier_ht":1,\
+                   "barrier":1,\
                    "voltage":1,\
                    "position":0,\
                    "richardson":10,\

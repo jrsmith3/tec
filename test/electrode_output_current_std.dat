@@ -15,7 +15,7 @@ F0.01
 sS'position'
 p6
 I0
-sS'barrier_ht'
+sS'barrier'
 p7
 cnumpy.core.multiarray
 scalar

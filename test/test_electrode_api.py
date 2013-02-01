@@ -39,7 +39,7 @@ class InstantiationInputIncomplete(unittest.TestCase):
     """
 
     input_params = {"temp":1,\
-                   "barrier_ht":1,\
+                   "barrier":1,\
                    "voltage":1,\
                    "position":0,\
                    "richardson":10,\
@@ -52,9 +52,9 @@ class InstantiationInputIncomplete(unittest.TestCase):
     del(self.input_params["temp"])
     self.assertRaises(KeyError,Electrode,self.input_params)
 
-  def test_Electrode_input_arg_sans_barrier_ht(self):
-    """Instantiating argument missing barrier_ht."""
-    del(self.input_params["barrier_ht"])
+  def test_Electrode_input_arg_sans_barrier(self):
+    """Instantiating argument missing barrier."""
+    del(self.input_params["barrier"])
     self.assertRaises(KeyError,Electrode,self.input_params)
 
   def test_Electrode_input_arg_sans_voltage(self):
@@ -89,7 +89,7 @@ class InstantiationInputFieldsWrongType(unittest.TestCase):
     """
 
     input_params = {"temp":1,\
-                   "barrier_ht":1,\
+                   "barrier":1,\
                    "voltage":1,\
                    "position":0,\
                    "richardson":10,\
@@ -102,9 +102,9 @@ class InstantiationInputFieldsWrongType(unittest.TestCase):
     self.input_params["temp"] = "this string is non-numeric."
     self.assertRaises(TypeError,Electrode,self.input_params)
 
-  def test_Electrode_input_barrier_ht_non_numeric(self):
-    """Instantiating argument barrier_ht is non-numeric."""
-    self.input_params["barrier_ht"] = "this string is non-numeric."
+  def test_Electrode_input_barrier_non_numeric(self):
+    """Instantiating argument barrier is non-numeric."""
+    self.input_params["barrier"] = "this string is non-numeric."
     self.assertRaises(TypeError,Electrode,self.input_params)
 
   def test_Electrode_input_voltage_non_numeric(self):
@@ -147,7 +147,7 @@ class InstantiationInputOutsideConstraints(unittest.TestCase):
     """
 
     input_params = {"temp":1,\
-                   "barrier_ht":1,\
+                   "barrier":1,\
                    "voltage":1,\
                    "position":0,\
                    "richardson":10,\
@@ -160,9 +160,9 @@ class InstantiationInputOutsideConstraints(unittest.TestCase):
     self.input_params["temp"] = -1.1
     self.assertRaises(ValueError,Electrode,self.input_params)
   
-  def test_Electrode_input_barrier_ht_less_than_zero(self):
-    """Instantiating argument barrier_ht < 0."""
-    self.input_params["barrier_ht"] = -1.1
+  def test_Electrode_input_barrier_less_than_zero(self):
+    """Instantiating argument barrier < 0."""
+    self.input_params["barrier"] = -1.1
     self.assertRaises(ValueError,Electrode,self.input_params)
   
   def test_Electrode_input_richardson_less_than_zero(self):
@@ -196,7 +196,7 @@ class SetInputWrongType(unittest.TestCase):
     """
 
     input_params = {"temp":1,\
-                   "barrier_ht":1,\
+                   "barrier":1,\
                    "voltage":1,\
                    "position":0,\
                    "richardson":10,\
@@ -210,10 +210,10 @@ class SetInputWrongType(unittest.TestCase):
     non_num = "this string is non-numeric."
     self.assertRaises(TypeError,self.El["temp"],non_num)
 
-  def test_Electrode_set_barrier_ht_non_numeric(self):
-    """Set argument barrier_ht non-numeric."""
+  def test_Electrode_set_barrier_non_numeric(self):
+    """Set argument barrier non-numeric."""
     non_num = "this string is non-numeric."
-    self.assertRaises(TypeError,self.El["barrier_ht"],non_num)
+    self.assertRaises(TypeError,self.El["barrier"],non_num)
 
   def test_Electrode_set_voltage_non_numeric(self):
     """Set argument voltage non-numeric."""
@@ -255,7 +255,7 @@ class SetInputOutsideConstraints(unittest.TestCase):
     """
 
     input_params = {"temp":1,\
-                   "barrier_ht":1,\
+                   "barrier":1,\
                    "voltage":1,\
                    "position":0,\
                    "richardson":10,\
@@ -268,9 +268,9 @@ class SetInputOutsideConstraints(unittest.TestCase):
     """Set argument temp < 0."""
     self.assertRaises(ValueError,self.El.__setitem__, "temp", -1.1)
   
-  def test_Electrode_set_barrier_ht_less_than_zero(self):
-    """Set argument barrier_ht < 0."""
-    self.assertRaises(ValueError,self.El.__setitem__,"barrier_ht",-1.1)
+  def test_Electrode_set_barrier_less_than_zero(self):
+    """Set argument barrier < 0."""
+    self.assertRaises(ValueError,self.El.__setitem__,"barrier",-1.1)
   
   def test_Electrode_set_richardson_less_than_zero(self):
     """Set argument richardson < 0."""
@@ -300,7 +300,7 @@ class SetInputOutsideConstraints(unittest.TestCase):
     #"""
 
     #input_params = {"temp":1,\
-                   #"barrier_ht":1,\
+                   #"barrier":1,\
                    #"voltage":1,\
                    #"position":0,\
                    #"richardson":10,\

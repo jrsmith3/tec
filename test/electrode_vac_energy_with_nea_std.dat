@@ -3,7 +3,7 @@
 S'temp'
 p2
 I1
-sS'barrier_ht'
+sS'barrier'
 p3
 cnumpy.core.multiarray
 scalar

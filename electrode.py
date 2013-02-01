@@ -29,7 +29,7 @@ class Electrode(dict):
   
     1.4
     
-  for barrier_ht is understood to be
+  for barrier is understood to be
   
     1.40000000000000
   
@@ -38,14 +38,14 @@ class Electrode(dict):
     ---        ---------- ----             -----------
     temp       >  0       K
     
-    barrier_ht >= 0       eV               Sometimes referred to as work 
+    barrier >= 0       eV               Sometimes referred to as work 
                                            function. In the case of a metal and 
                                            a positive electron affinity 
                                            semiconductor, the barrier height is 
                                            the difference between the vacuum 
                                            energy and the Fermi level. In the 
                                            case of a negative electron affinity 
-                                           semiconductor, the barrier_ht is the 
+                                           semiconductor, the barrier is the 
                                            difference between the conduction 
                                            band minimum and Fermi level.
                                            
@@ -74,14 +74,14 @@ class Electrode(dict):
   Here's an example.
   
   >>> input_params = {"temp":1000,
-  ...                 "barrier_ht":1,
+  ...                 "barrier":1,
   ...                 "voltage":0,
   ...                 "position":0,
   ...                 "richardson":10,
   ...                 "emissivity":0.5}
   >>> El = Electrode(input_params)
   >>> El
-  {'barrier_ht': 1.6021764600000001e-19,
+  {'barrier': 1.6021764600000001e-19,
    'emissivity': 0.5,
    'position': 0.0,
    'richardson': 100000.0,
@@ -95,7 +95,7 @@ class Electrode(dict):
       raise TypeError("Inputs must be of type dict.")
     
     # Ensure that the minimum required fields are present in input_params.
-    req_fields = ["temp","barrier_ht","voltage","position","richardson",\
+    req_fields = ["temp","barrier","voltage","position","richardson",\
       "emissivity"]
     input_param_keys = set(input_params.keys())
     
@@ -126,8 +126,8 @@ class Electrode(dict):
     # Check to see if constraints are met.
     if key == "temp" and item < 0:
       raise ValueError("temp must be greater than or equal to zero.")
-    if key == "barrier_ht" and item < 0:
-      raise ValueError("barrier_ht must be non-negative.")
+    if key == "barrier" and item < 0:
+      raise ValueError("barrier must be non-negative.")
     if key == "richardson" and item < 0:
       raise ValueError("richardson must be non-negative.")
     if key == "emissivity" and not (0 < item < 1):
@@ -136,7 +136,7 @@ class Electrode(dict):
       raise ValueError("nea must be non-negative.")
     
     # Convert the pertinant values to SI:
-    if key is "barrier_ht":
+    if key is "barrier":
       # Update to J
       item = 1.60217646e-19 * item
     if key is "nea":
@@ -158,14 +158,14 @@ class Electrode(dict):
     Return value of the saturation current in A m^{-2}.
   
     Calculates the output current density according to the Richardson-Dushman
-    equation. If either temp or barrier_ht are equal to 0, this  method returns
+    equation. If either temp or barrier are equal to 0, this  method returns
     a value of 0.
     """
     if self["temp"] == 0:
       saturation_current = 0
     else:
       saturation_current = self["richardson"] * math.pow(self["temp"],2) * \
-      math.exp(-self["barrier_ht"]/(physical_constants["boltzmann"] * self["temp"]))
+      math.exp(-self["barrier"]/(physical_constants["boltzmann"] * self["temp"]))
     
     return saturation_current
 
@@ -174,17 +174,17 @@ class Electrode(dict):
     Position of the vacuum energy relative to the voltage ground in J.
     
     If the Electrode has no nea attribute, the vacuum energy is simply the sum 
-    of barrier_ht and voltage, normalized to the proper units. If the Electrode 
-    does have an nea attribute, the result is the sum of barrier_ht and voltage, 
+    of barrier and voltage, normalized to the proper units. If the Electrode 
+    does have an nea attribute, the result is the sum of barrier and voltage, 
     reduced by the value of nea.
     """
     
     if "nea" in self.keys():
       vacuum_energy = (1.60217646e-19 * physical_constants["electron_charge"] * 
-      self["voltage"]) + self["barrier_ht"] - self["nea"]
+      self["voltage"]) + self["barrier"] - self["nea"]
     else:
       vacuum_energy = (1.60217646e-19 * physical_constants["electron_charge"] * 
-      self["voltage"]) + self["barrier_ht"]
+      self["voltage"]) + self["barrier"]
       
     return vacuum_energy
       

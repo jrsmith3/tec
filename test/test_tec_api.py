@@ -45,14 +45,14 @@ class InstantiationInputIncomplete(unittest.TestCase):
     """
 
     em_params = {"temp":1,\
-                 "barrier_ht":1,\
+                 "barrier":1,\
                  "voltage":1,\
                  "position":0,\
                  "richardson":10,\
                  "emissivity":0.5}
                    
     co_params = {"temp":1,\
-                 "barrier_ht":1,\
+                 "barrier":1,\
                  "voltage":1,\
                  "position":0,\
                  "richardson":10,\
@@ -83,14 +83,14 @@ class InstantiationInputFieldsWrongType(unittest.TestCase):
     """
 
     em_params = {"temp":1,\
-                 "barrier_ht":1,\
+                 "barrier":1,\
                  "voltage":1,\
                  "position":0,\
                  "richardson":10,\
                  "emissivity":0.5}
                    
     co_params = {"temp":1,\
-                 "barrier_ht":1,\
+                 "barrier":1,\
                  "voltage":1,\
                  "position":0,\
                  "richardson":10,\
@@ -122,14 +122,14 @@ class SetInputWrongType(unittest.TestCase):
     """
 
     em_params = {"temp":1,\
-                 "barrier_ht":1,\
+                 "barrier":1,\
                  "voltage":1,\
                  "position":0,\
                  "richardson":10,\
                  "emissivity":0.5}
                    
     co_params = {"temp":1,\
-                 "barrier_ht":1,\
+                 "barrier":1,\
                  "voltage":1,\
                  "position":0,\
                  "richardson":10,\
@@ -160,14 +160,14 @@ class CalculatorsReturnType(unittest.TestCase):
     """
 
     em_params = {"temp":1,\
-                 "barrier_ht":1,\
+                 "barrier":1,\
                  "voltage":1,\
                  "position":0,\
                  "richardson":10,\
                  "emissivity":0.5}
                    
     co_params = {"temp":1,\
-                 "barrier_ht":1,\
+                 "barrier":1,\
                  "voltage":1,\
                  "position":1,\
                  "richardson":10,\

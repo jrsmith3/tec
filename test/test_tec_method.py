@@ -48,7 +48,7 @@ class MethodsValues(unittest.TestCase):
     """
     Contact potential values test.
     
-    This method has machine precision. When the barrier_ht attribute of an Electrode object is set, the quantity is converted from eV to J by multiplying by the value of the fundamental charge. Even though the machine does a machine precision multiplication, the value of  the fundamental charge has a lower relative precision than the mahcine. So there are a bunch of digits that get carried around that are insignificant. However, this calc_contact_potential calculation, the result is divided by the value of the fundamental charge to get the result in V. This division recovers the original precision of  the values of barrier_ht and therefore the result is of machine precision.
+    This method has machine precision. When the barrier attribute of an Electrode object is set, the quantity is converted from eV to J by multiplying by the value of the fundamental charge. Even though the machine does a machine precision multiplication, the value of  the fundamental charge has a lower relative precision than the mahcine. So there are a bunch of digits that get carried around that are insignificant. However, this calc_contact_potential calculation, the result is divided by the value of the fundamental charge to get the result in V. This division recovers the original precision of  the values of barrier_ht and therefore the result is of machine precision.
     """
     pass
   
