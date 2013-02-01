@@ -188,3 +188,8 @@ class Electrode(dict):
       
     return vacuum_energy
       
+  def calc_barrier_ht(self):
+      """
+      Returns value of barrier height relative to ground in J.
+      """
+      return self["barrier"] + physical_constants["electron_charge"] * self["voltage"]
