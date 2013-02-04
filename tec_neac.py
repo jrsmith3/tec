@@ -76,12 +76,6 @@ class TEC_NEAC(TEC_Langmuir):
   [1] JRS, work in progress.
   """
   
-  def calc_back_current_density(self):
-    """
-    Return back current density in A m^{-2}.
-    """
-    return 0.0
-    
   def calc_motive(self):
     """
     Calculate the motive parameters and populate "motive_data".
@@ -110,48 +104,6 @@ class TEC_NEAC(TEC_Langmuir):
         np.log(self["Emitter"].calc_saturation_current()/output_current_density)
       self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
     
-  def get_motive(self):
-    """
-    Value of motive relative to ground for given value(s) of position in J.
-    
-    Position must be of numerical type or numpy array. Returns NaN if position 
-    falls outside of the interelectrode space.
-    """
-    pass
-  
-  def get_max_motive_ht(self, with_position=False):
-    """
-    Returns value of the maximum motive relative to ground in J.
-    
-    If with_position is True, return a tuple where the first element is the 
-    maximum motive value and the second element is the corresponding position.
-    """
-    return self["motive_data"]["max_motive_ht"]
-  
-  def calc_saturation_pt(self):
-    """
-    Calculate and return saturation point condition.
-    
-    Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
-    """    
-    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    output_current_density = self["Emitter"].calc_saturation_current()
-    
-    position = self.calc_interelectrode_spacing() * \
-      ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
-      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
-      (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
-      
-    motive = self["motive_data"]["dps"].get_motive(position)
-    
-    output_voltage = (self["Emitter"]["barrier"] - \
-      self["Collector"]["barrier"] - \
-      motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
-      physical_constants["electron_charge"]
-    
-    return {"output_voltage":output_voltage,
-	    "output_current_density":output_current_density}
-  
   def calc_critical_pt(self):
     """
     Calculate and return critical point condition.
@@ -196,24 +148,3 @@ class TEC_NEAC(TEC_Langmuir):
       motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
     
     return position - self["motive_data"]["dps"].get_position(motive)
-
-  def output_voltage_target_function(self,output_current_density):
-    """
-    Target function for the output voltage rootfinder.
-    """
-    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
-    em_position = self["motive_data"]["dps"].get_position(em_motive)
-    
-    x0 = ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3) / \
-      (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4) * \
-      self["Emitter"]["temp"]**(3./4) / output_current_density**(1./2)
-    
-    co_position = self.calc_interelectrode_spacing()/x0 + em_position
-    co_motive = self["motive_data"]["dps"].get_motive(co_position)
-    
-    return self.calc_output_voltage() - ((self["Emitter"]["barrier"] + \
-      em_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) - \
-      (self["Collector"]["barrier"] + \
-      co_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]))/ \
-      physical_constants["electron_charge"]
