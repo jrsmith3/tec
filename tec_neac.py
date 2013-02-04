@@ -104,6 +104,30 @@ class TEC_NEAC(TEC_Langmuir):
         np.log(self["Emitter"].calc_saturation_current()/output_current_density)
       self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
     
+  def calc_saturation_pt(self):
+    """
+    Calculate and return saturation point condition.
+    
+    Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
+    """    
+    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    output_current_density = self["Emitter"].calc_saturation_current()
+    
+    position = self.calc_interelectrode_spacing() * \
+      ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
+      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
+      (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
+      
+    motive = self["motive_data"]["dps"].get_motive(position)
+    
+    output_voltage = (self["Emitter"]["barrier"] + self["Collector"]["nea"] - \
+      self["Collector"]["barrier"] - \
+      motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
+      physical_constants["electron_charge"]
+    
+    return {"output_voltage":output_voltage,
+            "output_current_density":output_current_density}
+  
   def calc_critical_pt(self):
     """
     Calculate and return critical point condition.
@@ -131,20 +155,3 @@ class TEC_NEAC(TEC_Langmuir):
     
     return {"output_voltage":output_voltage,
 	    "output_current_density":output_current_density}
-       
-  
-  def critical_point_target_function(self,output_current_density):
-    """
-    Target function for critical point rootfinder.
-    """
-    position = -self.calc_interelectrode_spacing() * \
-      ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
-      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
-      (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
-      
-    if output_current_density == 0:
-      motive = np.inf
-    else:
-      motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
-    
-    return position - self["motive_data"]["dps"].get_position(motive)
