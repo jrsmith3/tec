@@ -86,19 +86,19 @@ class TEC_NEAC(TEC_Langmuir):
     self["motive_data"]["dps"] = DimensionlessLangmuirPoissonSoln()
     
     self["motive_data"]["saturation_pt"] = self.calc_saturation_pt()
-    self["motive_data"]["critical_pt"] = self.calc_critical_pt()
+    self["motive_data"]["virt_critical_pt"] = self.calc_virt_critical_pt()
     
     if self.calc_output_voltage() < self["motive_data"]["saturation_pt"]["output_voltage"]:
       # Accelerating mode.
       self["motive_data"]["max_motive_ht"] = self["Emitter"].calc_motive_bc()
-    elif self.calc_output_voltage() > self["motive_data"]["critical_pt"]["output_voltage"]:
+    elif self.calc_output_voltage() > self["motive_data"]["virt_critical_pt"]["output_voltage"]:
       # Retarding mode.
       self["motive_data"]["max_motive_ht"] = self["Collector"].calc_motive_bc()
     else:
       # Space charge limited mode.
       output_current_density = optimize.brentq(self.output_voltage_target_function,\
         self["motive_data"]["saturation_pt"]["output_current_density"],\
-        self["motive_data"]["critical_pt"]["output_current_density"])
+        self["motive_data"]["virt_critical_pt"]["output_current_density"])
         
       barrier = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
         np.log(self["Emitter"].calc_saturation_current()/output_current_density)
@@ -128,29 +128,28 @@ class TEC_NEAC(TEC_Langmuir):
     return {"output_voltage":output_voltage,
             "output_current_density":output_current_density}
   
-  def calc_critical_pt(self):
+  def calc_virt_critical_pt(self):
     """
-    Calculate and return critical point condition.
+    Calculate and return virtual critical point condition.
     
     Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
-    # Rootfinder to get critical point output current density.
-    output_current_density = optimize.brentq(self.critical_point_target_function,\
-      self["Emitter"].calc_saturation_current(),0)
-    #output_current_density = 1.0
-    
-    position = -self.calc_interelectrode_spacing() * \
-      ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
-      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
-      (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
+    x0 = ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3) / \
+      (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4) * \
+      self["Emitter"]["temp"]**(3./4) / output_current_density**(1./2)
       
-    motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+    co_motive = self["Collector"]["nea"]/(physical_constants["boltzmann"] * self["Emitter"]["temp"])
+    co_position = self["motive_data"]["dps"].get_position(co_motive, branch="rhs")
+    em_position = co_position - self.calc_interelectrode_spacing()/x0
+    em_motive = self["motive_data"]["dps"].get_motive(em_position)
     
+    output_current_density = self["Emitter"].calc_saturation_current() * np.exp(-em_motive)
+      
     output_voltage = (self["Emitter"]["barrier"] - \
       self["Collector"]["barrier"] + \
-      motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
+      em_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
       physical_constants["electron_charge"]
     
     return {"output_voltage":output_voltage,
