@@ -93,6 +93,12 @@ class TEC_Langmuir(TEC):
     """
     Calculate the motive parameters and populate "motive_data".
     """
+    # Throw out any nea attributes if they exist.
+    # I feel like this code needs some explanation. The model this class implements assumes that neither electrode has NEA. Therefore, it doesn't make sense to allow anyone to set an "nea" attribute for either electrode. However, it is possible to instantiate a TEC_Langmuir object without either electrode having an "nea" attribute, then later set an "nea" attribute for one of the electrodes. It would be easy to check for "nea" during instantiation, but I would have to write a lot of ugly, hacky code to prevent either of the electrodes from acquiring an "nea" attribute later on. Since the calc_motive() method is presumably called whenever the TEC_Langmuir attributes (or sub-attributes) are called, the following block of code will notice if "nea" has been added to the electrodes, and will remove it.
+    for electrode in ["Emitter","Collector"]:
+      if "nea" in self[electrode]:
+        del self[electrode]["nea"]
+    
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
     self["motive_data"] = {}
