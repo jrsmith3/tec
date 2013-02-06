@@ -136,6 +136,19 @@ class TEC_NEAC(TEC_Langmuir):
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
+    output_current_density = optimize.brentq(self.virt_critical_point_target_function,\
+      self["Emitter"].calc_saturation_current(),0)
+    
+    output_voltage = self.critical_point_target_function(output_current_density,voltage_instead=True)
+    
+    return {"output_voltage":output_voltage,
+            "output_current_density":output_current_density}
+
+  def virt_critical_point_target_function(self,output_current_density,voltage_instead=False):
+    """
+    Target function for virtual critical point rootfinder.
+    """
+
     x0 = ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3) / \
       (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4) * \
       self["Emitter"]["temp"]**(3./4) / output_current_density**(1./2)
@@ -145,12 +158,16 @@ class TEC_NEAC(TEC_Langmuir):
     em_position = co_position - self.calc_interelectrode_spacing()/x0
     em_motive = self["motive_data"]["dps"].get_motive(em_position)
     
-    output_current_density = self["Emitter"].calc_saturation_current() * np.exp(-em_motive)
-      
-    output_voltage = (self["Emitter"]["barrier"] - \
+    output_current_density2 = self["Emitter"].calc_saturation_current() * np.exp(-em_motive)
+    
+    return output_current_density - output_current_density2
+    
+    if voltage_instead:
+      output_voltage = (self["Emitter"]["barrier"] - \
       self["Collector"]["barrier"] + \
       em_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
       physical_constants["electron_charge"]
-    
-    return {"output_voltage":output_voltage,
-	    "output_current_density":output_current_density}
+      
+      return output_voltage
+    else:
+      return output_current_density - output_current_density2
