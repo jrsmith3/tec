@@ -88,6 +88,13 @@ class TEC_NEAC(TEC_Langmuir):
     
     self["motive_data"] = {}
     self["motive_data"]["dps"] = DimensionlessLangmuirPoissonSoln()
+
+    self["motive_data"]["dist_no_sp_ch"] = self.sp_ch_avoidance_edge()
+
+    if self["motive_data"]["dist_no_sp_ch"] < self.calc_interelectrode_spacing():
+      # Deal with space charge.
+    else:
+      # No space charge.
     
     self["motive_data"]["saturation_pt"] = self.calc_saturation_pt()
     self["motive_data"]["virt_critical_pt"] = self.calc_virt_critical_pt()
