@@ -172,8 +172,9 @@ class TEC_NEAC(TEC_Langmuir):
       self["Emitter"].calc_saturation_current(),0)
     
     motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
-    output_voltage = self["Emitter"]["barrier"] - self["Collector"]["barrier"] + \
-      physical_constants["boltzmann"] * self["Emitter"]["temp"] * motive
+    output_voltage = (self["Emitter"]["barrier"] - self["Collector"]["barrier"] + \
+      physical_constants["boltzmann"] * self["Emitter"]["temp"] * motive) / \
+      physical_constants["electron_charge"]
     
     return {"output_voltage":output_voltage,
             "output_current_density":output_current_density}
