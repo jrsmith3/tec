@@ -31,6 +31,8 @@ class TEC_NEAC(TEC_Langmuir):
       output_current_density: Current at which the critical point occurs.
       
     dps:           Langmuir's dimensionless Poisson's equation solution object.
+
+    dist_no_sp_ch: Distance below which the TEC experiences no space charge limited mode. [m]
       
   Parameters
   ----------
@@ -64,6 +66,8 @@ class TEC_NEAC(TEC_Langmuir):
   >>> isinstance(example_tec["motive_data"]["virt_critical_pt"]["output_voltage"],float)
   True
   >>> isinstance(example_tec["motive_data"]["virt_critical_pt"]["output_current_density"],float)
+  True
+  >>> isinstance(example_tec["dist_no_sp_ch"],float)
   True
   >>> type(example_tec["motive_data"]["dps"])
   <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
