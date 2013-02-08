@@ -119,8 +119,8 @@ class TEC_NEAC(TEC_Langmuir):
       (physical_constants["boltzmann"] * self["Emitter"]["temp"])
     co_position_vr = self["motive_data"]["dps"].get_position(co_motive_vr,branch="rhs")
     
-    spclbs_max_dist = (co_position_vr * self["Emitter"]["temp"]**(3./4))/ \
-      (self.calc_interelectrode_spacing() * self["Emitter"].calc_saturation_current()**(1./2)) * \
+    spclbs_max_dist = (co_position_vr * self["Emitter"]["temp"]**(3./4)) / \
+      (self["Emitter"].calc_saturation_current()**(1./2)) * \
       ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3)/ \
       (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4)
       
