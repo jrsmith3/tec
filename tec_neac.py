@@ -32,7 +32,7 @@ class TEC_NEAC(TEC_Langmuir):
       
     dps:           Langmuir's dimensionless Poisson's equation solution object.
 
-    dist_no_sp_ch: Distance below which the TEC experiences no space charge limited mode. [m]
+    spclmbs_max_dist: Space charge limited mode boundary surface maximum distance: distance below which the TEC experiences no space charge limited mode. [m]
       
   Parameters
   ----------
@@ -40,7 +40,7 @@ class TEC_NEAC(TEC_Langmuir):
 
   Examples and interface testing
   ------------------------------
-  >>> from tec_langmuir import TEC_Langmuir
+  >>> from tec_neac import TEC_NEAC
   >>> em_dict = {"temp":1000,
   ...            "barrier":1,
   ...            "voltage":0,
@@ -55,7 +55,7 @@ class TEC_NEAC(TEC_Langmuir):
   ...            "emissivity":0.5,
   ...            "nea":0.2,}
   >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
-  >>> example_tec = TEC_Langmuir(input_dict)
+  >>> example_tec = TEC_NEAC(input_dict)
   
   Make sure that the motive_data interface matches the above description.
   
@@ -67,7 +67,7 @@ class TEC_NEAC(TEC_Langmuir):
   True
   >>> isinstance(example_tec["motive_data"]["virt_critical_pt"]["output_current_density"],float)
   True
-  >>> isinstance(example_tec["dist_no_sp_ch"],float)
+  >>> isinstance(example_tec["motive_data"]["spclmbs_max_dist"],float)
   True
   >>> type(example_tec["motive_data"]["dps"])
   <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
@@ -89,22 +89,16 @@ class TEC_NEAC(TEC_Langmuir):
     self["motive_data"] = {}
     self["motive_data"]["dps"] = DimensionlessLangmuirPoissonSoln()
 
-    self["motive_data"]["dist_no_sp_ch"] = self.sp_ch_avoidance_edge()
-
-    if self["motive_data"]["dist_no_sp_ch"] < self.calc_interelectrode_spacing():
-      # Deal with space charge.
-    else:
-      # No space charge.
-    
+    self["motive_data"]["spclmbs_max_dist"] = self.calc_spclmbs_max_dist()
     self["motive_data"]["saturation_pt"] = self.calc_saturation_pt()
     self["motive_data"]["virt_critical_pt"] = self.calc_virt_critical_pt()
-    
+
     if self.calc_output_voltage() < self["motive_data"]["saturation_pt"]["output_voltage"]:
       # Accelerating mode.
-      self["motive_data"]["max_motive_ht"] = self["Emitter"].calc_motive_bc()
+      self["motive_data"]["max_motive_ht"] = self["Emitter"].calc_barrier_ht()
     elif self.calc_output_voltage() > self["motive_data"]["virt_critical_pt"]["output_voltage"]:
       # Retarding mode.
-      self["motive_data"]["max_motive_ht"] = self["Collector"].calc_motive_bc()
+      self["motive_data"]["max_motive_ht"] = self["Collector"].calc_barrier_ht()
     else:
       # Space charge limited mode.
       output_current_density = optimize.brentq(self.output_voltage_target_function,\
@@ -113,7 +107,25 @@ class TEC_NEAC(TEC_Langmuir):
         
       barrier = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
         np.log(self["Emitter"].calc_saturation_current()/output_current_density)
-      self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
+      self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_barrier_ht()
+      
+  def calc_spclmbs_max_dist(self):
+    """
+    Calculate space charge limited mode boundary surface maximum interelectrode distance.
+    """
+    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    # I am using the suffix "vr" to denote "Virtual cRitical point."
+    co_motive_vr = self["Collector"]["nea"]/ \
+      (physical_constants["boltzmann"] * self["Emitter"]["temp"])
+    co_position_vr = self["motive_data"]["dps"].get_position(co_motive_vr,branch="rhs")
+    
+    spclbs_max_dist = (co_position_vr * self["Emitter"]["temp"]**(3./4))/ \
+      (self.calc_interelectrode_spacing() * self["Emitter"].calc_saturation_current()**(1./2)) * \
+      ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3)/ \
+      (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4)
+      
+    return spclbs_max_dist
+    
     
   def calc_saturation_pt(self):
     """
@@ -122,6 +134,11 @@ class TEC_NEAC(TEC_Langmuir):
     Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
     """    
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    # If the device is operating within the space charge limited mode boundary surface, we can immediately set the values and exit.
+    if self.calc_interelectrode_spacing() <= self["motive_data"]["spclmbs_max_dist"]:
+      return {"output_voltage":self.calc_contact_potential(),
+              "output_current_density":self["Emitter"].calc_saturation_current()}
+    
     output_current_density = self["Emitter"].calc_saturation_current()
     
     position = self.calc_interelectrode_spacing() * \
@@ -146,39 +163,41 @@ class TEC_NEAC(TEC_Langmuir):
     Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    # If the device is operating within the space charge limited mode boundary surface, we can immediately set the values and exit.
+    if self.calc_interelectrode_spacing() <= self["motive_data"]["spclmbs_max_dist"]:
+      return {"output_voltage":self.calc_contact_potential(),
+              "output_current_density":self["Emitter"].calc_saturation_current()}
     
     output_current_density = optimize.brentq(self.virt_critical_point_target_function,\
       self["Emitter"].calc_saturation_current(),0)
     
-    output_voltage = self.critical_point_target_function(output_current_density,voltage_instead=True)
+    motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+    output_voltage = self["Emitter"]["barrier"] - self["Collector"]["barrier"] + \
+      physical_constants["boltzmann"] * self["Emitter"]["temp"] * motive
     
     return {"output_voltage":output_voltage,
             "output_current_density":output_current_density}
 
-  def virt_critical_point_target_function(self,output_current_density,voltage_instead=False):
+  def virt_critical_point_target_function(self,output_current_density):
     """
     Target function for virtual critical point rootfinder.
     """
-
-    x0 = ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3) / \
-      (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4) * \
-      self["Emitter"]["temp"]**(3./4) / output_current_density**(1./2)
-      
-    co_motive = self["Collector"]["nea"]/(physical_constants["boltzmann"] * self["Emitter"]["temp"])
-    co_position = self["motive_data"]["dps"].get_position(co_motive, branch="rhs")
-    em_position = co_position - self.calc_interelectrode_spacing()/x0
-    em_motive = self["motive_data"]["dps"].get_motive(em_position)
+    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names. Since this method is only about the virtual critical point, I don't use any suffix.
+    co_motive = self["Collector"]["nea"]/ \
+      (physical_constants["boltzmann"] * self["Emitter"]["temp"])
+    co_position = self["motive_data"]["dps"].get_position(co_motive,branch="rhs")
     
-    output_current_density2 = self["Emitter"].calc_saturation_current() * np.exp(-em_motive)
-    
-    return output_current_density - output_current_density2
-    
-    if voltage_instead:
-      output_voltage = (self["Emitter"]["barrier"] - \
-      self["Collector"]["barrier"] + \
-      em_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
-      physical_constants["electron_charge"]
-      
-      return output_voltage
+    if output_current_density == 0:
+      em_motive = np.inf
     else:
-      return output_current_density - output_current_density2
+      em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+    
+    em_position = self["motive_data"]["dps"].get_position(em_motive)
+    
+    # offset is the dimensionless distance term which, along with the emitter and collector dimensionless distance, sums to zero.
+    offset = self.calc_interelectrode_spacing() * \
+      ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
+      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
+      (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
+      
+    return co_position - (em_position + offset)
