@@ -176,7 +176,6 @@ class TEC_Langmuir(TEC):
     # Rootfinder to get critical point output current density.
     output_current_density = optimize.brentq(self.critical_point_target_function,\
       self["Emitter"].calc_saturation_current(),0)
-    #output_current_density = 1.0
     
     position = -self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
@@ -230,3 +229,4 @@ class TEC_Langmuir(TEC):
       (self["Collector"]["barrier"] + \
       co_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]))/ \
       physical_constants["electron_charge"]
+      
