@@ -201,3 +201,25 @@ class TEC_NEAC(TEC_Langmuir):
       (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
       
     return co_position - (em_position + offset)
+
+  def output_voltage_target_function(self,output_current_density):
+    """
+    Target function for the output voltage rootfinder.
+    """
+    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+    em_position = self["motive_data"]["dps"].get_position(em_motive)
+    
+    offset = self.calc_interelectrode_spacing() * \
+      ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
+      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
+      (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
+
+    co_position = em_position + offset
+    co_motive = self["motive_data"]["dps"].get_motive(co_position)
+    
+    return self.calc_output_voltage() - ((self["Emitter"]["barrier"] + \
+      em_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) - \
+      (self["Collector"]["barrier"] - self["Collector"]["nea"] + \
+      co_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]))/ \
+      physical_constants["electron_charge"]
