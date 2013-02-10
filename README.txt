@@ -152,3 +152,11 @@ There are a number of issues that must be addressed for this numerical testing s
 but computing such products and quotients by hand doesn't scale. Since the above product/quotient is a tedious hand calculation, I would not be confident that I could accurately do more than two or three at a time. Therefore, calculating thousands or even hundreds of standard data by hand is a non-starter. Even calculating tens of such values is likely too time consuming.
 
 3. Accuracy despite testing a small number of values: I suspect this problem is akin to interpolation. The method under test is essentially a black box. Because of the nature of computers, the inputs aren't really continuous, but they span some large number of states due to double precision floating point numbers. I am taking a very small subset of values and testing them and expecting all other values to be accurate as a result of passing the test.
+
+Releases and Versioning
+=======================
+This project conforms to a semantic versioning strategy as described in [1].
+
+Release notes are located in the CHANGELOG even though this strategy is probably wrong. Each released version will have its own release notes. This file is coarse-grained; see the VCS commits and source for maximum detail.
+
+[1] Semantic Versioning v2.0.0-rc.1 http://semver.org
