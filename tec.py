@@ -279,17 +279,18 @@ class TEC(dict):
     """
     elecHeatTransportForward = self.calc_forward_current_density()*(self.get_max_motive_ht()+\
       2 * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
-      Constants.electronCharge
+      physical_constants["electron_charge"]
     elecHeatTransportBackward = self.calc_back_current_density()*(self.get_max_motive_ht()+\
       2 * physical_constants["boltzmann"] * self["Collector"]["temp"]) / \
-      Constants.electronCharge
+      physical_constants["electron_charge"]
     return elecHeatTransportForward - elecHeatTransportBackward
   
   def __calc_black_body_heat_transport(self):
     """
     Returns the radiation transport of a TEC object.
+
+    Equation for radiative heat transfer taken from Incropera et.al. p. 793, Eq. 13.19. ISBN:978-0-471-45727-5.
     """
-    return Constants.sigma0 * \
-      (self["Emitter"]["emissivity"] * pow(self["Emitter"]["temp"],4) - \
-      self["Collector"]["emissivity"] * pow(self["Collector"]["temp"],4))
-    
+    return physical_constants["sigma0"] * \
+      (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
+      ((1./self["Emitter"]["emissivity"]) + (1./self["Collector"]["emissivity"]) - 1)
