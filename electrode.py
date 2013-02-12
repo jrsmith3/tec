@@ -153,8 +153,7 @@ class Electrode(dict):
     params = ["temp","richardson","barrier","voltage","position","nea"]
     if key in params:
       if key in self.keys():
-	#print "param changed."
-	self["param_changed"] = True
+        self["param_changed"] = True
       
     # Set value.
     dict.__setitem__(self,key,item)
