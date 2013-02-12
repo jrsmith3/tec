@@ -149,6 +149,13 @@ class Electrode(dict):
       # Update to A m^{-2} K^{-2}
       item = 1e4 * item
       
+    # Check to see if the Electrode already has the attribute set. If so, add the flag.
+    params = ["temp","richardson","barrier","voltage","position","nea"]
+    if key in params:
+      if key in self.keys():
+	#print "param changed."
+	self["param_changed"] = True
+      
     # Set value.
     dict.__setitem__(self,key,item)
   
