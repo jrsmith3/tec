@@ -110,6 +110,8 @@ class Electrode(dict):
     # Try to set the object's attributes:
     for key in req_fields:
       self[key] = input_params[key]
+      
+    self.__param_changed = False
 
   
   def __setitem__(self,key,item):
@@ -152,10 +154,20 @@ class Electrode(dict):
     # Check to see if the Electrode already has the attribute set. If so, add the flag.
     if key in ["temp","richardson","barrier","voltage","position","nea"]:
       if key in self.keys():
-        self["param_changed"] = True
+        self.__param_changed = True
       
     # Set value.
     dict.__setitem__(self,key,item)
+    
+  def param_changed_and_reset(self):
+    """
+    Return boolean indicating if a parameter has been changed, and reset to False.
+    """
+    if self.__param_changed:
+      self.__param_changed = False
+      return True
+    else:
+      return False
   
   # Methods
   def calc_saturation_current(self):
