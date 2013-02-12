@@ -150,8 +150,7 @@ class Electrode(dict):
       item = 1e4 * item
       
     # Check to see if the Electrode already has the attribute set. If so, add the flag.
-    params = ["temp","richardson","barrier","voltage","position","nea"]
-    if key in params:
+    if key in ["temp","richardson","barrier","voltage","position","nea"]:
       if key in self.keys():
         self["param_changed"] = True
       
