@@ -1,0 +1,7 @@
+0.1.0
+2013.02.10 Joshua R Smith
+joshua.r.smith@gmail.com
+
+Initial release of the TEC package. This package currently implements most of the functionality described in the README file. Exceptions are: this release does not yet implement the scripting functionality. This release also *does not* have a comprehensive suite of tests as described in the README. Finally, this release includes a class which implements the model of TEC electron transport described in my forthcoming paper [1].
+
+[1] Increasing the Efficiency of a Thermionic Engine Using a Negative Affinity Collector (working title). Joshua Ryan Smith. URI:paper-2013.01.16_nea_collector.
