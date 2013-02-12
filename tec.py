@@ -3,7 +3,46 @@
 from electrode import Electrode
 from constants import physical_constants
 import numpy as np
-from scipy import interpolate
+from scipy import interpolate,optimize
+
+def max_value(calculator):
+  """
+  Decorator method to calculate the maximum value of the requested method.
+  """
+  def wrapper(self,with_output = False):
+    if with_output in ["max","voltage","full"]:
+      # Save the collector voltage because we are going to be moving it around.
+      saved_voltage = self["Collector"]["voltage"]
+      
+      # Set up the bounds for the minimization.
+      lo = self["Emitter"]["voltage"]
+      hi = (self["Emitter"]["barrier"] + self["Collector"]["barrier"]) / \
+        physical_constants["electron_charge"] + self["Emitter"]["voltage"]
+        
+      # God, this is fugly and probably wrong.
+      output = optimize.fminbound(target_function,lo,hi,[self],full_output = True)
+      
+      # Put everything back like it was.
+      self["Collector"]["voltage"] = saved_voltage
+    else:    
+      return calculator(self)
+    
+    # Figure out what to return.
+    if with_output == "max":
+      return -1 * output[1]
+    elif with_output == "voltage":
+      return output[0]
+    elif with_output == "full":
+      return output
+  
+  def target_function(voltage,obj):
+    """
+    Target function of the max_value decorator.
+    """
+    obj["Collector"]["voltage"] = voltage
+    return -1 * calculator(obj)
+
+  return wrapper
 
 class TEC(dict):
   
@@ -216,6 +255,7 @@ class TEC(dict):
     return self.calc_forward_current_density() - \
       self.calc_back_current_density()
   
+  @max_value
   def calc_output_power_density(self):
     """
     Return output power density in W m^{-2}.
@@ -271,6 +311,7 @@ class TEC(dict):
     else:
       return np.nan
   
+  @max_value
   def calc_total_efficiency(self):
     """
     Return total efficiency considering all heat transport mechanisms.
