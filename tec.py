@@ -9,7 +9,18 @@ def max_value(calculator):
   """
   Decorator method to calculate the maximum value of the requested method.
   """
-  def wrapper(self,with_output = False):
+  def wrapper(self, with_output = False, set_voltage = False):
+    """
+    Arguments (* denotes default argument):
+      with_output == "max": Returns the maximum value of the method relative to the output voltage.
+                     "voltage": Returns the voltage at which the maximum output occurs.
+                     "full": Returns all of the data that the minimization method returns.
+                     else*: Do no minimization and just return the current value of the method.
+      set_voltage == True: After the optimization, leave the object with an output voltage that maximizes the method in question.
+                     False*: Return the output voltage to whatever it was originally.
+                     
+      The set_voltage argument has no effect unless the with_output argument is "max", "voltage", or "full". 
+    """
     if with_output in ["max","voltage","full"]:
       # Save the collector voltage because we are going to be moving it around.
       saved_voltage = self["Collector"]["voltage"]
@@ -22,8 +33,13 @@ def max_value(calculator):
       # God, this is fugly and probably wrong.
       output = optimize.fminbound(target_function,lo,hi,[self],full_output = True)
       
-      # Put everything back like it was.
-      self["Collector"]["voltage"] = saved_voltage
+      # I don't know if this code is the best way to set the voltage.
+      if set_voltage is True:
+        # Just leave everything alone.
+        pass
+      else:
+        # Put everything back like it was.
+        self["Collector"]["voltage"] = saved_voltage
     else:    
       return calculator(self)
     
