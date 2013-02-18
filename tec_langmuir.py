@@ -123,14 +123,38 @@ class TEC_Langmuir(TEC):
         np.log(self["Emitter"].calc_saturation_current()/output_current_density)
       self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
     
-  def get_motive(self):
+  def get_motive(self,pos):
     """
     Value of motive relative to ground for given value(s) of position in J.
     
     Position must be of numerical type or numpy array. Returns NaN if position 
     falls outside of the interelectrode space.
     """
-    pass
+    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names. The "position" and "motive" variables refer to the dimensionless quantities, while "pos" and "mot" refer to the dimensioned quantities.
+    em_motive = (self.get_max_motive_ht() - self["Emitter"].calc_barrier_ht()) / \
+      (physical_constants["boltzmann"] * self["Emitter"]["temp"])
+    em_position = self["motive_data"]["dps"].get_position(em_motive)
+    
+    position = pos * ((2 * np.pi * physical_constants["electron_mass"] * \
+      physical_constants["electron_charge"]**2) / \
+      (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
+      (self.calc_output_current_density()**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4)) + \
+      em_position
+      
+    # What follows is some hacky code
+      
+    motive = []
+      
+    for p in position:
+      motive.append(self["motive_data"]["dps"].get_motive(p))
+    
+    # Turn the list into a numpy array
+    motive = np.array(motive)
+    
+    mot = self.get_max_motive_ht() - \
+      physical_constants["boltzmann"] * self["Emitter"]["temp"] * motive
+      
+    return mot
   
   def get_max_motive_ht(self, with_position=False):
     """
