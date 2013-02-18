@@ -167,7 +167,7 @@ class TEC(dict):
       self["Collector"].calc_motive_bc()])
     position_array = np.array([self["Emitter"]["position"], \
       self["Collector"]["position"]])
-    motive_interp = interpolate.interp1d(motive_array,position_array)
+    motive_interp = interpolate.InterpolatedUnivariateSpline(position_array, motive_array, k = 1)
     
     self["motive_data"] = {"motive_array":motive_array, \
                            "position_array":position_array, \
@@ -180,20 +180,7 @@ class TEC(dict):
     Position must be of numerical type or numpy array. Returns NaN if position 
     falls outside of the interelectrode space.
     """
-    
-    # Test input type.
-    if type(position) is int:
-      pass
-    elif type(position) is float:
-      pass
-    elif type(position) is numpy.ndarray:
-      pass
-    else:
-      raise TypeError("Inputs must be of numeric or numpy array.")
-      # What happens if position is a numpy array with non-numerical values?
-    
     return self["motive_data"]["motive_interp"](position)
-    
   
   def get_max_motive_ht(self, with_position=False):
     """
