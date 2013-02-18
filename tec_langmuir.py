@@ -160,10 +160,20 @@ class TEC_Langmuir(TEC):
     """
     Returns value of the maximum motive relative to ground in J.
     
-    If with_position is True, return a tuple where the first element is the 
-    maximum motive value and the second element is the corresponding position.
+    If with_position is True, return the position at which the maximum motive occurs.
     """
-    return self["motive_data"]["max_motive_ht"]
+    if with_position:
+      em_motive = (self.get_max_motive_ht() - self["Emitter"].calc_barrier_ht()) / \
+        (physical_constants["boltzmann"] * self["Emitter"]["temp"])
+      em_position = self["motive_data"]["dps"].get_position(em_motive)
+      
+      return -1 * em_position * \
+        ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3)/\
+        (2*np.pi*physical_constants["electron_mass"]*\
+        physical_constants["electron_charge"]**2))**(1.0/4) * \
+        (self["Emitter"]["temp"]**(3.0/4))/(self.calc_output_current_density()**(1.0/2))
+    else:
+      return self["motive_data"]["max_motive_ht"]
   
   def calc_saturation_pt(self):
     """
