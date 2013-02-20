@@ -354,109 +354,103 @@ class TEC(dict):
       (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
       ((1./self["Emitter"]["emissivity"]) + (1./self["Collector"]["emissivity"]) - 1)
 
-  def plot_motive(self, ax = None, show = False):
+  def plot_motive(self, axl = None, show = False):
     """
     Plot an annotated motive diagram relative to ground.
 
     If this method is called without an argument, it will create a figure with a subplot(111) and plot the motive diagram with the barriers, neas, voltages, etc. If a matplotplib Axes object is passed to this method, this method will draw the motive diagram on that Axes. If show == True, the method will pyplot.show() the result.
     """
 
-    if ax == None:
+    if axl == None:
       fig = plt.figure()
-      ax = fig.add_subplot(111)
+      axl = fig.add_subplot(111)
     else:
       fig = plt.gcf()
-      ax = plt.gca()
 
-    fig.axes[-1].xaxis.set(visible = False)
-    fig.axes[-1].spines["top"].set_color("none")
-    fig.axes[-1].spines["bottom"].set_color("none")
-    fig.axes[-1].patch.set_visible(False)
-    # fig.axes[-1].set_frame_on(False)
+    # Create the axes object for the collector barrier visualization.
+    axr = fig.add_axes(axl.get_positio())
 
     # Generate the position and corresponding motive values.
     pos = np.linspace(self["Emitter"]["position"],self["Collector"]["position"],100)
     mot = self.get_motive(pos) / physical_constants["electron_charge"]
 
-    ax.plot(pos,mot)
+    # Plot all the items on the emitter-side axes.
+    axl.plot(pos,mot)
 
-    # Draw the barriers of...
-    # ...emitter
-    ax.spines["left"].set_bounds(self["Emitter"]["voltage"], 
-      self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"])
-    ax.spines["left"].set_position(("data", self["Emitter"]["position"]))
-    # ...and collector
-    ax.spines["right"].set_bounds(self["Collector"]["voltage"], 
-      self["Collector"].calc_barrier_ht() / physical_constants["electron_charge"])
-    ax.spines["right"].set_position(("data", self["Collector"]["position"]))
-    # ax.spines["right"].set_color("none")
-    # ax.yaxis.set_ticks_position("left")
-
-    # Ticks and labels for emitter and collector.
-    ticks_loc = []
-    ticks_format = []
-
-    # Put the ticks on the axes.
-    for el in ["Emitter", "Collector"]:
-      labels = ["$\mu_{" + el[0] + "}$",
-                "$\psi_{" + el[0] + "}$",
-                "$\psi_{" + el[0] + ",CBM}$"]
-      if "nea" in self[el]:
-        ticks_loc.append(matplotlib.ticker.FixedLocator([self[el]["voltage"],
-          self[el].calc_motive_bc() / physical_constants["electron_charge"],
-          self[el].calc_barrier_ht() / physical_constants["electron_charge"]]))
-        ticks_format.append(matplotlib.ticker.FixedFormatter(labels))
-      else:
-        del labels[-1]
-        ticks_loc.append(matplotlib.ticker.FixedLocator([self[el]["voltage"],
-          self[el].calc_barrier_ht() / physical_constants["electron_charge"]]))
-        ticks_format.append(matplotlib.ticker.FixedFormatter(labels))
-
-      if el is "Collector":
-        axr = fig.axes[-1].twinx()
-        # axr.spines["right"].set_bounds(self["Collector"]["voltage"], 
-        #   self["Collector"].calc_barrier_ht() / physical_constants["electron_charge"])
-        # axr.spines["right"].set_position(("data", self["Collector"]["position"]))
-
-      fig.axes[-1].yaxis.set_major_locator(ticks_loc[-1])
-      fig.axes[-1].yaxis.set_major_formatter(ticks_format[-1])
-      fig.axes[-1].tick_params(direction="outward")
-
-    # Make sure both axes are scaled properly. First get the last two Axes objects' y-limits.
-    ylims_left = plt.gcf().axes[-1].axis()[-2:]
-    ylims_right = plt.gcf().axes[-2].axis()[-2:]
-
-    # Figure out the maxima and minima.
-    zipped_ylims = zip(ylims_left, ylims_right)
-    y_lo = min(zipped_ylims[0])
-    y_hi = max(zipped_ylims[1])
-
-    # Finally, scale both axes with the limit data.
-    for axs in plt.gcf().axes[-2:]:
-      axs.set_ylim([y_lo, y_hi])
-
-    # maximum motive
-    plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"], 'k+')
-    plt.annotate("$\psi_{m}$", 
-      xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"]))
+    # # maximum motive
+    # plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"], 'k+')
+    # plt.annotate("$\psi_{m}$", 
+    #   xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"]))
     
-    # labels and dimension lines
-    for el,pos_indx in zip(["Emitter", "Collector"],[8,92]):
-      if "nea" in self[el]:
-        nea = "$\chi_{" + el[0] + "}$"
-        self.dimension_line(nea, pos[pos_indx+5], 
-          self[el].calc_motive_bc() / physical_constants["electron_charge"], 
-          self[el].calc_barrier_ht() / physical_constants["electron_charge"])
-        barrier = "$\zeta_{" + el[0] + "}$"
-        self.dimension_line(barrier, pos[pos_indx], 
-          self[el]["voltage"], 
-          self[el].calc_barrier_ht() / physical_constants["electron_charge"])
-      else:
-        barrier = "$\phi_{" + el[0] + "}$"
-        self.dimension_line(barrier, pos[pos_indx], 
-          self[el]["voltage"], 
-          self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+    # # labels and dimension lines
+    # for el,pos_indx in zip(["Emitter", "Collector"],[8,92]):
+    #   if "nea" in self[el]:
+    #     nea = "$\chi_{" + el[0] + "}$"
+    #     self.dimension_line(nea, pos[pos_indx+5], 
+    #       self[el].calc_motive_bc() / physical_constants["electron_charge"], 
+    #       self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+    #     barrier = "$\zeta_{" + el[0] + "}$"
+    #     self.dimension_line(barrier, pos[pos_indx], 
+    #       self[el]["voltage"], 
+    #       self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+    #   else:
+    #     barrier = "$\phi_{" + el[0] + "}$"
+    #     self.dimension_line(barrier, pos[pos_indx], 
+    #       self[el]["voltage"], 
+    #       self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+    
+    # ==vv This stuff should go into a method vv==
+    # Initialize the axes borders, etc.
+    axl.xaxis.set(visible = False)
+    axl.spines["top"].set_color("none")
+    axl.spines["bottom"].set_color("none")
+    axl.spines["right"].set_color("none")
+    axl.spines["left"].set_color("none")
+    axl.patch.set_visible(False)
 
+    # Draw the barrier of the emitter using the axes object's spines. Constrain it to the left side of the motive curve.
+    axl.spines["left"].set_bounds(self["Emitter"]["voltage"], 
+      self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"])
+    axl.spines["left"].set_position(("data", self["Emitter"]["position"]))
+
+    # Set up ticks and labels for emitter.
+    ticks_labels = ["$\mu_{E}$",
+              "$\psi_{E}$",
+              "$\psi_{E,CBM}$"]
+    if "nea" in self["Emitter"]:
+      ticks_loc = matplotlib.ticker.FixedLocator([self["Emitter"]["voltage"],
+        self["Emitter"].calc_motive_bc() / physical_constants["electron_charge"],
+        self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"]])
+    else:
+      del ticks_labels[-1]
+      ticks_loc = matplotlib.ticker.FixedLocator([self["Emitter"]["voltage"],
+        self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"]])
+
+    ticks_format = matplotlib.ticker.FixedFormatter(ticks_labels)
+
+    # Apply ticks to axes object
+    axl.yaxis.set_major_locator(ticks_loc)
+    axl.yaxis.set_major_formatter(ticks_format)
+
+    # Only have ticks on the left hand side of the plot
+    axl.yaxis.set_ticks_position("left")
+    # ==^^ This stuff should go into a method ^^==
+
+    # # Make sure both axes are scaled properly. First get the last two Axes objects' y-limits.
+    # ylims_left = plt.gcf().axes[-1].axis()[-2:]
+    # ylims_right = plt.gcf().axes[-2].axis()[-2:]
+
+    # # Figure out the maxima and minima.
+    # zipped_ylims = zip(ylims_left, ylims_right)
+    # y_lo = min(zipped_ylims[0])
+    # y_hi = max(zipped_ylims[1])
+
+    # # Finally, scale both axes with the limit data.
+    # for axs in plt.gcf().axes[-2:]:
+    #   axs.set_ylim([y_lo, y_hi])
+
+    # Temporary y-scaling
+    axl.set_ylim(0, 2)
 
     if show:
       plt.show()
