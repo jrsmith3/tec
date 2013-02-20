@@ -4,6 +4,8 @@ from electrode import Electrode
 from constants import physical_constants
 import numpy as np
 from scipy import interpolate,optimize
+import matplotlib.pyplot as plt
+import matplotlib
 
 def max_value(calculator):
   """
@@ -186,8 +188,7 @@ class TEC(dict):
     """
     Returns value of the maximum motive relative to ground in J.
     
-    If with_position is True, return a tuple where the first element is the 
-    maximum motive value and the second element is the corresponding position.
+    If with_position is True, return the position at max motive.
     """
     
     max_motive = self["motive_data"]["motive_array"].max()
@@ -195,7 +196,7 @@ class TEC(dict):
     position_at_max_motive = self["motive_data"]["position_array"][max_motive_indx]
     
     if with_position:
-      return max_motive, position_at_max_motive
+      return position_at_max_motive
     else:
       return max_motive
       
@@ -352,3 +353,88 @@ class TEC(dict):
     return physical_constants["sigma0"] * \
       (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
       ((1./self["Emitter"]["emissivity"]) + (1./self["Collector"]["emissivity"]) - 1)
+
+  def plot_motive(self, ax = None, show = False):
+    """
+    Plot an annotated motive diagram relative to ground.
+
+    If this method is called without an argument, it will create a figure with a subplot(111) and plot the motive diagram with the barriers, neas, voltages, etc. If a matplotplib Axes object is passed to this method, this method will draw the motive diagram on that Axes. If show == True, the method will pyplot.show() the result.
+    """
+    if ax == None:
+      fig = plt.figure()
+      ax = fig.add_subplot(111)
+    else:
+      fig = plt.gcf()
+
+    fig.axes[-1].xaxis.set(visible = False)
+    fig.axes[-1].patch.set_visible(False)
+    fig.axes[-1].set_frame_on(False)
+
+    # Generate the position and corresponding motive values.
+    pos = np.linspace(self["Emitter"]["position"],self["Collector"]["position"],100)
+    mot = self.get_motive(pos) / physical_constants["electron_charge"]
+
+    ax.plot(pos,mot)
+
+    # Draw the barriers of...
+    # ...emitter
+    plt.plot([self["Emitter"]["position"], self["Emitter"]["position"]],
+      [self["Emitter"]["voltage"], 
+      self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"]],'k')
+    # ...and collector
+    plt.plot([self["Collector"]["position"], self["Collector"]["position"]],
+      [self["Collector"]["voltage"], 
+      self["Collector"].calc_barrier_ht() / physical_constants["electron_charge"]],'k')
+
+    # Ticks and labels for emitter and collector.
+    ticks_loc = []
+    ticks_format = []
+
+    # Put the ticks on the axes.
+    for el in ["Emitter", "Collector"]:
+      labels = ["$\mu_{" + el[0] + "}$",
+                "$\psi_{" + el[0] + "}$",
+                "$\psi_{" + el[0] + ",CBM}$"]
+      if "nea" in self[el]:
+        ticks_loc.append(matplotlib.ticker.FixedLocator([self[el]["voltage"],
+          self[el].calc_motive_bc() / physical_constants["electron_charge"],
+          self[el].calc_barrier_ht() / physical_constants["electron_charge"]]))
+        ticks_format.append(matplotlib.ticker.FixedFormatter(labels))
+      else:
+        del labels[-1]
+        ticks_loc.append(matplotlib.ticker.FixedLocator([self[el]["voltage"],
+          self[el].calc_barrier_ht() / physical_constants["electron_charge"]]))
+        ticks_format.append(matplotlib.ticker.FixedFormatter(labels))
+
+      if el is "Collector":
+        axr = fig.axes[-1].twinx()
+
+      fig.axes[-1].yaxis.set_major_locator(ticks_loc[-1])
+      fig.axes[-1].yaxis.set_major_formatter(ticks_format[-1])
+      fig.axes[-1].tick_params(direction="outward")
+
+    # Make sure both axes are scaled properly. First get the last two Axes objects' y-limits.
+    ylims_left = plt.gcf().axes[-1].axis()[-2:]
+    ylims_right = plt.gcf().axes[-2].axis()[-2:]
+
+    # Figure out the maxima and minima.
+    zipped_ylims = zip(ylims_left, ylims_right)
+    y_lo = min(zipped_ylims[0])
+    y_hi = max(zipped_ylims[1])
+
+    # Finally, scale both axes with the limit data.
+    for axs in plt.gcf().axes[-2:]:
+      axs.set_ylim([y_lo, y_hi])
+
+    # maximum motive
+    plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"], 'k+')
+    plt.annotate("$\psi_{m}$", 
+      xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"]))
+    
+    # # labels and dimension lines
+
+
+
+    if show:
+      plt.show()
+
