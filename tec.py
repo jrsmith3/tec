@@ -360,6 +360,7 @@ class TEC(dict):
 
     If this method is called without an argument, it will create a figure with a subplot(111) and plot the motive diagram with the barriers, neas, voltages, etc. If a matplotplib Axes object is passed to this method, this method will draw the motive diagram on that Axes. If show == True, the method will pyplot.show() the result.
     """
+
     if ax == None:
       fig = plt.figure()
       ax = fig.add_subplot(111)
@@ -376,6 +377,7 @@ class TEC(dict):
 
     ax.plot(pos,mot)
 
+    # NOTE: I should be doing the following with spines and not lines.
     # Draw the barriers of...
     # ...emitter
     plt.plot([self["Emitter"]["position"], self["Emitter"]["position"]],
@@ -431,10 +433,68 @@ class TEC(dict):
     plt.annotate("$\psi_{m}$", 
       xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"]))
     
-    # # labels and dimension lines
-
+    # labels and dimension lines
+    for el,pos_indx in zip(["Emitter", "Collector"],[8,92]):
+      if "nea" in self[el]:
+        nea = "$\chi_{" + el[0] + "}$"
+        self.dimension_line(nea, pos[pos_indx+5], 
+          self[el].calc_motive_bc() / physical_constants["electron_charge"], 
+          self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+        barrier = "$\zeta_{" + el[0] + "}$"
+        self.dimension_line(barrier, pos[pos_indx], 
+          self[el]["voltage"], 
+          self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+      else:
+        barrier = "$\phi_{" + el[0] + "}$"
+        self.dimension_line(barrier, pos[pos_indx], 
+          self[el]["voltage"], 
+          self[el].calc_barrier_ht() / physical_constants["electron_charge"])
 
 
     if show:
       plt.show()
+
+  def dimension_line(self, label, x, y_lo, y_hi, label_loc = "mi", label_pos = "left"):
+    """
+    Plots a vertical dimension line on the gca().
+
+    label: string labeling the dimension line.  
+    x: horizontal placement of dimension line.
+    y_lo: dimension line will extend down to this position.
+    y_hi: dimension line will extend up to this position.
+    label_loc: vertical placement of the label. Can be "lo" "mi" or "hi".
+    label_pos: which side of the dimension line the label is placed.
+    """
+    ax = plt.gca()
+
+    # Figure out where the text should go.
+    if label_pos == "right":
+      ha = "right"
+    else:
+      ha = "left"
+
+    if label_loc == "hi":
+      label_y = np.mean([y_lo, y_hi, y_hi, y_hi])
+    elif label_loc == "lo":
+      label_y = np.mean([y_lo, y_lo, y_lo, y_hi])
+    else:
+      label_y = np.mean([y_lo, y_hi])
+
+    # Write the text.
+    ax.annotate(label, xy = [x, y_lo], xytext = [x, label_y], ha = "center",
+      arrowprops = {"arrowstyle":"->"})
+    ax.annotate(label, xy = [x, y_hi], xytext = [x, label_y], ha = "center",
+      arrowprops = {"arrowstyle":"->"})
+
+    # width = 1e-8
+
+    # dy_lo = y_lo - np.mean([y_lo,y_hi])
+    # # Down arrow.
+    # ax.arrow(x, np.mean([y_lo,y_hi]), 0, dy_lo, color = "k",
+    #   width = width, head_width = 3 * width, head_length = 4.5)
+
+    # dy_hi = y_hi - np.mean([y_lo,y_hi])
+    # # Up arrow.
+    # ax.arrow(x, np.mean([y_lo,y_hi]), 0, dy_hi)
+
 
