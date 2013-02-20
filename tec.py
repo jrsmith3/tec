@@ -368,14 +368,14 @@ class TEC(dict):
       fig = plt.gcf()
 
     # Create the axes object for the collector barrier visualization.
-    axr = fig.add_axes(axl.get_positio())
+    axr = fig.add_axes(axl.get_position())
 
     # Generate the position and corresponding motive values.
     pos = np.linspace(self["Emitter"]["position"],self["Collector"]["position"],100)
     mot = self.get_motive(pos) / physical_constants["electron_charge"]
 
     # Plot all the items on the emitter-side axes.
-    axl.plot(pos,mot)
+    axl.plot(pos,mot,"k")
 
     # # maximum motive
     # plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"], 'k+')
@@ -405,7 +405,7 @@ class TEC(dict):
     axl.spines["top"].set_color("none")
     axl.spines["bottom"].set_color("none")
     axl.spines["right"].set_color("none")
-    axl.spines["left"].set_color("none")
+    # axl.spines["left"].set_color("none")
     axl.patch.set_visible(False)
 
     # Draw the barrier of the emitter using the axes object's spines. Constrain it to the left side of the motive curve.
