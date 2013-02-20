@@ -377,83 +377,104 @@ class TEC(dict):
     # Plot all the items on the emitter-side axes.
     axl.plot(pos,mot,"k")
 
-    # # maximum motive
-    # plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"], 'k+')
-    # plt.annotate("$\psi_{m}$", 
-    #   xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"]))
-    
-    # # labels and dimension lines
-    # for el,pos_indx in zip(["Emitter", "Collector"],[8,92]):
-    #   if "nea" in self[el]:
-    #     nea = "$\chi_{" + el[0] + "}$"
-    #     self.dimension_line(nea, pos[pos_indx+5], 
-    #       self[el].calc_motive_bc() / physical_constants["electron_charge"], 
-    #       self[el].calc_barrier_ht() / physical_constants["electron_charge"])
-    #     barrier = "$\zeta_{" + el[0] + "}$"
-    #     self.dimension_line(barrier, pos[pos_indx], 
-    #       self[el]["voltage"], 
-    #       self[el].calc_barrier_ht() / physical_constants["electron_charge"])
-    #   else:
-    #     barrier = "$\phi_{" + el[0] + "}$"
-    #     self.dimension_line(barrier, pos[pos_indx], 
-    #       self[el]["voltage"], 
-    #       self[el].calc_barrier_ht() / physical_constants["electron_charge"])
-    
-    # ==vv This stuff should go into a method vv==
-    # Initialize the axes borders, etc.
-    axl.xaxis.set(visible = False)
-    axl.spines["top"].set_color("none")
-    axl.spines["bottom"].set_color("none")
-    axl.spines["right"].set_color("none")
-    # axl.spines["left"].set_color("none")
-    axl.patch.set_visible(False)
+    # Work out the x-interval.
+    x_interval = self["Collector"]["position"] - self["Emitter"]["position"]
 
-    # Draw the barrier of the emitter using the axes object's spines. Constrain it to the left side of the motive curve.
-    axl.spines["left"].set_bounds(self["Emitter"]["voltage"], 
-      self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"])
-    axl.spines["left"].set_position(("data", self["Emitter"]["position"]))
+    # maximum motive
+    plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"], 'k+')
+    plt.annotate("$\psi_{m}$", 
+      xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"]))
+    
+    # labels and dimension lines
+    for el, factr in zip(["Emitter", "Collector"],[-1,1]):
+      if "nea" in self[el]:
+        nea = "$\chi_{" + el[0] + "}$"
+        self.dimension_line(nea, self[el]["position"] + (factr * 0.07 * x_interval), 
+          self[el].calc_motive_bc() / physical_constants["electron_charge"], 
+          self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+        barrier = "$\zeta_{" + el[0] + "}$"
+      else:
+        barrier = "$\phi_{" + el[0] + "}$"
+      self.dimension_line(barrier, self[el]["position"] + (factr * 0.1 * x_interval), 
+        self[el]["voltage"], 
+        self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+
+    self.barrier_artist(axl, "Emitter")
+    self.barrier_artist(axr, "Collector")
+
+    # x-scaling
+    xmin = self["Emitter"]["position"] - (0.12 * x_interval)
+    xmax = self["Collector"]["position"] + (0.12 * x_interval)
+    xlim = (xmin, xmax)
+
+    axl.set_xlim(xlim)
+    axr.set_xlim(xlim)
+
+    # y-scaling
+    y_lo = min([0, self["Emitter"]["voltage"], self["Collector"]["voltage"]])
+    y_hi = max([self["Emitter"].calc_barrier_ht() / \
+      physical_constants["electron_charge"], 
+      self["Collector"].calc_barrier_ht() / physical_constants["electron_charge"], 
+      self.get_max_motive_ht()])
+
+    axl.set_ylim([y_lo, 1.1 * y_hi])
+    axr.set_ylim([y_lo, 1.1 * y_hi])
+    
+    if show:
+      plt.show()
+
+  def barrier_artist(self, ax, el):
+    """
+    Helper method to properly draw barrier using spines.
+    """
+    if el == "Emitter":
+      loc = "left"
+    else:
+      loc = "right"
+
+    # Initialize the axes borders, etc.
+    ax.xaxis.set(visible = False)
+    ax.spines["top"].set_color("none")
+    ax.spines["bottom"].set_color("none")
+    ax.spines["right"].set_color("none")
+    ax.spines["left"].set_color("none")
+    ax.patch.set_visible(False)
+
+    # Switch back on the appropriate spine.
+    ax.spines[loc].set_color("k")
+
+    # Only have ticks on the proper side of the plot
+    ax.yaxis.set_ticks_position(loc)
+
+    # Draw the barrier of the electrode using the axes object's spines. Constrain it to the proper side of the motive curve.
+    # Fix the unit offset on the right
+    if el == "Collector":
+      x_loc = self[el]["position"] - 1
+    else:
+      x_loc = self[el]["position"]
+
+    ax.spines[loc].set_position(("data", x_loc))
+    ax.spines[loc].set_bounds(self[el]["voltage"], 
+      self[el].calc_barrier_ht() / physical_constants["electron_charge"])
 
     # Set up ticks and labels for emitter.
-    ticks_labels = ["$\mu_{E}$",
-              "$\psi_{E}$",
-              "$\psi_{E,CBM}$"]
-    if "nea" in self["Emitter"]:
-      ticks_loc = matplotlib.ticker.FixedLocator([self["Emitter"]["voltage"],
-        self["Emitter"].calc_motive_bc() / physical_constants["electron_charge"],
-        self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"]])
+    ticks_labels = ["$\mu_{" + el[0] + "}$",
+              "$\psi_{" + el[0] + "}$",
+              "$\psi_{" + el[0] + ",CBM}$"]
+    if "nea" in self[el]:
+      ticks_loc = matplotlib.ticker.FixedLocator([self[el]["voltage"],
+        self[el].calc_motive_bc() / physical_constants["electron_charge"],
+        self[el].calc_barrier_ht() / physical_constants["electron_charge"]])
     else:
       del ticks_labels[-1]
-      ticks_loc = matplotlib.ticker.FixedLocator([self["Emitter"]["voltage"],
-        self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"]])
+      ticks_loc = matplotlib.ticker.FixedLocator([self[el]["voltage"],
+        self[el].calc_barrier_ht() / physical_constants["electron_charge"]])
 
     ticks_format = matplotlib.ticker.FixedFormatter(ticks_labels)
 
     # Apply ticks to axes object
-    axl.yaxis.set_major_locator(ticks_loc)
-    axl.yaxis.set_major_formatter(ticks_format)
-
-    # Only have ticks on the left hand side of the plot
-    axl.yaxis.set_ticks_position("left")
-    # ==^^ This stuff should go into a method ^^==
-
-    # # Make sure both axes are scaled properly. First get the last two Axes objects' y-limits.
-    # ylims_left = plt.gcf().axes[-1].axis()[-2:]
-    # ylims_right = plt.gcf().axes[-2].axis()[-2:]
-
-    # # Figure out the maxima and minima.
-    # zipped_ylims = zip(ylims_left, ylims_right)
-    # y_lo = min(zipped_ylims[0])
-    # y_hi = max(zipped_ylims[1])
-
-    # # Finally, scale both axes with the limit data.
-    # for axs in plt.gcf().axes[-2:]:
-    #   axs.set_ylim([y_lo, y_hi])
-
-    # Temporary y-scaling
-    axl.set_ylim(0, 2)
-
-    if show:
-      plt.show()
+    ax.yaxis.set_major_locator(ticks_loc)
+    ax.yaxis.set_major_formatter(ticks_format)
 
   def dimension_line(self, label, x, y_lo, y_hi, label_loc = "mi", label_pos = "left"):
     """
