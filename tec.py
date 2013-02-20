@@ -366,10 +366,13 @@ class TEC(dict):
       ax = fig.add_subplot(111)
     else:
       fig = plt.gcf()
+      ax = plt.gca()
 
     fig.axes[-1].xaxis.set(visible = False)
+    fig.axes[-1].spines["top"].set_color("none")
+    fig.axes[-1].spines["bottom"].set_color("none")
     fig.axes[-1].patch.set_visible(False)
-    fig.axes[-1].set_frame_on(False)
+    # fig.axes[-1].set_frame_on(False)
 
     # Generate the position and corresponding motive values.
     pos = np.linspace(self["Emitter"]["position"],self["Collector"]["position"],100)
@@ -377,16 +380,17 @@ class TEC(dict):
 
     ax.plot(pos,mot)
 
-    # NOTE: I should be doing the following with spines and not lines.
     # Draw the barriers of...
     # ...emitter
-    plt.plot([self["Emitter"]["position"], self["Emitter"]["position"]],
-      [self["Emitter"]["voltage"], 
-      self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"]],'k')
+    ax.spines["left"].set_bounds(self["Emitter"]["voltage"], 
+      self["Emitter"].calc_barrier_ht() / physical_constants["electron_charge"])
+    ax.spines["left"].set_position(("data", self["Emitter"]["position"]))
     # ...and collector
-    plt.plot([self["Collector"]["position"], self["Collector"]["position"]],
-      [self["Collector"]["voltage"], 
-      self["Collector"].calc_barrier_ht() / physical_constants["electron_charge"]],'k')
+    ax.spines["right"].set_bounds(self["Collector"]["voltage"], 
+      self["Collector"].calc_barrier_ht() / physical_constants["electron_charge"])
+    ax.spines["right"].set_position(("data", self["Collector"]["position"]))
+    # ax.spines["right"].set_color("none")
+    # ax.yaxis.set_ticks_position("left")
 
     # Ticks and labels for emitter and collector.
     ticks_loc = []
@@ -410,6 +414,9 @@ class TEC(dict):
 
       if el is "Collector":
         axr = fig.axes[-1].twinx()
+        # axr.spines["right"].set_bounds(self["Collector"]["voltage"], 
+        #   self["Collector"].calc_barrier_ht() / physical_constants["electron_charge"])
+        # axr.spines["right"].set_position(("data", self["Collector"]["position"]))
 
       fig.axes[-1].yaxis.set_major_locator(ticks_loc[-1])
       fig.axes[-1].yaxis.set_major_formatter(ticks_format[-1])
