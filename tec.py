@@ -383,19 +383,20 @@ class TEC(dict):
     # maximum motive
     plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"], 'k+')
     plt.annotate("$\psi_{m}$", 
+      xytext = (1.1 * self.get_max_motive_ht(with_position=True), 1.05 * self.get_max_motive_ht() / physical_constants["electron_charge"]),
       xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"]))
     
     # labels and dimension lines
     for el, factr in zip(["Emitter", "Collector"],[-1,1]):
       if "nea" in self[el]:
         nea = "$\chi_{" + el[0] + "}$"
-        self.dimension_line(nea, self[el]["position"] + (factr * 0.07 * x_interval), 
+        self.dimension_line(nea, self[el]["position"] + (factr * 0.1 * x_interval), 
           self[el].calc_motive_bc() / physical_constants["electron_charge"], 
           self[el].calc_barrier_ht() / physical_constants["electron_charge"])
         barrier = "$\zeta_{" + el[0] + "}$"
       else:
         barrier = "$\phi_{" + el[0] + "}$"
-      self.dimension_line(barrier, self[el]["position"] + (factr * 0.1 * x_interval), 
+      self.dimension_line(barrier, self[el]["position"] + (factr * 0.25 * x_interval), 
         self[el]["voltage"], 
         self[el].calc_barrier_ht() / physical_constants["electron_charge"])
 
@@ -403,8 +404,9 @@ class TEC(dict):
     self.barrier_artist(axr, "Collector")
 
     # x-scaling
-    xmin = self["Emitter"]["position"] - (0.12 * x_interval)
-    xmax = self["Collector"]["position"] + (0.12 * x_interval)
+    x_buffer = 0.25
+    xmin = self["Emitter"]["position"] - (x_buffer * x_interval)
+    xmax = self["Collector"]["position"] + (x_buffer * x_interval)
     xlim = (xmin, xmax)
 
     axl.set_xlim(xlim)
@@ -442,6 +444,7 @@ class TEC(dict):
 
     # Switch back on the appropriate spine.
     ax.spines[loc].set_color("k")
+    ax.spines[loc].set_linewidth(0.25)
 
     # Only have ticks on the proper side of the plot
     ax.yaxis.set_ticks_position(loc)
@@ -505,19 +508,6 @@ class TEC(dict):
 
     # Write the text.
     ax.annotate(label, xy = [x, y_lo], xytext = [x, label_y], ha = "center",
-      arrowprops = {"arrowstyle":"->"})
+      arrowprops = {"arrowstyle":"->", "linewidth":0.25})
     ax.annotate(label, xy = [x, y_hi], xytext = [x, label_y], ha = "center",
-      arrowprops = {"arrowstyle":"->"})
-
-    # width = 1e-8
-
-    # dy_lo = y_lo - np.mean([y_lo,y_hi])
-    # # Down arrow.
-    # ax.arrow(x, np.mean([y_lo,y_hi]), 0, dy_lo, color = "k",
-    #   width = width, head_width = 3 * width, head_length = 4.5)
-
-    # dy_hi = y_hi - np.mean([y_lo,y_hi])
-    # # Up arrow.
-    # ax.arrow(x, np.mean([y_lo,y_hi]), 0, dy_hi)
-
-
+      arrowprops = {"arrowstyle":"->", "linewidth":0.25})
