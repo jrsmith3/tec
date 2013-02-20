@@ -445,6 +445,7 @@ class TEC(dict):
 
     # Only have ticks on the proper side of the plot
     ax.yaxis.set_ticks_position(loc)
+    ax.tick_params(direction = "outward")
 
     # Draw the barrier of the electrode using the axes object's spines. Constrain it to the proper side of the motive curve.
     # Fix the unit offset on the right
