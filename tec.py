@@ -354,7 +354,7 @@ class TEC(dict):
       (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
       ((1./self["Emitter"]["emissivity"]) + (1./self["Collector"]["emissivity"]) - 1)
 
-  def plot_motive(self, axl = None, show = False):
+  def plot_motive(self, axl = None, show = False, fontsize = False):
     """
     Plot an annotated motive diagram relative to ground.
 
@@ -421,7 +421,20 @@ class TEC(dict):
 
     axl.set_ylim([y_lo, 1.1 * y_hi])
     axr.set_ylim([y_lo, 1.1 * y_hi])
-    
+
+    # Set the fontsize of all the elements.
+    if fontsize:
+      axs = [axl, axr]
+
+      for ax in axs:
+        # Set fontsize of annotations
+        for child in ax.get_children():
+          if isinstance(child, matplotlib.text.Annotation):
+            child.set_fontsize(fontsize)
+          if isinstance(child, matplotlib.axis.YAxis):
+            for tick_label in child.get_majorticklabels():
+              tick_label.set_fontsize(fontsize)
+
     if show:
       plt.show()
 
