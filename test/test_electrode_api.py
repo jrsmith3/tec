@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 """
 Tests API of the Electrode class.
 """
@@ -12,13 +9,45 @@ __copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
 __license__ = ""
 
 from tec import Electrode
+from input_params import electrode_input_params as el_input
 import unittest
+import copy
 
+# ============
+# Base classes
+# ============
+class ElectrodeAPITestBaseJustInputParams(unittest.TestCase):
+  """
+  Base class for API tests.
+
+  This class defines a common setUp method that all the tests in this suite use.
+  """
+  def setUp(self):
+    """
+    Set up a dictionary that can properly instantiate an Electrode object.
+    """
+    self.input_params = copy.copy(el_input)
+
+class ElectrodeAPITestBaseWithElectrode(unittest.TestCase):
+  """
+  Base class for API tests.
+
+  This class defines a common setUp method that all the tests in this suite use.
+  """
+  def setUp(self):
+    """
+    Set up a dictionary that can properly instantiate an Electrode object.
+    """
+    self.El = Electrode(copy.copy(el_input))
+
+
+# ============
+# Test classes
+# ============
 class InstantiationInputNonDict(unittest.TestCase):
   """
   Tests instantiation when non-dict data is used.
   """
-
   def test_Electrode_no_input_arg(self):
     """Attempt to instantiate Electrode with no input argument."""
     self.assertRaises(TypeError,Electrode,None)
@@ -28,25 +57,10 @@ class InstantiationInputNonDict(unittest.TestCase):
     self.assertRaises(TypeError,Electrode,"this string is not a dict.")
 
 
-class InstantiationInputIncomplete(unittest.TestCase):
+class InstantiationInputIncomplete(ElectrodeAPITestBaseJustInputParams):
   """
   Tests instantiating when input dict is missing required data.
   """
-  
-  def setUp(self):
-    """
-    Set up a dictionary that can properly instantiate an Electrode object.
-    """
-
-    input_params = {"temp":1,\
-                   "barrier":1,\
-                   "voltage":1,\
-                   "position":0,\
-                   "richardson":10,\
-                   "emissivity":0.5}
-                   
-    self.input_params = input_params
-
   def test_Electrode_input_arg_sans_temp(self):
     """Instantiating argument missing temp."""
     del(self.input_params["temp"])
@@ -78,25 +92,10 @@ class InstantiationInputIncomplete(unittest.TestCase):
     self.assertRaises(KeyError,Electrode,self.input_params)
     
     
-class InstantiationInputFieldsWrongType(unittest.TestCase):
+class InstantiationInputFieldsWrongType(ElectrodeAPITestBaseJustInputParams):
   """
   Tests instantiating when input dict has non-numeric data items.
   """
-
-  def setUp(self):
-    """
-    Set up a dictionary that can properly instantiate an Electrode object.
-    """
-
-    input_params = {"temp":1,\
-                   "barrier":1,\
-                   "voltage":1,\
-                   "position":0,\
-                   "richardson":10,\
-                   "emissivity":0.5}
-                   
-    self.input_params = input_params
-
   def test_Electrode_input_temp_non_numeric(self):
     """Instantiating argument temp is non-numeric."""
     self.input_params["temp"] = "this string is non-numeric."
@@ -133,28 +132,13 @@ class InstantiationInputFieldsWrongType(unittest.TestCase):
     self.assertRaises(TypeError,Electrode,self.input_params)
 
 
-class InstantiationInputOutsideConstraints(unittest.TestCase):
+class InstantiationInputOutsideConstraints(ElectrodeAPITestBaseJustInputParams):
   """
   Tests instantiating when input dict values are outside their constraints.
   
   See the Electrode class docstring for information about the constraints on 
   the input data.
   """
-
-  def setUp(self):
-    """
-    Set up a dictionary that can properly instantiate an Electrode object.
-    """
-
-    input_params = {"temp":1,\
-                   "barrier":1,\
-                   "voltage":1,\
-                   "position":0,\
-                   "richardson":10,\
-                   "emissivity":0.5}
-                   
-    self.input_params = input_params
-
   def test_Electrode_input_temp_less_than_zero(self):
     """Instantiating argument temp < 0."""
     self.input_params["temp"] = -1.1
@@ -184,27 +168,12 @@ class InstantiationInputOutsideConstraints(unittest.TestCase):
     """Instantiating argument nea < 0."""
     self.input_params["nea"] = -1.0
     self.assertRaises(ValueError,Electrode,self.input_params)
-    
-class SetInputWrongType(unittest.TestCase):
+
+
+class SetInputWrongType(ElectrodeAPITestBaseWithElectrode):
   """
   Tests setting attributes when input data is non-numeric.
   """
-
-  def setUp(self):
-    """
-    Set up an Electrode object for the tests.
-    """
-
-    input_params = {"temp":1,\
-                   "barrier":1,\
-                   "voltage":1,\
-                   "position":0,\
-                   "richardson":10,\
-                   "emissivity":0.5, \
-                   "nea":1.0}
-                   
-    self.El = Electrode(input_params)
-    
   def test_Electrode_set_temp_non_numeric(self):
     """Set argument temp non-numeric."""
     non_num = "this string is non-numeric."
@@ -241,29 +210,13 @@ class SetInputWrongType(unittest.TestCase):
     self.assertRaises(TypeError,self.El["nea"],non_num)
 
 
-class SetInputOutsideConstraints(unittest.TestCase):
+class SetInputOutsideConstraints(ElectrodeAPITestBaseWithElectrode):
   """
   Tests setting attributes when input values are outside their constraints.
   
   See the Electrode class docstring for information about the constraints on 
   the data.
   """
-  
-  def setUp(self):
-    """
-    Set up an Electrode object for the tests.
-    """
-
-    input_params = {"temp":1,\
-                   "barrier":1,\
-                   "voltage":1,\
-                   "position":0,\
-                   "richardson":10,\
-                   "emissivity":0.5, \
-                   "nea":1.0}
-                   
-    self.El = Electrode(input_params)
-    
   def test_Electrode_set_temp_less_than_zero(self):
     """Set argument temp < 0."""
     self.assertRaises(ValueError,self.El.__setitem__, "temp", -1.1)
@@ -288,35 +241,131 @@ class SetInputOutsideConstraints(unittest.TestCase):
     """Set argument nea < 0."""
     self.assertRaises(ValueError,self.El.__setitem__,"nea",-1.1)
     
+
 # None of the following works on Python 2.6.6 which is what is on my work computer.
-#class CalculatorsReturnType(unittest.TestCase):
-  #"""
-  #Tests output types of the Electrode calculator methods.
-  #"""
+class CalculatorsReturnType(ElectrodeAPITestBaseWithElectrode):
+  """
+  Tests output types of the Electrode calculator methods.
+  """
+  def test_Electrode_calc_saturation_current_type(self):
+    """calc_saturation_current should return a number."""
+    self.assertIsInstance(self.El.calc_saturation_current(),(int,long,float))
 
-  #def setUp(self):
-    #"""
-    #Set up an Electrode object for the tests.
-    #"""
+  def test_Electrode_calc_vacuum_energy_type(self):
+    """calc_vacuum_energy should return a number."""
+    self.assertIsInstance(self.El.calc_vacuum_energy(),(int,long,float))
 
-    #input_params = {"temp":1,\
-                   #"barrier":1,\
-                   #"voltage":1,\
-                   #"position":0,\
-                   #"richardson":10,\
-                   #"emissivity":0.5, \
-                   #"nea":1.0}
-                   
-    #self.El = Electrode(input_params)
-    
-  #def test_Electrode_calc_saturation_current_type(self):
-    #"""calc_saturation_current should return a number."""
-    #self.assertIsInstance(self.El.calc_saturation_current(),(int,long,float))
+  def test_Electrode_calc_barrier_ht_type(self):
+    """calc_barrier_ht should return a number."""
+    self.assertIsInstance(self.El.calc_barrier_ht(),(int,long,float))
 
-  #def test_Electrode_calc_vacuum_energy_type(self):
-    #"""calc_vacuum_energy should return a number."""
-    #self.assertIsInstance(self.El.calc_vacuum_energy(),(int,long,float))
+  def test_Electrode_calc_motive_bc(self):
+    """calc_vacuum_energy should return a number."""
+    self.assertIsInstance(self.El.calc_motive_bc(),(int,long,float))
 
+class ParamChanged(ElectrodeAPITestBaseWithElectrode):
+  """
+  Functionality of method param_changed_and_reset
+  """
+  def test_usually_false(self):
+    """
+    param_changed_and_reset should be 0 by default
+    """
+    self.assertFalse(self.El.param_changed_and_reset())
 
-if __name__ == '__main__':
-  unittest.main()
+  def test_true_immediately_after_temp_change(self):
+    """
+    param_changed_and_reset should switch to 1 if temp changes
+    """
+    self.El["temp"] = 0.7
+    self.assertTrue(self.El.param_changed_and_reset())
+
+  def test_true_immediately_after_barrier_change(self):
+    """
+    param_changed_and_reset should switch to 1 if barrier changes
+    """
+    self.El["barrier"] = 0.7
+    self.assertTrue(self.El.param_changed_and_reset())
+
+  def test_true_immediately_after_voltage_change(self):
+    """
+    param_changed_and_reset should switch to 1 if voltage changes
+    """
+    self.El["voltage"] = 0.7
+    self.assertTrue(self.El.param_changed_and_reset())
+
+  def test_true_immediately_after_position_change(self):
+    """
+    param_changed_and_reset should switch to 1 if position changes
+    """
+    self.El["position"] = 0.7
+    self.assertTrue(self.El.param_changed_and_reset())
+
+  def test_true_immediately_after_richardson_change(self):
+    """
+    param_changed_and_reset should switch to 1 if richardson changes
+    """
+    self.El["richardson"] = 0.7
+    self.assertTrue(self.El.param_changed_and_reset())
+
+  def test_true_immediately_after_emissivity_change(self):
+    """
+    param_changed_and_reset should be 0 if emissivity changes
+    """
+    self.El["emissivity"] = 0.7
+    self.assertFalse(self.El.param_changed_and_reset())
+
+  def test_true_immediately_after_nea_change(self):
+    """
+    param_changed_and_reset should switch to 1 if nea changes
+    """
+    self.El["nea"] = 0.7
+    self.assertTrue(self.El.param_changed_and_reset())
+
+  def test_reset_to_false_after_temp_change(self):
+    """
+    param_changed_and_reset should switch to 0 after checking temp
+    """
+    self.El["temp"] = 0.7
+    self.El.param_changed_and_reset()
+    self.assertFalse(self.El.param_changed_and_reset())
+
+  def test_reset_to_false_after_barrier_change(self):
+    """
+    param_changed_and_reset should switch to 0 after checking barrier
+    """
+    self.El["barrier"] = 0.7
+    self.El.param_changed_and_reset()
+    self.assertFalse(self.El.param_changed_and_reset())
+
+  def test_reset_to_false_after_voltage_change(self):
+    """
+    param_changed_and_reset should switch to 0 after checking voltage
+    """
+    self.El["voltage"] = 0.7
+    self.El.param_changed_and_reset()
+    self.assertFalse(self.El.param_changed_and_reset())
+
+  def test_reset_to_false_after_position_change(self):
+    """
+    param_changed_and_reset should switch to 0 after checking position
+    """
+    self.El["position"] = 0.7
+    self.El.param_changed_and_reset()
+    self.assertFalse(self.El.param_changed_and_reset())
+
+  def test_reset_to_false_after_richardson_change(self):
+    """
+    param_changed_and_reset should switch to 0 after checking richardson
+    """
+    self.El["richardson"] = 0.7
+    self.El.param_changed_and_reset()
+    self.assertFalse(self.El.param_changed_and_reset())
+
+  def test_reset_to_false_after_nea_change(self):
+    """
+    param_changed_and_reset should switch to 0 after checking nea
+    """
+    self.El["nea"] = 0.7
+    self.El.param_changed_and_reset()
+    self.assertFalse(self.El.param_changed_and_reset())
