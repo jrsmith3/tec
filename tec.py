@@ -390,13 +390,16 @@ class TEC(dict):
     for el, factr in zip(["Emitter", "Collector"],[-1,1]):
       if "nea" in self[el]:
         nea = "$\chi_{" + el[0] + "}$"
-        self.dimension_line(nea, self[el]["position"] + (factr * 0.1 * x_interval), 
+        self.dimension_line(nea, self[el]["position"] + (factr * 0.25 * x_interval), 
           self[el].calc_motive_bc() / physical_constants["electron_charge"], 
           self[el].calc_barrier_ht() / physical_constants["electron_charge"])
         barrier = "$\zeta_{" + el[0] + "}$"
+        barrier_pos = 0.6
       else:
         barrier = "$\phi_{" + el[0] + "}$"
-      self.dimension_line(barrier, self[el]["position"] + (factr * 0.25 * x_interval), 
+        barrier_pos = 0.25
+      self.dimension_line(barrier,self[el]["position"] + \
+        (factr * barrier_pos * x_interval), 
         self[el]["voltage"], 
         self[el].calc_barrier_ht() / physical_constants["electron_charge"])
 
@@ -404,9 +407,10 @@ class TEC(dict):
     self.barrier_artist(axr, "Collector")
 
     # x-scaling
-    x_buffer = 0.25
-    xmin = self["Emitter"]["position"] - (x_buffer * x_interval)
-    xmax = self["Collector"]["position"] + (x_buffer * x_interval)
+    xl_buffer = 0.25
+    xr_buffer = 0.6
+    xmin = self["Emitter"]["position"] - (xl_buffer * x_interval)
+    xmax = self["Collector"]["position"] + (xr_buffer * x_interval)
     xlim = (xmin, xmax)
 
     axl.set_xlim(xlim)
