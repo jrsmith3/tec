@@ -38,7 +38,7 @@ class Electrode(dict):
     ---        ---------- ----             -----------
     temp       >  0       K
     
-    barrier >= 0       eV               Sometimes referred to as work 
+    barrier >= 0          eV               Sometimes referred to as work 
                                            function. In the case of a metal and 
                                            a positive electron affinity 
                                            semiconductor, the barrier height is 
@@ -161,7 +161,9 @@ class Electrode(dict):
     
   def param_changed_and_reset(self):
     """
-    Return boolean indicating if a parameter has been changed, and reset to False.
+    Return True, reset to False if a parameter affecting motive has just been changed.
+
+    Parameters which affect motive are temp, barrier, voltage, position, richardson, and nea.
     """
     if self.__param_changed:
       self.__param_changed = False
