@@ -1,4 +1,18 @@
 # -*- coding: utf-8 -*-
+"""
+=========================
+Base Library (:mod:`tec`)
+=========================
+
+.. currentmodule:: tec
+
+Base library
+
+.. autoclass:: Electrode
+  :members:
+.. autoclass:: TECBase
+  :members:
+"""
 
 import numpy as np
 from scipy import interpolate,optimize

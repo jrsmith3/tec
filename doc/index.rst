@@ -19,15 +19,24 @@ The purpose of this package is to make simulating the performance of thermionic 
 There are three major components to this package: the library, the scripting system, and the testing system.
 
 
-Contents:
+.. toctree::
+   	:maxdepth: 2
+
+   	Installation <install>
+   	Quickstart <quickstart>
+   	Library <library>
+   	Scripting <scripting>
+   	Testing <testing>
+
+Reference
+---------
 
 .. toctree::
-   :maxdepth: 2
+   	:maxdepth: 2
 
-   Library
-   Scripting
-   Testing
-
+   	api
+   	Models <models>
+	Numerical Accuracy <numerics>
 
 
 Indices and tables
