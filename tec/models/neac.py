@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy import interpolate,optimize
+from . import Langmuir
 
 class NEAC(Langmuir):
   """
