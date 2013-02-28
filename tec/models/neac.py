@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from electrode import Electrode
-from constants import physical_constants
-from dimensionlesslangmuirpoissonsoln import DimensionlessLangmuirPoissonSoln
-from tec_langmuir import TEC_Langmuir
 import numpy as np
 from scipy import interpolate,optimize
 
