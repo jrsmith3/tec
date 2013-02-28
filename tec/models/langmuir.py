@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy import interpolate,optimize,integrate,special
+from tec import TECBase
 
 class DimensionlessLangmuirPoissonSoln(dict):
   """
