@@ -7,7 +7,7 @@ from tec_langmuir import TEC_Langmuir
 import numpy as np
 from scipy import interpolate,optimize
 
-class TEC_NEAC(TEC_Langmuir):
+class NEAC(Langmuir):
   """
   Thermionic engine simulator. Considers space charge and collector NEA.
 

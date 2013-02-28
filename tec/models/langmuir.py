@@ -100,7 +100,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
         0.5*np.exp(motive[0])*(1+special.erf( motive[0]**0.5 )) ])
 
 
-class TEC_Langmuir(TEC):
+class Langmuir(TECBase):
   """
   Thermionic engine simulator. Considers space charge, ignores NEA.
 
