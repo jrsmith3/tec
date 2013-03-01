@@ -1,2 +1,3 @@
-.. automodule:: models
+.. automodule:: tec.models
 	:members:
+	
