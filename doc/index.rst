@@ -35,7 +35,7 @@ Reference
    	:maxdepth: 2
 
    	api
-   	Models <models>
+   	models
 	Numerical Accuracy <numerics>
 
 
