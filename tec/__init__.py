@@ -5,13 +5,6 @@ Base Library (:mod:`tec`)
 =========================
 
 .. currentmodule:: tec
-
-Base library
-
-.. autoclass:: Electrode
-  :members:
-.. autoclass:: TECBase
-  :members:
 """
 
 import numpy as np
@@ -26,69 +19,26 @@ physical_constants = {"boltzmann" : 1.3806488e-23, \
                       "sigma0" : 5.67050e-8}
 
 class Electrode(dict):
-  
   """
   Thermionic electrode.
+
+  An Electrode object is instantiated by a dict with the keys, constraints, and units listed below. Additional keys will be ignored, and there are no default values for instantiation. Note that despite the units listed below, the Electrode stores and returns its quantities in SI units.
   
-  An Electrode object is instantiated by a dict. The dict must have the keys 
-  listed below which adhere to the noted constraints and units (what I'm calling 
-  "TEC units"). Additional keys will be ignored, and there are no default values 
-  for instantiation. 
-  
+  :param dict input_params: Initializing values for Electrode.
+  :param float input_params["temp"]: Temperature > 0 [K]
+  :param float input_params["barrier"]: Emission barrier >=0 [eV] Sometimes referred to as work function. The barrier is the difference between the lowest energy for which an electron inside a material can escape and the Fermi energy.
+  :param float input_params["voltage"]: Voltage [V] Measured with respect to ground.
+  :param float input_params["position"]: Position [um] Position of the electrode with respect to the origin.
+  :param float input_params["richardson"]: Richardson Constant >=0 [A cm^{-2} K^{-2}]
+  :param float input_params["emissivity"]: Stefan-Boltzmann emissivity < 1 & > 0
+  :param float input_params["nea"]: Negative electron affinity >=0 [eV] (Optional) Increases as the difference between the vacuum energy and conduction band minimum increases.
+
   The user can set either temp or richardson equal to zero to "switch off" the 
-  electrode -- the calc_saturation_current method will return a value of zero in 
-  either case. See the docstring of that method for more info.
-  
-  It is assumed that all input parameters are to machine precision despite the 
-  explicit number of significant figures defined by the user. For example, if 
-  the machine has fifteen digits of precision, an explicit value of
-  
-    1.4
-    
-  for barrier is understood to be
-  
-    1.40000000000000
-  
-  Keys for instantiating dict:
-    Key        Constraint Unit             Description
-    ---        ---------- ----             -----------
-    temp       >  0       K
-    
-    barrier >= 0          eV               Sometimes referred to as work 
-                                           function. In the case of a metal and 
-                                           a positive electron affinity 
-                                           semiconductor, the barrier height is 
-                                           the difference between the vacuum 
-                                           energy and the Fermi level. In the 
-                                           case of a negative electron affinity 
-                                           semiconductor, the barrier is the 
-                                           difference between the conduction 
-                                           band minimum and Fermi level.
+  electrode -- the :meth:`calc_saturation_current` method will return a value 
+  of zero in either case.
                                            
-    voltage               V                Explicitly sets the bias of the 
-                                           electrode with respect to ground. 
-                                           Disambiguates the potential between 
-                                           the Emitter and Collector in a TEC 
-                                           object.
-                                           
-    position              \mu m            Explicitly sets the position of the 
-                                           electrode. Disambiguates the relative 
-                                           positions of the Emitter and 
-                                           Collector in a TEC object.
-                                           
-    richardson >= 0       A cm^{-2} K^{-2} 
-    
-    emissivity < 1 & > 0  
-    
-    nea        >= 0       eV               Optional. In some semiconductors, the 
-                                           vacuum level falls below the 
-                                           conduction band minimum. An increase 
-                                           in this value implies the vacuum 
-                                           level moves ever lower from the 
-                                           conduction band minimum.
-                                           
-  Here's an example.
-  
+  Example:
+
   >>> input_params = {"temp":1000,
   ...                 "barrier":1,
   ...                 "voltage":0,
@@ -190,11 +140,9 @@ class Electrode(dict):
   # Methods
   def calc_saturation_current(self):
     """
-    Return value of the saturation current in A m^{-2}.
+    Saturation current in A m^{-2} calculated according to Richardson-Dushman.
   
-    Calculates the output current density according to the Richardson-Dushman
-    equation. If either temp or barrier are equal to 0, this  method returns
-    a value of 0.
+    If either temp or barrier are equal to 0, this  method returns a value of 0.
     """
     if self["temp"] == 0:
       saturation_current = 0
@@ -206,7 +154,7 @@ class Electrode(dict):
 
   def calc_vacuum_energy(self):
     """
-    Position of the vacuum energy relative to fermi energy in J.
+    Position of the vacuum energy relative to Fermi energy in J.
     
     If the Electrode does not have NEA, the vacuum energy occurs at the top of 
     the barrier and is therefore equal to the barrier. If the Electrode does 
@@ -220,15 +168,13 @@ class Electrode(dict):
       
   def calc_barrier_ht(self):
     """
-    Returns value of barrier height relative to ground in J.
+    Value of barrier height in J relative to ground.
     """
     return self["barrier"] + physical_constants["electron_charge"] * self["voltage"]
       
   def calc_motive_bc(self):
     """
-    Returns the motive boundary condition in J. 
-    
-    It is worth remembering the boundary condition is relative to ground.
+    Motive boundary condition in J relative to ground.
     """
     return self.calc_vacuum_energy() + \
       physical_constants["electron_charge"] * self["voltage"]
@@ -236,21 +182,19 @@ class Electrode(dict):
 
 def max_value(calculator):
   """
-  Decorator method to calculate the maximum value of the requested method.
+  Decorator method to calculate the max value, etc. of the requested method.
   """
-  def wrapper(self, with_output = False, set_voltage = False):
+  def wrapper(self, action = None, set_voltage = False):
     """
-    Arguments (* denotes default argument):
-      with_output == "max": Returns the maximum value of the method relative to the output voltage.
-                     "voltage": Returns the voltage at which the maximum output occurs.
-                     "full": Returns all of the data that the minimization method returns.
-                     else*: Do no minimization and just return the current value of the method.
-      set_voltage == True: After the optimization, leave the object with an output voltage that maximizes the method in question.
-                     False*: Return the output voltage to whatever it was originally.
-                     
-      The set_voltage argument has no effect unless the with_output argument is "max", "voltage", or "full". 
+    :param action: Key indicating the method's desired action. 
+    :param action==None: Simply returns the current value of the method. 
+    :param action=="max": Returns the maximum value of the method relative to the output voltage.
+    :param action=="voltage": Returns the voltage at which the maximum output occurs.
+    :param action=="full": Returns all of the data that the minimization method returns.
+    :param set_voltage: If True, leave the voltage set such that the desired output is maximized. Parameter has no effect unless the action argument is "max", "voltage", or "full".
+    :type set_voltage: bool
     """
-    if with_output in ["max","voltage","full"]:
+    if action in ["max","voltage","full"]:
       # Save the collector voltage because we are going to be moving it around.
       saved_voltage = self["Collector"]["voltage"]
       
@@ -273,11 +217,11 @@ def max_value(calculator):
       return calculator(self)
     
     # Figure out what to return.
-    if with_output == "max":
+    if action == "max":
       return -1 * output[1]
-    elif with_output == "voltage":
+    elif action == "voltage":
       return output[0]
-    elif with_output == "full":
+    elif action == "full":
       return output
   
   def target_function(voltage,obj):
@@ -290,30 +234,24 @@ def max_value(calculator):
   return wrapper
 
 class TECBase(dict):
-  
   """
-  Thermionic engine simulator. Ignores space charge, considers NEA.
+  Base thermionic engine class.
 
-  dict-like object that implements a model of electron transport; ignores the negative space charge effect. This class calculates a motive between the vacuum levels of the two elecrodes which may or may not feature NEA. The model is based on [1]. 
+  This class provides the base API for subclasses which implement particular models of TEC electron transport. Even though it isn't intended to be a model, this class implements a model of electron transport which completely ignores the negative space charge effect, similar to the model described on p. 51 of :cite:`978-0-26-208059-0`.
+
+  The TECBase class is instantiated by a dict with two keys, "Emitter" and "Collector". Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.
+
+  :param dict input_params: Dict containing sub-dicts which can instantiate :class:`Electrode` objects.
+  :param dict input_params["Emitter"]: Initializes the emitter electrode.
+  :param dict input_params["Collector"]: Initializes the collector electrode.
 
   Attributes
   ----------
-  The attributes of the object are accessed like a dictionary. The object has three attributes, "Emitter" and "Collector" are both Electrode objects. "motive_data" is a dictionary containing (meta)data calculated during the motive calculation. "motive_data" should usually be accessed via the class's convenience methods. "motive_data" contains the following data:
+  The attributes of the object are accessed like a dictionary. The object has three attributes, "Emitter" and "Collector" are both Electrode objects. "motive_data" is a dictionary containing (meta)data calculated during the motive calculation. There is no requirement on the structure or contents of the "motive_data" attribute because each particular implementation of a model may have its own specific requirements. Such requirements will be documented in teh subclass's docstring. In the case of TECBase, "motive_data" contains the following data:
 
-    motive_array:   A two-element array containing the electrostatic boundary 
-                    conditions, i.e. the vacuum level of the emitter and 
-                    collector, respectively.
-    
-    position_array: A two-element array containing the values of position 
-                    corresponding to the values in motive_array.
-                    
-    motive_interp:  A scipy.interpolate.interp1d object that interpolates the 
-                    two arrays described above used in the class's convenience 
-                    methods.
-
-  Parameters
-  ----------
-  The TECBase class is instantiated by a dict with two keys, "Emitter" and "Collector" (case insensitive). Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.
+  * motive_array: A two-element array containing the electrostatic boundary conditions, i.e. the vacuum level of the emitter and collector, respectively.
+  * position_array: A two-element array containing the values of position corresponding to the values in motive_array.
+  * motive_interp: A scipy.interpolate.interp1d object that interpolates the two arrays described above used in the class's convenience methods.
 
   Examples
   --------
@@ -332,10 +270,6 @@ class TECBase(dict):
   >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
   >>> example_tec = TECBase(input_dict)
   
-  Notes
-  -----
-  "motive_data" contains the interp1d object because there's no sense in re-instantiating it every time I call the associated methods.
-
   Bibliography
   ------------
   [1] "Thermionic Energy Conversion, Vol. I." Hatsopoulous and Gyftopoulous. p. 48.
@@ -406,16 +340,15 @@ class TECBase(dict):
     """
     Value of motive relative to ground for given value(s) of position in J.
     
-    Position must be of numerical type or numpy array. Returns NaN if position 
-    falls outside of the interelectrode space.
+    :param position: float or numpy array at which motive is to be evaluated. Returns NaN if position falls outside of the interelectrode space.
     """
     return self["motive_data"]["motive_interp"](position)
   
   def get_max_motive_ht(self, with_position=False):
     """
-    Returns value of the maximum motive relative to ground in J.
+    Value of the maximum motive relative to ground in J.
     
-    If with_position is True, return the position at max motive.
+    :param bool with_position: True returns the position at max motive instead.
     """
     
     max_motive = self["motive_data"]["motive_array"].max()
@@ -431,23 +364,21 @@ class TECBase(dict):
   # Methods returning basic data about the TEC --------------------------------
   def calc_interelectrode_spacing(self):
     """
-    Return distance between Collector and Emitter in m.
+    Distance between collector and emitter in m.
     """
     return self["Collector"]["position"] - self["Emitter"]["position"]
   
   def calc_output_voltage(self):
     """
-    Return potential difference between Emitter and Collector in V.
+    Voltage difference between emitter and collector in V.
     """
     return self["Collector"]["voltage"] - self["Emitter"]["voltage"]
   
   def calc_contact_potential(self):
     """
-    Return contact potential in V.
+    Contact potential in V.
     
-    The contact potential is defined as the difference in barrier height between
-    the emitter and collector. This value should not be confused with the output
-    voltage which is the voltage difference between the collector and emitter.
+    The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by :meth:`calc_output_voltage` which is the voltage difference between the collector and emitter.
     """
     return (self["Emitter"]["barrier"] - \
       self["Collector"]["barrier"])/physical_constants["electron_charge"]
@@ -456,7 +387,7 @@ class TECBase(dict):
   # Methods regarding current and power ---------------------------------------
   def calc_forward_current_density(self):
     """
-    Return forward current density in A m^{-2}.
+    Forward current density in A m^{-2}.
     """
     
     if self["Emitter"].calc_barrier_ht() >= self.get_max_motive_ht():
@@ -468,7 +399,7 @@ class TECBase(dict):
   
   def calc_back_current_density(self):
     """
-    Return back current density in A m^{-2}.
+    Back current density in A m^{-2}.
     """
     
     if self["Collector"].calc_barrier_ht() >= self.get_max_motive_ht():
@@ -481,7 +412,7 @@ class TECBase(dict):
   
   def calc_output_current_density(self):
     """
-    Return difference between forward and back current density in A m^{-2}.
+    Net current density flowing across device in A m^{-2}.
     """
     return self.calc_forward_current_density() - \
       self.calc_back_current_density()
@@ -496,7 +427,7 @@ class TECBase(dict):
   # This method needs work: voltage/current density is not resistance
   def calc_load_resistance(self):
     """
-    Return load resistance in ohms.
+    Load resistance in ohms.
     """
     # There is something fishy about the units in this calculation.
     if self.calc_output_current_density() != 0:
@@ -508,7 +439,7 @@ class TECBase(dict):
   # Methods regarding efficiency ----------------------------------------------
   def calc_carnot_efficiency(self):
     """
-    Return value of carnot efficiency in the range 0 to 1.
+    Carnot efficiency in the range 0 to 1.
     
     This method will return a negative value if the emitter temperature is less
     than the collector temperature.
@@ -517,10 +448,9 @@ class TECBase(dict):
   
   def calc_radiation_efficiency(self):
     """
-    Return efficiency of device considering only blackbody heat transport.
-    
-    The output will be between 0 and 1. If the output power is less than zero,
-    return nan.
+    Efficiency considering only blackbody heat transport in range 0 to 1.
+
+    This method will return nan if the output power is less than zero. See :cite:`978-0-26-208059-0` p. 73 for a description of how the radiation efficiency is calculated.
     """
     if self.calc_output_power_density() > 0:
       return self.calc_output_power_density() / self.__calc_black_body_heat_transport()
@@ -529,13 +459,9 @@ class TECBase(dict):
   
   def calc_electronic_efficiency(self):
     """
-    Return efficiency of device considering only electronic heat transport.
-    
-    The output will be between 0 and 1. If the output power is less than zero,
-    return nan.
+    Efficiency considering only electronic heat transport in range 0 to 1.
 
-    See "Thermionic Energy Conversion Vol. I" by Hatsopoulous and Gyftopoulous
-    pp 73 for a description of the electronic efficiency.
+    This method will return nan if the output power is less than zero. See :cite:`978-0-26-208059-0` p. 73 for a description of how the electronic efficiency is calculated.
     """
     if self.calc_output_power_density() > 0:
       return self.calc_output_power_density() / self.__calc_electronic_heat_transport()
@@ -560,8 +486,7 @@ class TECBase(dict):
     """
     Returns the electronic heat transport of a TECBase object.
     
-    A description of electronic losses can be found on page 69 (eq. 2.57a) of
-    "Thermionic Energy Conversion Vol. 1" by Hatsopoulous and Gyftopoulous.
+    A description of electronic losses can be found in :cite:`978-0-26-208059-0`, page 69 (eq. 2.57a).
     """
     elecHeatTransportForward = self.calc_forward_current_density()*(self.get_max_motive_ht()+\
       2 * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
@@ -575,7 +500,7 @@ class TECBase(dict):
     """
     Returns the radiation transport of a TECBase object.
 
-    Equation for radiative heat transfer taken from Incropera et.al. p. 793, Eq. 13.19. ISBN:978-0-471-45727-5.
+    Equation for radiative heat transfer taken from :cite:`978-0-471-45727-5` p. 793, Eq. 13.19.
     """
     return physical_constants["sigma0"] * \
       (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
@@ -585,7 +510,9 @@ class TECBase(dict):
     """
     Plot an annotated motive diagram relative to ground.
 
-    If this method is called without an argument, it will create a figure with a subplot(111) and plot the motive diagram with the barriers, neas, voltages, etc. If a matplotplib Axes object is passed to this method, this method will draw the motive diagram on that Axes. If show == True, the method will pyplot.show() the result.
+    :param axl: :class:`matplotlib.Axes` object on which to draw motive diagram. None results in a new figure with a subplot(111) as the location to draw the motive diagram.
+    :param bool show: If True, :meth:`pyplot.show()` the result.
+    :param int fontsize: Annotation font size.
     """
 
     if axl == None:
@@ -671,7 +598,7 @@ class TECBase(dict):
 
   def barrier_artist(self, ax, el):
     """
-    Helper method to properly draw barrier using spines.
+    Helper method to properly draw barrier on the motive diagram using spines.
     """
     if el == "Emitter":
       loc = "left"
@@ -726,14 +653,16 @@ class TECBase(dict):
 
   def dimension_line(self, label, x, y_lo, y_hi, label_loc = "mi", label_pos = "left"):
     """
-    Plots a vertical dimension line on the gca().
+    Helper method to plot vertical dimension line on the motive diagram.
 
-    label: string labeling the dimension line.  
-    x: horizontal placement of dimension line.
-    y_lo: dimension line will extend down to this position.
-    y_hi: dimension line will extend up to this position.
-    label_loc: vertical placement of the label. Can be "lo" "mi" or "hi".
-    label_pos: which side of the dimension line the label is placed.
+    :param dict label: Dict containing sub-dicts which can instantiate 
+
+    :param string label: Label for dimension line.
+    :param float x: Horizontal placement of dimension line.
+    :param float y_lo: Lower extent of dimension line.
+    :param float y_hi: Upper extent of dimension line.
+    :param str label_loc: Vertical placement of the label. Can be "lo" "mi" or "hi".
+    :param str label_pos: Which side of the dimension line the label is placed ("left" or "right").
     """
     ax = plt.gca()
 
