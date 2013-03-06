@@ -6,7 +6,9 @@ from tec import TECBase
 
 class DimensionlessLangmuirPoissonSoln(dict):
   """
-  Approximation of solution of Langmuir's dimensionless Poisson's equation.
+  Numerical solution of Langmuir's dimensionless Poisson's equation.
+
+  The purpose of this class is to provide an API to the solution of Langmuir's dimensionless Poisson's equation :cite:`10.1103/PhysRev.21.419` to provide the appropriate level of simplicity to the user. Via the class methods, the user can access either the dimensionless motive vs. dimensionless position or the dimensionless position vs. dimensionless motive, both of which are necessary in the Langmuir model. This class uses an ode solver to approximate the solution to the ode, then interpolation to return values at arbitrary abscissae -- see the source for details of the ode solver and interpolation algorithm.
   """
   
   def __init__(self):
@@ -18,12 +20,18 @@ class DimensionlessLangmuirPoissonSoln(dict):
     # 4. Solve both the lhs and rhs odes.
     # 5. Create the lhs and rhs interpolation objects.
     
-    self["lhs"] = self.calc_branch(-2.5538,"lhs")
-    self["rhs"] = self.calc_branch(100.,"rhs")
+    self["lhs"] = self.calc_branch(-2.5538)
+    self["rhs"] = self.calc_branch(100.)
       
-  def calc_branch(self, endpoint, side, num_points = 1000):
+  def calc_branch(self, endpoint, num_points = 1000):
     """
-    Calculates data for either the left or right hand side of the ode solution.
+    Numerical solution for either side of the ode.
+
+    :param float endpoint: Endpoint for the ode solver.
+    :param int num_points: Number of points for ode solver to use.
+    :rtype: Dictionary of interpolation objects.
+
+    This method returns a dictionary with items, "motive_v_position" and "position_v_motive"; each item an interpolation of what its name describes.
     """
     ics = np.array([0,0])
     position_array = np.linspace(0, endpoint, num_points)
@@ -52,7 +60,14 @@ class DimensionlessLangmuirPoissonSoln(dict):
   
   def get_position(self, motive, branch = "lhs"):
     """
-    Return position, default negative, given a value of motive.
+    Interpolation of dimensionless position at arbitrary dimensionless motive.
+
+    :param float motive: Argument of interpolation.
+    :param str branch=="lhs": Interpolate from left-hand side of solution to ode.
+    :param str branch=="rhs": Interpolate from right-hand side of solution to ode.
+    :rtype float: Interpolated position. 
+
+    The left or right hand side must be specified since the inverse of the solution to Langmuir's dimensionless Poisson's equation is not a single-valued function. Returns NaN if motive is < 0.
     """
     
     if type(branch) is not str:
@@ -71,7 +86,12 @@ class DimensionlessLangmuirPoissonSoln(dict):
   
   def get_motive(self, position):
     """
-    Return motive given a value of position.
+    Interpolation of dimensionless motive at arbitrary dimensionless position.
+
+    :param float position: Argument of interpolation.
+    :rtype float: Interpolated motive.
+
+    Returns NaN if position falls outside the lower asymptote.
     """
     if position < -2.55389:
       return np.NaN
@@ -100,7 +120,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
 
 class Langmuir(TECBase):
   """
-  Thermionic engine simulator. Considers space charge, ignores NEA.
+  Considers space charge, ignores NEA.
 
   dict-like object that implements a model of electron transport including the negative space charge effect. This class explicitly ignores the fact that either electrode may have NEA and determines the vacuum level of an electrode at the barrier. The model is based on [1].
 
