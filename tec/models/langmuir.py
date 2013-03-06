@@ -65,7 +65,8 @@ class DimensionlessLangmuirPoissonSoln(dict):
     :param float motive: Argument of interpolation.
     :param str branch=="lhs": Interpolate from left-hand side of solution to ode.
     :param str branch=="rhs": Interpolate from right-hand side of solution to ode.
-    :rtype float: Interpolated position. 
+    :returns: Interpolated position.
+    :rtype: float
 
     The left or right hand side must be specified since the inverse of the solution to Langmuir's dimensionless Poisson's equation is not a single-valued function. Returns NaN if motive is < 0.
     """
@@ -86,12 +87,9 @@ class DimensionlessLangmuirPoissonSoln(dict):
   
   def get_motive(self, position):
     """
-    Interpolation of dimensionless motive at arbitrary dimensionless position.
-
-    :param float position: Argument of interpolation.
-    :rtype float: Interpolated motive.
-
-    Returns NaN if position falls outside the lower asymptote.
+    Value of motive relative to ground for given value(s) of position in J.
+    
+    :param position: float or numpy array at which motive is to be evaluated. Returns NaN if position falls outside of the interelectrode space.
     """
     if position < -2.55389:
       return np.NaN
@@ -120,41 +118,18 @@ class DimensionlessLangmuirPoissonSoln(dict):
 
 class Langmuir(TECBase):
   """
-  Considers space charge, ignores NEA.
+  Considers space charge, ignores NEA and back emission.
 
-  dict-like object that implements a model of electron transport including the negative space charge effect. This class explicitly ignores the fact that either electrode may have NEA and determines the vacuum level of an electrode at the barrier. The model is based on [1].
+  This class explicitly ignores the fact that either electrode may have NEA and determines the vacuum level of an electrode at the barrier. The model is based on :cite:`10.1103/PhysRev.21.419`.
 
   Attributes
   ----------
-  The attributes of the object are accessed like a dictionary. The object has three attributes; "Emitter" and "Collector" are both Electrode objects. "motive_data" is a dictionary containing (meta)data calculated during the motive calculation. "motive_data" should usually be accessed via the class's convenience methods. "motive_data" contains the following data:
+  :class:`Langmuir` objects have the same attributes as :class:`tec.TECBase`; "motive_data" is structured specifically for this model and contains the following data. For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
 
-    saturation_pt: Dict containing saturation point data described below. Only 
-                   contains dimensionless quantities at the collector since the
-                   emitter dimensionless quantities are all zero by definition. 
-                   For brevity, "dimensionless" prefix omitted from "position" 
-                   and "motive" variable names.
-    
-      output_voltage:         Voltage at which the saturation point occurs.
+  * saturation_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
+  * critical_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the critical point.
+  * dps: Langmuir's dimensionless Poisson's equation solution object.
       
-      output_current_density: Current at which the saturation point occurs.
-    
-    critical_pt:   Dict containing critical point data described below. Only 
-                   contains dimensionless quantities at the emitter since the
-                   collector dimensionless quantities are all zero by 
-                   definition. For brevity, "dimensionless" prefix omitted from 
-                   "position" and "motive" variable names.
-
-    
-      output_voltage:         Voltage at which the critical point occurs.
-      
-      output_current_density: Current at which the critical point occurs.
-      
-    dps:           Langmuir's dimensionless Poisson's equation solution object.
-      
-  Parameters
-  ----------
-  The TEC_Langmuir class is instantiated by a dict with two keys, "Emitter" and "Collector" (case insensitive). Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.
-
   Examples and interface testing
   ------------------------------
   >>> from tec_langmuir import TEC_Langmuir
@@ -172,9 +147,6 @@ class Langmuir(TECBase):
   ...            "emissivity":0.5}
   >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
   >>> example_tec = TEC_Langmuir(input_dict)
-  
-  Make sure that the motive_data interface matches the above description.
-  
   >>> isinstance(example_tec["motive_data"]["saturation_pt"]["output_voltage"],float)
   True
   >>> isinstance(example_tec["motive_data"]["saturation_pt"]["output_current_density"],float)
@@ -185,24 +157,17 @@ class Langmuir(TECBase):
   True
   >>> type(example_tec["motive_data"]["dps"])
   <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
-
-  Notes
-  -----
-
-  Bibliography
-  ------------
-  [1] Langmuir
   """
   
   def calc_back_current_density(self):
     """
-    Return back current density in A m^{-2}.
+    Always 0 since back emission is ignored.
     """
     return 0.0
     
   def calc_motive(self):
     """
-    Calculate the motive parameters and populate "motive_data".
+    Calculates the motive (meta)data and populates the 'motive_data' attribute.
     """
     # Throw out any nea attributes if they exist.
     # I feel like this code needs some explanation. The model this class implements assumes that neither electrode has NEA. Therefore, it doesn't make sense to allow anyone to set an "nea" attribute for either electrode. However, it is possible to instantiate a TEC_Langmuir object without either electrode having an "nea" attribute, then later set an "nea" attribute for one of the electrodes. It would be easy to check for "nea" during instantiation, but I would have to write a lot of ugly, hacky code to prevent either of the electrodes from acquiring an "nea" attribute later on. Since the calc_motive() method is presumably called whenever the TEC_Langmuir attributes (or sub-attributes) are called, the following block of code will notice if "nea" has been added to the electrodes, and will remove it.
@@ -269,9 +234,9 @@ class Langmuir(TECBase):
   
   def get_max_motive_ht(self, with_position=False):
     """
-    Returns value of the maximum motive relative to ground in J.
+    Value of the maximum motive relative to ground in J.
     
-    If with_position is True, return the position at which the maximum motive occurs.
+    :param bool with_position: True returns the position at max motive instead.
     """
     if with_position:
       em_motive = (self.get_max_motive_ht() - self["Emitter"].calc_barrier_ht()) / \
@@ -288,9 +253,9 @@ class Langmuir(TECBase):
   
   def calc_saturation_pt(self):
     """
-    Calculate and return saturation point condition.
+    Determine saturation point condition.
     
-    Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
+    :rtype: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
     """    
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     output_current_density = self["Emitter"].calc_saturation_current()
@@ -308,13 +273,13 @@ class Langmuir(TECBase):
       physical_constants["electron_charge"]
     
     return {"output_voltage":output_voltage,
-	    "output_current_density":output_current_density}
+      	    "output_current_density":output_current_density}
   
   def calc_critical_pt(self):
     """
-    Calculate and return critical point condition.
+    Determine critical point condition.
     
-    Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
+    :rtype: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the critical point.
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
@@ -335,7 +300,7 @@ class Langmuir(TECBase):
       physical_constants["electron_charge"]
     
     return {"output_voltage":output_voltage,
-	    "output_current_density":output_current_density}
+      	    "output_current_density":output_current_density}
        
   
   def critical_point_target_function(self,output_current_density):
