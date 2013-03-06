@@ -36,7 +36,7 @@ Reference
 
    	api
    	models
-	Numerical Accuracy <numerics>
+   	Testing numerical accuracy of models <numerics>
 
 
 Indices and tables
