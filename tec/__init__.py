@@ -142,7 +142,7 @@ class Electrode(dict):
     """
     Saturation current in A m^{-2} calculated according to Richardson-Dushman.
   
-    If either temp or barrier are equal to 0, this  method returns a value of 0.
+    If either temp or richardson are equal to 0, this  method returns a value of 0.
     """
     if self["temp"] == 0:
       saturation_current = 0
