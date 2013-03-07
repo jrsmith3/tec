@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-Tests methods of the TEC class.
+-------
+TECBase
+-------
 """
 
 __author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
@@ -11,7 +13,7 @@ __date__ = ""
 __copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
 __license__ = ""
 
-from tec import TEC
+from tec import TECBase
 import unittest
 import pickle
 
