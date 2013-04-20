@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-Tests methods of the Electrode class.
+---------
+Electrode
+---------
 """
 
 __author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"

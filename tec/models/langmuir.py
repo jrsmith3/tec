@@ -1,49 +1,143 @@
 # -*- coding: utf-8 -*-
 
-from electrode import Electrode
-from constants import physical_constants
-from dimensionlesslangmuirpoissonsoln import DimensionlessLangmuirPoissonSoln
-from tec import TEC
 import numpy as np
-from scipy import interpolate,optimize
+from scipy import interpolate,optimize,integrate,special
+from tec import TECBase
 
-class TEC_Langmuir(TEC):
+class DimensionlessLangmuirPoissonSoln(dict):
   """
-  Thermionic engine simulator. Considers space charge, ignores NEA.
+  Numerical solution of Langmuir's dimensionless Poisson's equation.
 
-  dict-like object that implements a model of electron transport including the negative space charge effect. This class explicitly ignores the fact that either electrode may have NEA and determines the vacuum level of an electrode at the barrier. The model is based on [1].
+  The purpose of this class is to provide an API to the solution of Langmuir's dimensionless Poisson's equation :cite:`10.1103/PhysRev.21.419` to provide the appropriate level of simplicity to the user. Via the class methods, the user can access either the dimensionless motive vs. dimensionless position or the dimensionless position vs. dimensionless motive, both of which are necessary in the Langmuir model. This class uses an ode solver to approximate the solution to the ode, then interpolation to return values at arbitrary abscissae -- see the source for details of the ode solver and interpolation algorithm.
+  """
+  
+  def __init__(self):
+    
+    # Here is the algorithm:
+    # 1. Set up the default ode solver parameters.
+    # 2. Check to see if either the rhs or lhs params were passed as arguments. If not, use the default params.
+    # 3. Cat the additional default ode solver parameters to the lhs and rhs set of params.
+    # 4. Solve both the lhs and rhs odes.
+    # 5. Create the lhs and rhs interpolation objects.
+    
+    self["lhs"] = self.calc_branch(-2.5538)
+
+    data = np.loadtxt("tec/models/kleynen_langmuir.dat")
+    rhs = data[565:-1,:]
+    self["rhs"] = {}
+
+    self["rhs"]["motive_v_position"] = \
+      interpolate.InterpolatedUnivariateSpline(rhs[:,0],rhs[:,1])
+    self["rhs"]["position_v_motive"] = \
+        interpolate.InterpolatedUnivariateSpline(rhs[:,1],rhs[:,0],k=1)
+      
+  def calc_branch(self, endpoint, num_points = 1000):
+    """
+    Numerical solution for either side of the ode.
+
+    :param float endpoint: Endpoint for the ode solver.
+    :param int num_points: Number of points for ode solver to use.
+    :rtype: Dictionary of interpolation objects.
+
+    This method returns a dictionary with items, "motive_v_position" and "position_v_motive"; each item an interpolation of what its name describes.
+    """
+    ics = np.array([0,0])
+    position_array = np.linspace(0, endpoint, num_points)
+    motive_array = integrate.odeint(self.langmuir_poisson_eq,ics,position_array)
+    
+    # Create the motive_v_position interpolation, but first check the abscissae (position_array) are monotonically increasing.
+    if position_array[0] < position_array[-1]:
+      motive_v_position = \
+        interpolate.InterpolatedUnivariateSpline(position_array,motive_array[:,0])
+    else:
+      motive_v_position = \
+        interpolate.InterpolatedUnivariateSpline(position_array[::-1],motive_array[::-1,0])
+      
+    # Now create the position_v_motive interpolation but first check the abscissae (motive_array in this case) are monotonically increasing. Use linear interpolation to avoid weirdness near the origin.
+    
+    # I think I don't need the following block.
+    if motive_array[0,0] < motive_array[-1,0]:
+      position_v_motive = \
+        interpolate.InterpolatedUnivariateSpline(motive_array[:,0],position_array,k=1)
+    else:
+      position_v_motive = \
+        interpolate.InterpolatedUnivariateSpline(motive_array[::-1,0],position_array[::-1],k=1)
+      
+    return {"motive_v_position": motive_v_position, 
+            "position_v_motive": position_v_motive}
+  
+  def get_position(self, motive, branch = "lhs"):
+    """
+    Interpolation of dimensionless position at arbitrary dimensionless motive.
+
+    :param float motive: Argument of interpolation.
+    :param str branch=="lhs": Interpolate from left-hand side of solution to ode.
+    :param str branch=="rhs": Interpolate from right-hand side of solution to ode.
+    :returns: Interpolated position.
+    :rtype: float
+
+    The left or right hand side must be specified since the inverse of the solution to Langmuir's dimensionless Poisson's equation is not a single-valued function. Returns NaN if motive is < 0.
+    """
+    
+    if type(branch) is not str:
+      raise TypeError("branch must be of type str.")
+    #if branch is not "lhs" or "rhs":
+      #raise ValueError("branch must either be 'lhs' or 'rhs'.")
+    
+    if motive < 0:
+      return np.NaN
+
+    #if branch is "lhs" or branch is "rhs":
+    if branch is "lhs" and motive > 18.7:
+      return -2.55389
+    else:
+      return self[branch]["position_v_motive"](motive)
+  
+  def get_motive(self, position):
+    """
+    Value of motive relative to ground for given value(s) of position in J.
+    
+    :param position: float or numpy array at which motive is to be evaluated. Returns NaN if position falls outside of the interelectrode space.
+    """
+    if position < -2.55389:
+      return np.NaN
+    elif position <= 0:
+      return self["lhs"]["motive_v_position"](position)
+    else:
+      return self["rhs"]["motive_v_position"](position)
+  
+  def langmuir_poisson_eq(self, motive, position):
+    """
+    Langmuir's dimensionless Poisson's equation for the ODE solver.
+    """
+    
+    # Note:
+    # motive[0] = motive.
+    # motive[1] = motive[0]'
+    
+    if position >= 0:
+      return np.array([ motive[1],\
+        0.5*np.exp(motive[0])*(1-special.erf( motive[0]**0.5 )) ])
+        
+    if position < 0:
+      return np.array([ motive[1],\
+        0.5*np.exp(motive[0])*(1+special.erf( motive[0]**0.5 )) ])
+
+
+class Langmuir(TECBase):
+  """
+  Considers space charge, ignores NEA and back emission.
+
+  This class explicitly ignores the fact that either electrode may have NEA and determines the vacuum level of an electrode at the barrier. The model is based on :cite:`10.1103/PhysRev.21.419`.
 
   Attributes
   ----------
-  The attributes of the object are accessed like a dictionary. The object has three attributes; "Emitter" and "Collector" are both Electrode objects. "motive_data" is a dictionary containing (meta)data calculated during the motive calculation. "motive_data" should usually be accessed via the class's convenience methods. "motive_data" contains the following data:
+  :class:`Langmuir` objects have the same attributes as :class:`tec.TECBase`; "motive_data" is structured specifically for this model and contains the following data. For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
 
-    saturation_pt: Dict containing saturation point data described below. Only 
-                   contains dimensionless quantities at the collector since the
-                   emitter dimensionless quantities are all zero by definition. 
-                   For brevity, "dimensionless" prefix omitted from "position" 
-                   and "motive" variable names.
-    
-      output_voltage:         Voltage at which the saturation point occurs.
+  * saturation_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
+  * critical_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the critical point.
+  * dps: Langmuir's dimensionless Poisson's equation solution object.
       
-      output_current_density: Current at which the saturation point occurs.
-    
-    critical_pt:   Dict containing critical point data described below. Only 
-                   contains dimensionless quantities at the emitter since the
-                   collector dimensionless quantities are all zero by 
-                   definition. For brevity, "dimensionless" prefix omitted from 
-                   "position" and "motive" variable names.
-
-    
-      output_voltage:         Voltage at which the critical point occurs.
-      
-      output_current_density: Current at which the critical point occurs.
-      
-    dps:           Langmuir's dimensionless Poisson's equation solution object.
-      
-  Parameters
-  ----------
-  The TEC_Langmuir class is instantiated by a dict with two keys, "Emitter" and "Collector" (case insensitive). Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.
-
   Examples and interface testing
   ------------------------------
   >>> from tec_langmuir import TEC_Langmuir
@@ -61,9 +155,6 @@ class TEC_Langmuir(TEC):
   ...            "emissivity":0.5}
   >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
   >>> example_tec = TEC_Langmuir(input_dict)
-  
-  Make sure that the motive_data interface matches the above description.
-  
   >>> isinstance(example_tec["motive_data"]["saturation_pt"]["output_voltage"],float)
   True
   >>> isinstance(example_tec["motive_data"]["saturation_pt"]["output_current_density"],float)
@@ -74,24 +165,17 @@ class TEC_Langmuir(TEC):
   True
   >>> type(example_tec["motive_data"]["dps"])
   <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
-
-  Notes
-  -----
-
-  Bibliography
-  ------------
-  [1] Langmuir
   """
   
   def calc_back_current_density(self):
     """
-    Return back current density in A m^{-2}.
+    Always 0 since back emission is ignored.
     """
     return 0.0
     
   def calc_motive(self):
     """
-    Calculate the motive parameters and populate "motive_data".
+    Calculates the motive (meta)data and populates the 'motive_data' attribute.
     """
     # Throw out any nea attributes if they exist.
     # I feel like this code needs some explanation. The model this class implements assumes that neither electrode has NEA. Therefore, it doesn't make sense to allow anyone to set an "nea" attribute for either electrode. However, it is possible to instantiate a TEC_Langmuir object without either electrode having an "nea" attribute, then later set an "nea" attribute for one of the electrodes. It would be easy to check for "nea" during instantiation, but I would have to write a lot of ugly, hacky code to prevent either of the electrodes from acquiring an "nea" attribute later on. Since the calc_motive() method is presumably called whenever the TEC_Langmuir attributes (or sub-attributes) are called, the following block of code will notice if "nea" has been added to the electrodes, and will remove it.
@@ -158,9 +242,9 @@ class TEC_Langmuir(TEC):
   
   def get_max_motive_ht(self, with_position=False):
     """
-    Returns value of the maximum motive relative to ground in J.
+    Value of the maximum motive relative to ground in J.
     
-    If with_position is True, return the position at which the maximum motive occurs.
+    :param bool with_position: True returns the position at max motive instead.
     """
     if with_position:
       em_motive = (self.get_max_motive_ht() - self["Emitter"].calc_barrier_ht()) / \
@@ -177,9 +261,9 @@ class TEC_Langmuir(TEC):
   
   def calc_saturation_pt(self):
     """
-    Calculate and return saturation point condition.
+    Determine saturation point condition.
     
-    Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
+    :rtype: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
     """    
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     output_current_density = self["Emitter"].calc_saturation_current()
@@ -197,13 +281,13 @@ class TEC_Langmuir(TEC):
       physical_constants["electron_charge"]
     
     return {"output_voltage":output_voltage,
-	    "output_current_density":output_current_density}
+      	    "output_current_density":output_current_density}
   
   def calc_critical_pt(self):
     """
-    Calculate and return critical point condition.
+    Determine critical point condition.
     
-    Returns dict with keys output_voltage and output_current_density with values in [V] and [A m^-2], respectively.
+    :rtype: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the critical point.
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
     
@@ -224,7 +308,7 @@ class TEC_Langmuir(TEC):
       physical_constants["electron_charge"]
     
     return {"output_voltage":output_voltage,
-	    "output_current_density":output_current_density}
+      	    "output_current_density":output_current_density}
        
   
   def critical_point_target_function(self,output_current_density):

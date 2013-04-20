@@ -1,12 +1,4 @@
-"""
-Tests API of the Electrode class.
-"""
-
-__author__ = "Joshua Ryan Smith (joshua.r.smith@gmail.com)"
-__version__ = ""
-__date__ = ""
-__copyright__ = "Copyright (c) 2012 Joshua Ryan Smith"
-__license__ = ""
+# -*- coding: utf-8 -*-
 
 from tec import Electrode
 from input_params import electrode_input_params as el_input
