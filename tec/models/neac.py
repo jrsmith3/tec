@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy import interpolate,optimize
+from tec import physical_constants
 from . import Langmuir
 from langmuir import DimensionlessLangmuirPoissonSoln
 
