@@ -3,6 +3,7 @@
 import numpy as np
 from scipy import interpolate,optimize,integrate,special
 from tec import TECBase
+from tec import physical_constants
 
 class DimensionlessLangmuirPoissonSoln(dict):
   """
