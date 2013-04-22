@@ -3,6 +3,7 @@
 import numpy as np
 from scipy import interpolate,optimize
 from . import Langmuir
+from langmuir import DimensionlessLangmuirPoissonSoln
 
 class NEAC(Langmuir):
   """
