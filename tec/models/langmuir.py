@@ -21,15 +21,16 @@ class DimensionlessLangmuirPoissonSoln(dict):
     # 5. Create the lhs and rhs interpolation objects.
     
     self["lhs"] = self.calc_branch(-2.5538)
+    self["rhs"] = self.calc_branch(100)
 
-    data = np.loadtxt("tec/models/kleynen_langmuir.dat")
-    rhs = data[565:-1,:]
-    self["rhs"] = {}
+    # data = np.loadtxt("tec/models/kleynen_langmuir.dat")
+    # rhs = data[565:-1,:]
+    # self["rhs"] = {}
 
-    self["rhs"]["motive_v_position"] = \
-      interpolate.InterpolatedUnivariateSpline(rhs[:,0],rhs[:,1])
-    self["rhs"]["position_v_motive"] = \
-        interpolate.InterpolatedUnivariateSpline(rhs[:,1],rhs[:,0],k=1)
+    # self["rhs"]["motive_v_position"] = \
+    #   interpolate.InterpolatedUnivariateSpline(rhs[:,0],rhs[:,1])
+    # self["rhs"]["position_v_motive"] = \
+    #     interpolate.InterpolatedUnivariateSpline(rhs[:,1],rhs[:,0],k=1)
       
   def calc_branch(self, endpoint, num_points = 1000):
     """
