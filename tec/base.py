@@ -25,7 +25,7 @@ class Electrode(dict):
   :param float input_params["nea"]: Negative electron affinity >=0 [eV] (Optional) Increases as the difference between the vacuum energy and conduction band minimum increases.
 
   The user can set either temp or richardson equal to zero to "switch off" the 
-  electrode -- the :meth:`calc_saturation_current` method will return a value 
+  electrode -- the :meth:`calc_saturation_current_density` method will return a value 
   of zero in either case.
                                            
   Example:
@@ -129,7 +129,7 @@ class Electrode(dict):
       return False
   
   # Methods
-  def calc_saturation_current(self):
+  def calc_saturation_current_density(self):
     """
     Saturation current in A m^{-2} calculated according to Richardson-Dushman.
   
@@ -382,10 +382,10 @@ class TECBase(dict):
     """
     
     if self["Emitter"].calc_barrier_ht() >= self.get_max_motive_ht():
-      return self["Emitter"].calc_saturation_current()
+      return self["Emitter"].calc_saturation_current_density()
     else:
       barrier = self.get_max_motive_ht() - self["Emitter"].calc_barrier_ht()
-      return self["Emitter"].calc_saturation_current() * \
+      return self["Emitter"].calc_saturation_current_density() * \
 	np.exp(-barrier/(physical_constants["boltzmann"]*self["Emitter"]["temp"]))
   
   def calc_back_current_density(self):
@@ -394,10 +394,10 @@ class TECBase(dict):
     """
     
     if self["Collector"].calc_barrier_ht() >= self.get_max_motive_ht():
-      return self["Collector"].calc_saturation_current()
+      return self["Collector"].calc_saturation_current_density()
     else:
       barrier = self.get_max_motive_ht() - self["Collector"].calc_barrier_ht()
-      return self["Collector"].calc_saturation_current() * \
+      return self["Collector"].calc_saturation_current_density() * \
 	np.exp(-barrier/(physical_constants["boltzmann"]*self["Collector"]["temp"]))
   
   

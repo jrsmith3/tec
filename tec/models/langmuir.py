@@ -206,7 +206,7 @@ class Langmuir(TECBase):
         self["motive_data"]["critical_pt"]["output_current_density"])
         
       barrier = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
-        np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+        np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
       self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
     
   def get_motive(self,pos):
@@ -268,7 +268,7 @@ class Langmuir(TECBase):
     :rtype: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
     """    
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    output_current_density = self["Emitter"].calc_saturation_current()
+    output_current_density = self["Emitter"].calc_saturation_current_density()
     
     position = self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
@@ -295,14 +295,14 @@ class Langmuir(TECBase):
     
     # Rootfinder to get critical point output current density.
     output_current_density = optimize.brentq(self.critical_point_target_function,\
-      self["Emitter"].calc_saturation_current(),0)
+      self["Emitter"].calc_saturation_current_density(),0)
     
     position = -self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
       (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
       (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
       
-    motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+    motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
     
     output_voltage = (self["Emitter"]["barrier"] - \
       self["Collector"]["barrier"] + \
@@ -325,7 +325,7 @@ class Langmuir(TECBase):
     if output_current_density == 0:
       motive = np.inf
     else:
-      motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+      motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
     
     return position - self["motive_data"]["dps"].get_position(motive)
 
@@ -334,7 +334,7 @@ class Langmuir(TECBase):
     Target function for the output voltage rootfinder.
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+    em_motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
     em_position = self["motive_data"]["dps"].get_position(em_motive)
     
     x0 = ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3) / \

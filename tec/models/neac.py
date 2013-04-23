@@ -79,7 +79,7 @@ class NEAC(Langmuir):
         self["motive_data"]["virt_critical_pt"]["output_current_density"])
         
       barrier = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
-        np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+        np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
       self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_barrier_ht()
       
   def calc_spclmbs_max_dist(self):
@@ -96,7 +96,7 @@ class NEAC(Langmuir):
     co_position_vr = self["motive_data"]["dps"].get_position(co_motive_vr,branch="rhs")
     
     spclbs_max_dist = (co_position_vr * self["Emitter"]["temp"]**(3./4)) / \
-      (self["Emitter"].calc_saturation_current()**(1./2)) * \
+      (self["Emitter"].calc_saturation_current_density()**(1./2)) * \
       ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3)/ \
       (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4)
       
@@ -113,9 +113,9 @@ class NEAC(Langmuir):
     # If the device is operating within the space charge limited mode boundary surface, we can immediately set the values and exit.
     if self.calc_interelectrode_spacing() <= self["motive_data"]["spclmbs_max_dist"]:
       return {"output_voltage":self.calc_contact_potential(),
-              "output_current_density":self["Emitter"].calc_saturation_current()}
+              "output_current_density":self["Emitter"].calc_saturation_current_density()}
     
-    output_current_density = self["Emitter"].calc_saturation_current()
+    output_current_density = self["Emitter"].calc_saturation_current_density()
     
     position = self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
@@ -142,12 +142,12 @@ class NEAC(Langmuir):
     # If the device is operating within the space charge limited mode boundary surface, we can immediately set the values and exit.
     if self.calc_interelectrode_spacing() <= self["motive_data"]["spclmbs_max_dist"]:
       return {"output_voltage":self.calc_contact_potential(),
-              "output_current_density":self["Emitter"].calc_saturation_current()}
+              "output_current_density":self["Emitter"].calc_saturation_current_density()}
     
     output_current_density = optimize.brentq(self.virt_critical_point_target_function,\
-      self["Emitter"].calc_saturation_current(),0)
+      self["Emitter"].calc_saturation_current_density(),0)
     
-    motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+    motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
     output_voltage = (self["Emitter"]["barrier"] - self["Collector"]["barrier"] + \
       physical_constants["boltzmann"] * self["Emitter"]["temp"] * motive) / \
       physical_constants["electron_charge"]
@@ -167,7 +167,7 @@ class NEAC(Langmuir):
     if output_current_density == 0:
       em_motive = np.inf
     else:
-      em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+      em_motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
     
     em_position = self["motive_data"]["dps"].get_position(em_motive)
     
@@ -184,7 +184,7 @@ class NEAC(Langmuir):
     Target function for the output voltage rootfinder.
     """
     # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    em_motive = np.log(self["Emitter"].calc_saturation_current()/output_current_density)
+    em_motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
     em_position = self["motive_data"]["dps"].get_position(em_motive)
     
     offset = self.calc_interelectrode_spacing() * \
