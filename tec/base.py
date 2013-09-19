@@ -1,28 +1,40 @@
 import numpy as np
-from scipy import interpolate,optimize
+from scipy import interpolate, optimize
 import matplotlib.pyplot as plt
 import matplotlib
 
-physical_constants = {"boltzmann" : 1.3806488e-23, \
-                      "permittivity0" : 8.85418781762e-12, \
-                      "electron_charge" : 1.602176565e-19, \
-                      "electron_mass" : 9.1093897e-31, \
-                      "sigma0" : 5.67050e-8}
+physical_constants = {"boltzmann": 1.3806488e-23,
+                      "permittivity0": 8.85418781762e-12,
+                      "electron_charge": 1.602176565e-19,
+                      "electron_mass": 9.1093897e-31,
+                      "sigma0": 5.67050e-8}
+
 
 class Electrode(dict):
   """
   Thermionic electrode.
 
-  An Electrode object is instantiated by a dict with the keys, constraints, and units listed below. Additional keys will be ignored, and there are no default values for instantiation. Note that despite the units listed below, the Electrode stores and returns its quantities in SI units.
-  
+  An Electrode object is instantiated by a dict with the keys, constraints, and
+  units listed below. Additional keys will be ignored, and there are no default
+  values for instantiation. Note that despite the units listed below, the
+  Electrode stores and returns its quantities in SI units.
+
   :param dict input_params: Initializing values for Electrode.
   :param float input_params["temp"]: Temperature > 0 [K]
-  :param float input_params["barrier"]: Emission barrier >=0 [eV] Sometimes referred to as work function. The barrier is the difference between the lowest energy for which an electron inside a material can escape and the Fermi energy.
-  :param float input_params["voltage"]: Voltage [V] Measured with respect to ground.
-  :param float input_params["position"]: Position [um] Position of the electrode with respect to the origin.
-  :param float input_params["richardson"]: Richardson Constant >=0 [A cm^{-2} K^{-2}]
+  :param float input_params["barrier"]: Emission barrier >=0 [eV] Sometimes
+  referred to as work function. The barrier is the difference between the lowest
+  energy for which an electron inside a material can escape and the Fermi 
+  energy.
+  :param float input_params["voltage"]: Voltage [V] Measured with respect to
+  ground.
+  :param float input_params["position"]: Position [um] Position of the electrode
+  with respect to the origin.
+  :param float input_params["richardson"]: Richardson Constant >=0 
+  [A cm^{-2} K^{-2}]
   :param float input_params["emissivity"]: Stefan-Boltzmann emissivity < 1 & > 0
-  :param float input_params["nea"]: Negative electron affinity >=0 [eV] (Optional) Increases as the difference between the vacuum energy and conduction band minimum increases.
+  :param float input_params["nea"]: Negative electron affinity >=0 [eV] 
+  (Optional) Increases as the difference between the vacuum energy and 
+  conduction band minimum increases.
 
   The user can set either temp or richardson equal to zero to "switch off" the 
   electrode -- the :meth:`calc_saturation_current_density` method will return a value 
