@@ -509,7 +509,7 @@ class TECBase(dict):
       (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
       ((1./self["Emitter"]["emissivity"]) + (1./self["Collector"]["emissivity"]) - 1)
 
-  def plot_motive(self, axl = None, show = False, fontsize = False):
+  def plot_motive(self, axl = None, show = False, fontsize = False, output_voltage = False):
     """
     Plot an annotated motive diagram relative to ground.
 
@@ -559,6 +559,14 @@ class TECBase(dict):
         (factr * barrier_pos * x_interval), 
         self[el]["voltage"], 
         self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+
+      # Code for output voltage
+      if output_voltage:
+        if el == "Collector":
+          self.dimension_line("eV",self[el]["position"] + \
+            (factr * barrier_pos * x_interval), 
+            self["Emitter"]["voltage"], 
+            self[el]["voltage"])
 
     self.barrier_artist(axl, "Emitter")
     self.barrier_artist(axr, "Collector")
