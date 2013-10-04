@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='tec',
-      version='0.3.0',
+      version='0.3.1',
       author='Joshua Ryan Smith',
       author_email='joshua.r.smith@gmail.com',
       packages=['tec','tec/models'],
