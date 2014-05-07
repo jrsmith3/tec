@@ -1,0 +1,11 @@
+To cite tec in publications, use:
+
+J.R. Smith. tec - A python package for simulating vacuum thermionic energy conversion devices. 2013.
+
+A bibTeX entry is as follows:
+
+@Manual{github.com/jrsmith3/tec,
+    author={Smith, Joshua Ryan},
+    title={tec - A python package for simulating vacuum thermionic energy conversion devices},
+    year={2013},
+    url={https://github.com/jrsmith3/tec}}
