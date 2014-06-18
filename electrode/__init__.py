@@ -9,4 +9,5 @@ Base Library (:mod:`electrode`)
 """
 
 from physicalproperty import *
+from electrode import *
 import constants
