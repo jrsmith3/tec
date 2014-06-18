@@ -37,18 +37,7 @@ class Electrode(object):
             setattr(self, attr, params[attr])
 
     def __repr__(self):
-        physical_prop_dict = self._to_dict()
-        for key, val in physical_prop_dict.iteritems():
-            physical_prop_dict[key] = str(val)
-
-        str_rep = json.dumps(physical_prop_dict, 
-                             sort_keys = True,
-                             indent = 0,)
-
-        str_rep = str_rep.replace("\"", "")
-        str_rep = str_rep.replace("{", "")
-        str_rep = str_rep.replace("}", "")
-        return str(str_rep.strip())
+        return str(self._to_dict())
 
     def _list_PhysicalProperty_attr_names(self):
         """
