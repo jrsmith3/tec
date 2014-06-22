@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from weakref import WeakKeyDictionary
-from physicalproperty import PhysicalProperty
+from physicalproperty import PhysicalProperty, find_PhysicalProperty
 import constants
 import numpy as np
 import scipy
@@ -33,29 +33,17 @@ class Electrode(object):
 
 
     def __init__(self, params):
-        for attr in self._list_PhysicalProperty_attr_names():
+        for attr in find_PhysicalProperty(self):
             setattr(self, attr, params[attr])
 
     def __repr__(self):
         return str(self._to_dict())
 
-    def _list_PhysicalProperty_attr_names(self):
-        """
-        Return a list of public data attributes that are of type `PhysicalProperty` owned by the `Electrode` class.
-        """
-        physical_prop_names = []
-
-        for attr in dir(self.__class__):
-            if type(self.__class__.__dict__.get(attr)) is PhysicalProperty:
-                physical_prop_names.append(attr)
-
-        return physical_prop_names
-
     def _to_dict(self):
         """
         Return a dictionary representation of the current object.
         """
-        physical_prop_names = self._list_PhysicalProperty_attr_names()
+        physical_prop_names = find_PhysicalProperty(self)
         physical_prop_vals = [getattr(self, prop) for prop in physical_prop_names]
 
         return dict(zip(physical_prop_names, physical_prop_vals))
