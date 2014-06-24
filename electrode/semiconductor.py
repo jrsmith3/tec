@@ -111,6 +111,6 @@ class Semiconductor(object):
         ho_carrier_conc = self.calc_val_band_effective_dos() * np.exp(-exponent_2)
 
         ret_val =  el_carrier_conc - ho_carrier_conc + \
-            self.accept_conc / (1 + 4 * np.exp(-exponent_3))
+            self.accept_conc / (1 + 4 * np.exp(exponent_3))
 
         return ret_val.value
