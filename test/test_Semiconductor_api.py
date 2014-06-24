@@ -10,7 +10,7 @@ import copy
 input_params = {"temp": 300.,
                 "el_effective_mass": 9.84e-31,
                 "ho_effective_mass": 7.38e-31,
-                "accept_conc": 1e16,
+                "accept_conc": 1e18,
                 "accept_ionization_energy": 45.,
                 "bandgap": 1.11,}
 
