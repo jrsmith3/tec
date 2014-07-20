@@ -2,7 +2,7 @@
 from distutils.core import setup
 
 setup(name = "electrode",
-      version = "1.0.0",
+      version = "1.1.0",
       author = "Joshua Ryan Smith",
       author_email = "joshua.r.smith@gmail.com",
       packages=['electrode'],
