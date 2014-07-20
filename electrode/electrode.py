@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from weakref import WeakKeyDictionary
-from physicalproperty import PhysicalProperty, find_PhysicalProperty
 import constants
 import numpy as np
-import scipy
 from astropy import units
-import json
+from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
 class Electrode(object):
     """

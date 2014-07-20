@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from weakref import WeakKeyDictionary
+
 import constants
 import numpy as np
 from scipy import optimize

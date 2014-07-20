@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Physics constants in SI units. Created similar to astropy's Constants module.
 """
