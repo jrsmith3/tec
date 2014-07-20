@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from electrode import Semiconductor
+from electrode import SC_Electrode
 from astropy.units import Quantity
 from astropy.units import Unit
 import unittest
@@ -12,7 +12,10 @@ input_params = {"temp": 300.,
                 "ho_effective_mass": 7.38e-31,
                 "accept_conc": 1e18,
                 "accept_ionization_energy": 45.,
-                "bandgap": 1.11,}
+                "bandgap": 1.11,
+
+                "barrier": 1.0,
+                "richardson": 100.0,}
 
 # Base classes
 # ============
@@ -41,7 +44,7 @@ class ElectrodeAPITestBaseWithElectrode(unittest.TestCase):
         """
         Set up a dictionary that can properly instantiate an Electrode object.
         """
-        self.El = Semiconductor(copy.copy(input_params))
+        self.El = SC_Electrode(copy.copy(input_params))
 
 
 # Test classes
@@ -55,14 +58,14 @@ class InstantiationInputIncomplete(ElectrodeAPITestBaseJustInputParams):
 
 class InstantiationInputSuperfluousKeys(ElectrodeAPITestBaseJustInputParams):
     """
-    Semiconductor can be instantiated with dict with superfluous keys.
+    SC_Electrode can be instantiated with dict with superfluous keys.
     """
 
-    def test_Semiconductor_input_superfluous_keys(self):
+    def test_SC_Electrode_input_superfluous_keys(self):
         """Instantiating argument with additional key."""
         self.input_params["superfluous"] = "value not even numeric!"
         try:
-            El = Semiconductor(self.input_params)
+            El = SC_Electrode(self.input_params)
         except:
             self.fail("Superfluous key in input param dict caused failure of instantiation.")
 
@@ -167,7 +170,7 @@ class CalculatorsReturnTypeAndUnits(ElectrodeAPITestBaseWithElectrode):
         self.assertEqual(self.El.calc_fermi_energy().unit, Unit("eV"))
 
 if __name__ == "__main__":
-    sc = Semiconductor(input_params)
+    sc = SC_Electrode(input_params)
     print "Conduction band dos", str(sc.calc_cond_band_effective_dos())
     print "Valence band dos", str(sc.calc_val_band_effective_dos())
 

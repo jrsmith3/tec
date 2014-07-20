@@ -7,14 +7,9 @@ from astropy import units
 from electrode import Electrode
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
-class Semiconductor(object):
+class SC_Electrode(Electrode):
     """
     Implements basic semiconductor calculations for p-type Si.
-    """
-
-    temp = PhysicalProperty(unit = "K", lo_bnd = 0)
-    """
-    Temperature of material >0 [K].
     """
 
     el_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
