@@ -13,30 +13,28 @@ input_params = {"temp": 300.,
 
 # Base classes
 # ============
-class ElectrodeAPITestBaseJustInputParams(unittest.TestCase):
+class TestBaseJustInputParams(unittest.TestCase):
     """
-    Base class for API tests.
+    Base class for tests.
 
-    This class defines a common setUp method that all the tests in this suite use.
+    This class defines a common setUp method that features an attribute which can be used to instantiate `Electrode` objects.
     """
-
     def setUp(self):
         """
-        Set up a dictionary that can properly instantiate an Electrode object.
+        Set up a dictionary that can properly instantiate an `Electrode` object.
         """
         self.input_params = copy.copy(input_params)
 
 
-class ElectrodeAPITestBaseWithElectrode(unittest.TestCase):
+class TestBaseWithElectrode(unittest.TestCase):
     """
-    Base class for API tests.
+    Base class for tests.
 
-    This class defines a common setUp method that all the tests in this suite use.
+    This class defines a common setUp method that features an attribute which is an `Electrode` object.
     """
-
     def setUp(self):
         """
-        Set up a dictionary that can properly instantiate an Electrode object.
+        Set up an `Electrode` object.
         """
         self.El = Electrode(copy.copy(input_params))
 
@@ -57,7 +55,7 @@ class InstantiationInputNonDict(unittest.TestCase):
         self.assertRaises(TypeError, Electrode, "this string is not a dict.")
 
 
-class InstantiationInputIncomplete(ElectrodeAPITestBaseJustInputParams):
+class InstantiationInputIncomplete(TestBaseJustInputParams):
     """
     Tests instantiating when input dict is missing required data.
     """
@@ -78,7 +76,7 @@ class InstantiationInputIncomplete(ElectrodeAPITestBaseJustInputParams):
         self.assertRaises(KeyError, Electrode, self.input_params)
 
 
-class InstantiationInputSuperfluousKeys(ElectrodeAPITestBaseJustInputParams):
+class InstantiationInputSuperfluousKeys(TestBaseJustInputParams):
     """
     Electrode can be instantiated with dict with superfluous keys.
     """
@@ -92,7 +90,7 @@ class InstantiationInputSuperfluousKeys(ElectrodeAPITestBaseJustInputParams):
             self.fail("Superfluous key in input param dict caused failure of instantiation.")
 
 
-class InstantiationInputFieldsWrongType(ElectrodeAPITestBaseJustInputParams):
+class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
     """
     Tests instantiating when input dict has non-numeric data items.
     """
@@ -132,7 +130,7 @@ class InstantiationInputFieldsWrongType(ElectrodeAPITestBaseJustInputParams):
             self.fail("`richardson` field of instantiating dict must be numeric.")
 
 
-class InstantiationInputOutsideConstraints(ElectrodeAPITestBaseJustInputParams):
+class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
     """
     Tests instantiating when input dict values are outside their constraints.
 
@@ -156,7 +154,7 @@ class InstantiationInputOutsideConstraints(ElectrodeAPITestBaseJustInputParams):
         self.assertRaises(ValueError, Electrode, self.input_params)
 
 
-class SetDataWrongType(ElectrodeAPITestBaseWithElectrode):
+class SetDataWrongType(TestBaseWithElectrode):
     """
     Tests setting attributes when input data is non-numeric.
     """
@@ -195,7 +193,7 @@ class SetDataWrongType(ElectrodeAPITestBaseWithElectrode):
             self.fail("`richardson` attribute can be assigned a non-numeric value.")
 
 
-class SetDataOutsideConstraints(ElectrodeAPITestBaseWithElectrode):
+class SetDataOutsideConstraints(TestBaseWithElectrode):
     """
     Tests setting attributes when input values are outside their constraints.
 
@@ -234,7 +232,7 @@ class SetDataOutsideConstraints(ElectrodeAPITestBaseWithElectrode):
             self.fail("`richardson` attribute can be assigned a negative value.")
 
 
-class CalculatorsReturnTypeAndUnits(ElectrodeAPITestBaseWithElectrode):
+class CalculatorsReturnTypeAndUnits(TestBaseWithElectrode):
     """
     Tests output types and units (where applicable) of the Electrode calculator methods.
     """
@@ -254,3 +252,9 @@ class CalculatorsReturnTypeAndUnits(ElectrodeAPITestBaseWithElectrode):
         """
         self.assertEqual(
             self.El.calc_richardson_current_density().unit, Unit("A/cm2"))
+
+class CalculatorsReturnValues(TestBaseWithElectrode):
+    """
+    Tests values of calculator methods against known values.
+    """
+    pass
