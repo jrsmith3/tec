@@ -262,7 +262,70 @@ class SetDataWrongType(TestBaseWithElectrode):
     """
     Tests setting attributes when input data is non-numeric.
     """
-    pass
+    def test_el_effective_mass_non_numeric(self):
+        """
+        SC_Electrode can only set `el_effective_mass` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.El.el_effective_mass = non_num
+        except TypeError:
+            # Setting `el_effective_mass` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`el_effective_mass` attribute can be assigned a non-numeric value.")
+
+    def test_ho_effective_mass_non_numeric(self):
+        """
+        SC_Electrode can only set `ho_effective_mass` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.El.ho_effective_mass = non_num
+        except TypeError:
+            # Setting `ho_effective_mass` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`ho_effective_mass` attribute can be assigned a non-numeric value.")
+
+    def test_accept_conc_non_numeric(self):
+        """
+        SC_Electrode can only set `accept_conc` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.El.accept_conc = non_num
+        except TypeError:
+            # Setting `accept_conc` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`accept_conc` attribute can be assigned a non-numeric value.")
+
+    def test_accept_ionization_energy_non_numeric(self):
+        """
+        SC_Electrode can only set `accept_ionization_energy` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.El.accept_ionization_energy = non_num
+        except TypeError:
+            # Setting `accept_ionization_energy` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`accept_ionization_energy` attribute can be assigned a non-numeric value.")
+
+    def test_bandgap_non_numeric(self):
+        """
+        SC_Electrode can only set `bandgap` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.El.bandgap = non_num
+        except TypeError:
+            # Setting `bandgap` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`bandgap` attribute can be assigned a non-numeric value.")
 
 
 class SetDataOutsideConstraints(TestBaseWithElectrode):
