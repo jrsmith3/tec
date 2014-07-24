@@ -69,7 +69,61 @@ class InstantiationInputIncomplete(TestBaseJustInputParams):
     """
     Tests instantiation when non-dict data is used.
     """
-    pass
+    def test_temp_missing(self):
+        """
+        SC_Electrode instantiating dict requires `temp` key.
+        """
+        del(self.input_params["temp"])
+        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+
+    def test_barrier_missing(self):
+        """
+        SC_Electrode instantiating dict requires `barrier` key.
+        """
+        del(self.input_params["barrier"])
+        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+
+    def test_richardson_missing(self):
+        """
+        SC_Electrode instantiating dict requires `richardson` key.
+        """
+        del(self.input_params["richardson"])
+        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+
+    def test_el_effective_mass_missing(self):
+        """
+        SC_Electrode instantiating dict requires `el_effective_mass` key.
+        """
+        del(self.input_params["el_effective_mass"])
+        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+
+    def test_ho_effective_mass_missing(self):
+        """
+        SC_Electrode instantiating dict requires `ho_effective_mass` key.
+        """
+        del(self.input_params["ho_effective_mass"])
+        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+
+    def test_accept_conc_missing(self):
+        """
+        SC_Electrode instantiating dict requires `accept_conc` key.
+        """
+        del(self.input_params["accept_conc"])
+        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+
+    def test_accept_ionization_energy_missing(self):
+        """
+        SC_Electrode instantiating dict requires `accept_ionization_energy` key.
+        """
+        del(self.input_params["accept_ionization_energy"])
+        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+
+    def test_bandgap_missing(self):
+        """
+        SC_Electrode instantiating dict requires `bandgap` key.
+        """
+        del(self.input_params["bandgap"])
+        self.assertRaises(KeyError, SC_Electrode, self.input_params)
 
 
 class InstantiationInputSuperfluousKeys(TestBaseJustInputParams):
