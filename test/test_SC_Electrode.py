@@ -222,7 +222,40 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
     See the Electrode class docstring for information about the constraints on
     the input data.
     """
-    pass
+    def test_el_effective_mass_less_than_zero(self):
+        """
+        SC_Electrode instantiation requires `el_effective_mass` > 0.
+        """
+        self.input_params["el_effective_mass"] = -1.1
+        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+
+    def test_ho_effective_mass_less_than_zero(self):
+        """
+        SC_Electrode instantiation requires `ho_effective_mass` > 0.
+        """
+        self.input_params["ho_effective_mass"] = -1.1
+        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+
+    def test_accept_conc_less_than_zero(self):
+        """
+        SC_Electrode instantiation requires `accept_conc` > 0.
+        """
+        self.input_params["accept_conc"] = -1.1
+        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+
+    def test_accept_ionization_energy_less_than_zero(self):
+        """
+        SC_Electrode instantiation requires `accept_ionization_energy` > 0.
+        """
+        self.input_params["accept_ionization_energy"] = -1.1
+        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+
+    def test_bandgap_less_than_zero(self):
+        """
+        SC_Electrode instantiation requires `bandgap` > 0.
+        """
+        self.input_params["bandgap"] = -1.1
+        self.assertRaises(ValueError, SC_Electrode, self.input_params)
 
 
 class SetDataWrongType(TestBaseWithElectrode):
