@@ -144,7 +144,75 @@ class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
     """
     Tests instantiating when input dict has non-numeric data items.
     """
-    pass
+    def test_el_effective_mass_non_numeric(self):
+        """
+        SC_Electrode instantiation requires numeric `el_effective_mass` value.
+        """
+        self.input_params["el_effective_mass"] = "this string is non-numeric."
+
+        try:
+            El = SC_Electrode(self.input_params)
+        except TypeError:
+            # Instantiating an SC_Electrode with a dict with key `el_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`el_effective_mass` field of instantiating dict must be numeric.")
+
+    def test_ho_effective_mass_non_numeric(self):
+        """
+        SC_Electrode instantiation requires numeric `ho_effective_mass` value.
+        """
+        self.input_params["ho_effective_mass"] = "this string is non-numeric."
+
+        try:
+            El = SC_Electrode(self.input_params)
+        except TypeError:
+            # Instantiating an SC_Electrode with a dict with key `ho_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`ho_effective_mass` field of instantiating dict must be numeric.")
+
+    def test_accept_conc_non_numeric(self):
+        """
+        SC_Electrode instantiation requires numeric `accept_conc` value.
+        """
+        self.input_params["accept_conc"] = "this string is non-numeric."
+
+        try:
+            El = SC_Electrode(self.input_params)
+        except TypeError:
+            # Instantiating an SC_Electrode with a dict with key `accept_conc` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`accept_conc` field of instantiating dict must be numeric.")
+
+    def test_accept_ionization_energy_non_numeric(self):
+        """
+        SC_Electrode instantiation requires numeric `accept_ionization_energy` value.
+        """
+        self.input_params["accept_ionization_energy"] = "this string is non-numeric."
+
+        try:
+            El = SC_Electrode(self.input_params)
+        except TypeError:
+            # Instantiating an SC_Electrode with a dict with key `accept_ionization_energy` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`accept_ionization_energy` field of instantiating dict must be numeric.")
+
+    def test_bandgap_non_numeric(self):
+        """
+        SC_Electrode instantiation requires numeric `bandgap` value.
+        """
+        self.input_params["bandgap"] = "this string is non-numeric."
+
+        try:
+            El = SC_Electrode(self.input_params)
+        except TypeError:
+            # Instantiating an SC_Electrode with a dict with key `bandgap` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`bandgap` field of instantiating dict must be numeric.")
 
 
 class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
