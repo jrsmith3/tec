@@ -45,13 +45,16 @@ class InstantiationInputNonDict(unittest.TestCase):
     """
     Tests instantiation when non-dict data is used.
     """
-
-    def test_Electrode_no_input_arg(self):
-        """Attempt to instantiate Electrode with no input argument."""
+    def test_no_input_arg(self):
+        """
+        Electrode instantiation without input argument is invalid.
+        """
         self.assertRaises(TypeError, Electrode, None)
 
-    def test_Electrode_non_dict_input_arg(self):
-        """Attempt to instantiate Electrode with a non-dict input argument."""
+    def test_non_dict_input_arg(self):
+        """
+        Electrode instantiation with non-dict input argument is invalid.
+        """
         self.assertRaises(TypeError, Electrode, "this string is not a dict.")
 
 
@@ -59,30 +62,36 @@ class InstantiationInputIncomplete(TestBaseJustInputParams):
     """
     Tests instantiating when input dict is missing required data.
     """
-
-    def test_Electrode_input_arg_sans_temp(self):
-        """Instantiating argument missing temp."""
+    def test_temp_missing(self):
+        """
+        Electrode instantiating dict requires `temp` key.
+        """
         del(self.input_params["temp"])
         self.assertRaises(KeyError, Electrode, self.input_params)
 
-    def test_Electrode_input_arg_sans_barrier(self):
-        """Instantiating argument missing barrier."""
+    def test_barrier_missing(self):
+        """
+        Electrode instantiating dict requires `barrier` key.
+        """
         del(self.input_params["barrier"])
         self.assertRaises(KeyError, Electrode, self.input_params)
 
-    def test_Electrode_input_arg_sans_richardson(self):
-        """Instantiating argument missing richardson."""
+    def test_richardson_missing(self):
+        """
+        Electrode instantiating dict requires `richardson` key.
+        """
         del(self.input_params["richardson"])
         self.assertRaises(KeyError, Electrode, self.input_params)
 
 
 class InstantiationInputSuperfluousKeys(TestBaseJustInputParams):
     """
-    Electrode can be instantiated with dict with superfluous keys.
+    Tests instantiation with dict with superfluous keys.
     """
-
-    def test_Electrode_input_superfluous_keys(self):
-        """Instantiating argument with additional key."""
+    def test_superfluous_keys(self):
+        """
+        Electrode can be instantiated with dict with superfluous keys.
+        """
         self.input_params["superfluous"] = "value not even numeric!"
         try:
             El = Electrode(self.input_params)
@@ -94,9 +103,10 @@ class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
     """
     Tests instantiating when input dict has non-numeric data items.
     """
-
-    def test_Electrode_input_temp_non_numeric(self):
-        """Instantiating argument temp is non-numeric."""
+    def test_temp_non_numeric(self):
+        """
+        Electrode instantiation requires numeric `temp` value.
+        """
         self.input_params["temp"] = "this string is non-numeric."
 
         try:
@@ -107,8 +117,10 @@ class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
         else:
             self.fail("`temp` field of instantiating dict must be numeric.")
 
-    def test_Electrode_input_barrier_non_numeric(self):
-        """Instantiating argument barrier is non-numeric."""
+    def test_barrier_non_numeric(self):
+        """
+        Electrode instantiation requires numeric `barrier` value.
+        """
         self.input_params["barrier"] = "this string is non-numeric."
         try:
             El = Electrode(self.input_params)
@@ -118,8 +130,10 @@ class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
         else:
             self.fail("`barrier` field of instantiating dict must be numeric.")
 
-    def test_Electrode_input_richardson_non_numeric(self):
-        """Instantiating argument richardson is non-numeric."""
+    def test_richardson_non_numeric(self):
+        """
+        Electrode instantiation requires numeric `richardson` value.
+        """
         self.input_params["richardson"] = "this string is non-numeric."
         try:
             El = Electrode(self.input_params)
@@ -134,33 +148,39 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
     """
     Tests instantiating when input dict values are outside their constraints.
 
-    See the Electrode class docstring for information about the constraints on
+    See the class docstring for information about the constraints on
     the input data.
     """
-
-    def test_Electrode_input_temp_less_than_zero(self):
-        """Instantiating argument temp < 0."""
+    def test_temp_less_than_zero(self):
+        """
+        Electrode instantiation requires `temp` > 0.
+        """
         self.input_params["temp"] = -1.1
         self.assertRaises(ValueError, Electrode, self.input_params)
 
-    def test_Electrode_input_barrier_less_than_zero(self):
-        """Instantiating argument barrier < 0."""
+    def test_barrier_less_than_zero(self):
+        """
+        Electrode instantiation requires `barrier` > 0.
+        """
         self.input_params["barrier"] = -1.1
         self.assertRaises(ValueError, Electrode, self.input_params)
 
-    def test_Electrode_input_richardson_less_than_zero(self):
-        """Instantiating argument richardson < 0."""
+    def test_richardson_less_than_zero(self):
+        """
+        Electrode instantiation requires `richardson` > 0.
+        """
         self.input_params["richardson"] = -1.1
         self.assertRaises(ValueError, Electrode, self.input_params)
 
 
 class SetDataWrongType(TestBaseWithElectrode):
     """
-    Tests setting attributes when input data is non-numeric.
+    Tests setting attributes with non-numeric data.
     """
-
-    def test_Electrode_set_temp_non_numeric(self):
-        """Set argument temp non-numeric."""
+    def test_temp_non_numeric(self):
+        """
+        Electrode can only set `temp` with numeric value.
+        """
         non_num = "this string is non-numeric."
         try:
             self.El.temp = non_num
@@ -170,8 +190,10 @@ class SetDataWrongType(TestBaseWithElectrode):
         else:
             self.fail("`temp` attribute can be assigned a non-numeric value.")
 
-    def test_Electrode_set_barrier_non_numeric(self):
-        """Set argument barrier non-numeric."""
+    def test_barrier_non_numeric(self):
+        """
+        Electrode can only set `barrier` with numeric value.
+        """
         non_num = "this string is non-numeric."
         try:
             self.El.barrier = non_num
@@ -181,8 +203,10 @@ class SetDataWrongType(TestBaseWithElectrode):
         else:
             self.fail("`barrier` attribute can be assigned a non-numeric value.")
 
-    def test_Electrode_set_richardson_non_numeric(self):
-        """Set argument richardson non-numeric."""
+    def test_richardson_non_numeric(self):
+        """
+        Electrode can only set `richardson` with numeric value.
+        """
         non_num = "this string is non-numeric."
         try:
             self.El.richardson = non_num
@@ -197,12 +221,13 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
     """
     Tests setting attributes when input values are outside their constraints.
 
-    See the Electrode class docstring for information about the constraints on
+    See the class docstring for information about the constraints on
     the data.
     """
-
-    def test_Electrode_set_temp_less_than_zero(self):
-        """Set argument temp < 0."""
+    def test_temp_less_than_zero(self):
+        """
+        Electrode must set `temp` > 0.
+        """
         try:
             self.El.temp = -1.1
         except ValueError:
@@ -211,8 +236,10 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
         else:
             self.fail("`temp` attribute can be assigned a negative value.")
 
-    def test_Electrode_set_barrier_less_than_zero(self):
-        """Set argument barrier < 0."""
+    def test_barrier_less_than_zero(self):
+        """
+        Electrode must set `barrier` > 0.
+        """
         try:
             self.El.barrier = -1.1
         except ValueError:
@@ -221,8 +248,10 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
         else:
             self.fail("`barrier` attribute can be assigned a negative value.")
 
-    def test_Electrode_set_richardson_less_than_zero(self):
-        """Set argument richardson < 0."""
+    def test_richardson_less_than_zero(self):
+        """
+        Electrode must set `richardson` > 0.
+        """
         try:
             self.El.richardson = -1.1
         except ValueError:
@@ -232,23 +261,24 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
             self.fail("`richardson` attribute can be assigned a negative value.")
 
 
-class CalculatorsReturnTypeAndUnits(TestBaseWithElectrode):
+class CalculatorsReturnType(TestBaseWithElectrode):
     """
-    Tests output types and units (where applicable) of the Electrode calculator methods.
+    Tests output types of the calculator methods.
     """
-    # There is probably a much more elegant way to check units than I'm doing
-    # below.
-
-    def test_Electrode_calc_richardson_current_density_type(self):
+    def test_calc_richardson_current_density(self):
         """
-        calc_calc_richardson_current_density should return an astropy.units.Quantity.
+        Electrode.calc_richardson_current_density should return an astropy.units.Quantity.
         """
         self.assertIsInstance(
             self.El.calc_richardson_current_density(), Quantity)
 
-    def test_Electrode_calc_calc_richardson_current_density_unit(self):
+class CalculatorsReturnUnits(TestBaseWithElectrode):
+    """
+    Tests output units, where applicable, of the calculator methods.
+    """
+    def test_calc_richardson_current_density(self):
         """
-        calc_calc_richardson_current_density should return a value with unit A/cm2.
+        Electrode.calc_richardson_current_density should return a value with unit A/cm2.
         """
         self.assertEqual(
             self.El.calc_richardson_current_density().unit, Unit("A/cm2"))
