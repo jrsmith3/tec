@@ -335,7 +335,65 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
     See the Electrode class docstring for information about the constraints on
     the data.
     """
-    pass
+    def test_el_effective_mass_less_than_zero(self):
+        """
+        SC_Electrode must set `el_effective_mass` > 0.
+        """
+        try:
+            self.El.el_effective_mass = -1.1
+        except ValueError:
+            # Attempting to set the `el_effective_mass` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`el_effective_mass` attribute can be assigned a negative value.")
+
+    def test_ho_effective_mass_less_than_zero(self):
+        """
+        SC_Electrode must set `ho_effective_mass` > 0.
+        """
+        try:
+            self.El.ho_effective_mass = -1.1
+        except ValueError:
+            # Attempting to set the `ho_effective_mass` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`ho_effective_mass` attribute can be assigned a negative value.")
+
+    def test_accept_conc_less_than_zero(self):
+        """
+        SC_Electrode must set `accept_conc` > 0.
+        """
+        try:
+            self.El.accept_conc = -1.1
+        except ValueError:
+            # Attempting to set the `accept_conc` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`accept_conc` attribute can be assigned a negative value.")
+
+    def test_accept_ionization_energy_less_than_zero(self):
+        """
+        SC_Electrode must set `accept_ionization_energy` > 0.
+        """
+        try:
+            self.El.accept_ionization_energy = -1.1
+        except ValueError:
+            # Attempting to set the `accept_ionization_energy` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`accept_ionization_energy` attribute can be assigned a negative value.")
+
+    def test_bandgap_less_than_zero(self):
+        """
+        SC_Electrode must set `bandgap` > 0.
+        """
+        try:
+            self.El.bandgap = -1.1
+        except ValueError:
+            # Attempting to set the `bandgap` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`bandgap` attribute can be assigned a negative value.")
 
 
 class CalculatorsReturnType(TestBaseWithElectrode):
