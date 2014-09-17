@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import constants
 import numpy as np
 from scipy import optimize
 from astropy import units
+from astropy import constants
 from electrode import Electrode
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
@@ -46,7 +46,7 @@ class SC_Electrode(Electrode):
         Effective density of states in conduction band in [cm^-3].
         """
         dos = 2 * \
-            ((2 * np.pi * self.el_effective_mass * constants.k * self.temp) / \
+            ((2 * np.pi * self.el_effective_mass * constants.k_B * self.temp) / \
             (constants.h ** 2))**(3./2)
 
         return dos.to("1/cm3")
@@ -56,7 +56,7 @@ class SC_Electrode(Electrode):
         Effective density of states in conduction band in [cm^-3].
         """
         dos = 2 * \
-            ((2 * np.pi * self.ho_effective_mass * constants.k * self.temp) / \
+            ((2 * np.pi * self.ho_effective_mass * constants.k_B * self.temp) / \
             (constants.h ** 2))**(3./2)
 
         return dos.to("1/cm3")
@@ -66,7 +66,7 @@ class SC_Electrode(Electrode):
         Equilibrium electron carrier concentration in [cm^-3].
         """
         exponent = ((self.bandgap - self.calc_fermi_energy()) / \
-            (constants.k * self.temp)).decompose()
+            (constants.k_B * self.temp)).decompose()
 
         return self.calc_cond_band_effective_dos() * np.exp(-exponent)
 
@@ -75,7 +75,7 @@ class SC_Electrode(Electrode):
         Equilibrium hole carrier concentration in [cm^-3].
         """
         exponent = (self.calc_fermi_energy() / \
-            (constants.k * self.temp)).decompose()
+            (constants.k_B * self.temp)).decompose()
 
         return self.calc_val_band_effective_dos() * np.exp(-exponent)
 
@@ -97,10 +97,10 @@ class SC_Electrode(Electrode):
         fermi_energy = units.Quantity(fermi_energy, "eV")
 
         exponent_1 = ((self.bandgap - fermi_energy) / \
-            (constants.k * self.temp)).decompose()
-        exponent_2 = (fermi_energy / (constants.k * self.temp)).decompose()
+            (constants.k_B * self.temp)).decompose()
+        exponent_2 = (fermi_energy / (constants.k_B * self.temp)).decompose()
         exponent_3 = ((self.accept_ionization_energy - fermi_energy) / \
-            (constants.k * self.temp)).decompose()
+            (constants.k_B * self.temp)).decompose()
 
         el_carrier_conc = self.calc_cond_band_effective_dos() * np.exp(-exponent_1)
         ho_carrier_conc = self.calc_val_band_effective_dos() * np.exp(-exponent_2)

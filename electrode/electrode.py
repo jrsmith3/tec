@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import constants
 import numpy as np
 from astropy import units
+from astropy import constants
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
 class Electrode(object):
@@ -56,7 +56,7 @@ class Electrode(object):
         if self.temp.value == 0:
           current_density = units.Quantity(0, "A/cm2")
         else:
-            exponent = (self.barrier / (constants.k * self.temp)).decompose()
+            exponent = (self.barrier / (constants.k_B * self.temp)).decompose()
             coefficient = self.richardson * self.temp**2
             current_density = coefficient * np.exp(-exponent)
         

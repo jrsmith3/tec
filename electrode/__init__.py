@@ -11,4 +11,3 @@ Base Library (:mod:`electrode`)
 from physicalproperty import *
 from electrode import *
 from semiconductor import *
-import constants
