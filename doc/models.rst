@@ -1,3 +1,3 @@
 .. automodule:: tec.models
-	:members:
+	:members: Langmuir, NEAC
 	

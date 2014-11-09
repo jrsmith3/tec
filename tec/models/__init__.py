@@ -6,11 +6,6 @@ Models (:mod:`tec.models`)
 ==========================
 
 .. currentmodule:: tec.models
-
-.. automodule:: tec.models.langmuir
-	:members:
-.. automodule:: tec.models.neac
-	:members:
 """
 
 from langmuir import Langmuir
