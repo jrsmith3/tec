@@ -104,7 +104,6 @@ Reference
 
    	api
    	models
-   	Testing numerical accuracy of models <numerics>
 
 
 Bibliography

@@ -1,3 +1,3 @@
 .. automodule:: tec
-	:members:
+	:members: Electrode, TECBase
 	
