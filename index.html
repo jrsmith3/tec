@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tec - Utils for simulating vacuum thermionic energy conversion devices &mdash; tec 0.3.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="tec 0.3.3 documentation" href="#" />
+    <link rel="next" title="Base Library (tec)" href="api.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Base Library (tec)"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">tec 0.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tec-utils-for-simulating-vacuum-thermionic-energy-conversion-devices">
+<h1>tec - Utils for simulating vacuum thermionic energy conversion devices<a class="headerlink" href="#tec-utils-for-simulating-vacuum-thermionic-energy-conversion-devices" title="Permalink to this headline">¶</a></h1>
+<p>The tec package provides a uniform and extensible API for easily simulating thermionic energy conversion devices (TECs). A few models are supplied with the tec package, but others can be easily added.</p>
+</div>
+<div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="api.html#module-tec" title="tec"><tt class="xref py py-mod docutils literal"><span class="pre">tec</span></tt></a> module is implemented in python and depends on <a class="reference external" href="http://www.numpy.org">numpy</a>, <a class="reference external" href="http://www.scipy.org">scipy</a>, and <a class="reference external" href="http://matplotlib.org">matplotlib</a>. It isn&#8217;t required, but I recommend installing <a class="reference external" href="http://ipython.org">ipython</a> as well. These packages and more are available via Continuum Analytics&#8217;s <a class="reference external" href="http://continuum.io/downloads">anaconda</a> distribution. Anaconda is likely the quickest way to get set up with the prerequisites.</p>
+<p>If you are on windows, let me know how you install this stuff because I don&#8217;t have access to a windows box. Hit me up on the <a class="reference external" href="https://github.com/jrsmith3/tec/issues?state=open">issue tracker</a> if you have suggestions for windows.</p>
+</div>
+<div class="section" id="tec-installation">
+<h2>tec installation<a class="headerlink" href="#tec-installation" title="Permalink to this headline">¶</a></h2>
+<p>The code isn&#8217;t on pypi, so you&#8217;ll have to install from source. There are two ways to do it: 1. downloading and installing from the zip file and 2. installing with pip over git from github. If you don&#8217;t understand the phrase, &#8220;installing over git from github&#8221;, you want to use the first option.</p>
+</div>
+<div class="section" id="zip-file-install">
+<h2>Zip file install<a class="headerlink" href="#zip-file-install" title="Permalink to this headline">¶</a></h2>
+<p>All you have to do is download the most recent version (0.3.2) from the internet <a class="reference external" href="https://github.com/jrsmith3/tec/archive/0.3.2.zip">here</a>. Unzip the file and switch into the directory into which the zip file was uncompressed. Then execute the following command at the command line.</p>
+<blockquote>
+<div>$ python setup.py install</div></blockquote>
+</div>
+<div class="section" id="pip-git-github">
+<h2>pip + git + github<a class="headerlink" href="#pip-git-github" title="Permalink to this headline">¶</a></h2>
+<p>If you have pip installed, things should be pretty easy. Just execute</p>
+<blockquote>
+<div>$ pip install git+git://github.com/jrsmith3/tec.git</div></blockquote>
+</div>
+</div>
+<div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<p>TEC models are built by subclassing the TECBase class and adding functionality to calculate the motive. As a quick example, say the user wanted to simulate the device described in Hatsopoulous and Gyftopoulous <a class="reference internal" href="#id2" id="id1">[HG73]</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Pull in Langmuir&#39;s model.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tec.models</span> <span class="kn">import</span> <span class="n">Langmuir</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Create a dict containing the emitter parameters (assume emissivity = 0.5).</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="go">      &quot;barrier&quot;:1,</span>
+<span class="go">      &quot;voltage&quot;:1,</span>
+<span class="go">      &quot;position&quot;:0,</span>
+<span class="go">      &quot;richardson&quot;:10,</span>
+<span class="go">      &quot;emissivity&quot;:0.5}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Create the collector parameters.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>      <span class="s">&quot;barrier&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>      <span class="s">&quot;voltage&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>      <span class="s">&quot;position&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>      <span class="s">&quot;richardson&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>      <span class="s">&quot;emissivity&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Put everything together to instantiate the TEC.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tec_params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;Emitter&quot;</span><span class="p">:</span><span class="n">em</span><span class="p">,</span> <span class="s">&quot;Collector&quot;</span><span class="p">:</span><span class="n">co</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="n">Langmuir</span><span class="p">(</span><span class="n">tec_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># What&#39;s the maximum output power density of this thing?</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">.</span><span class="n">calc_output_power_density</span><span class="p">(</span><span class="n">with_output</span><span class="o">=</span><span class="s">&quot;max&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># What if we want to know the output power density if the device</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># is operating at maximum efficiency? First, calculate the maximum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># efficiency and set the TEC to the corresponding voltage.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">.</span><span class="n">calc_total_efficiency</span><span class="p">(</span><span class="n">with_output</span><span class="o">=</span><span class="s">&quot;max&quot;</span><span class="p">,</span><span class="n">set_voltage</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># And look, the output voltage was set such that the TEC is at max efficiency.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">.</span><span class="n">calc_output_voltage</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Now let&#39;s calculate the value of maximum output power.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">.</span><span class="n">calc_output_power_density</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># What does the motive diagram at this voltage look like?</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">.</span><span class="n">plot_motive</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Looks like a lot of negative space charge. What if we decrease the</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># interelectrode spacing?</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="p">[</span><span class="s">&quot;Collector&quot;</span><span class="p">][</span><span class="s">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">.</span><span class="n">calc_total_efficiency</span><span class="p">(</span><span class="n">with_output</span><span class="o">=</span><span class="s">&quot;max&quot;</span><span class="p">,</span><span class="n">set_voltage</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">.</span><span class="n">calc_output_power_density</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="o">.</span><span class="n">plot_motive</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reference">
+<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Base Library (<tt class="docutils literal"><span class="pre">tec</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models (<tt class="docutils literal"><span class="pre">tec.models</span></tt>)</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="bibliography">
+<h1>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this headline">¶</a></h1>
+<p id="bibtex-bibliography-index-0"><table class="docutils citation" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[HG73]</a></td><td>G.N. Hatsopoulous and E.P. Gyftopoulos. <em>Thermionic Energy Conversion</em>. volume 1. MIT Press, Cambridge, Massachusetts, 1973.</td></tr>
+</tbody>
+</table>
+</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">tec - Utils for simulating vacuum thermionic energy conversion devices</a></li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#tec-installation">tec installation</a></li>
+<li><a class="reference internal" href="#zip-file-install">Zip file install</a></li>
+<li><a class="reference internal" href="#pip-git-github">pip + git + github</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quickstart">Quickstart</a></li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+<li><a class="reference internal" href="#bibliography">Bibliography</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="next chapter">Base Library (<tt class="docutils literal"><span class="pre">tec</span></tt>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Base Library (tec)"
+             >next</a> |</li>
+        <li><a href="#">tec 0.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Joshua Ryan Smith.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

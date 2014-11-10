@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Models (tec.models) &mdash; tec 0.3.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="tec 0.3.3 documentation" href="index.html" />
+    <link rel="prev" title="Base Library (tec)" href="api.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Base Library (tec)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">tec 0.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-tec.models"></span><div class="section" id="models-tec-models">
+<h1>Models (<a class="reference internal" href="#module-tec.models" title="tec.models"><tt class="xref py py-mod docutils literal"><span class="pre">tec.models</span></tt></a>)<a class="headerlink" href="#models-tec-models" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="tec.models.Langmuir">
+<em class="property">class </em><tt class="descclassname">tec.models.</tt><tt class="descname">Langmuir</tt><big>(</big><em>input_params</em><big>)</big><a class="headerlink" href="#tec.models.Langmuir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Considers space charge, ignores NEA and back emission.</p>
+<p>This class explicitly ignores the fact that either electrode may have NEA and determines the vacuum level of an electrode at the barrier. The model is based on [10.1103/PhysRev.21.419].</p>
+<p><a class="reference internal" href="#tec.models.Langmuir" title="tec.models.Langmuir"><tt class="xref py py-class docutils literal"><span class="pre">Langmuir</span></tt></a> objects have the same attributes as <a class="reference internal" href="api.html#tec.TECBase" title="tec.TECBase"><tt class="xref py py-class docutils literal"><span class="pre">tec.TECBase</span></tt></a>; &#8220;motive_data&#8221; is structured specifically for this model and contains the following data. For brevity, &#8220;dimensionless&#8221; prefix omitted from &#8220;position&#8221; and &#8220;motive&#8221; variable names.</p>
+<ul class="simple">
+<li>saturation_pt: Dictionary with keys &#8220;output_voltage&#8221; [V] and &#8220;output_current_density&#8221; [A m^-2] at the saturation point.</li>
+<li>critical_pt: Dictionary with keys &#8220;output_voltage&#8221; [V] and &#8220;output_current_density&#8221; [A m^-2] at the critical point.</li>
+<li>dps: Langmuir&#8217;s dimensionless Poisson&#8217;s equation solution object.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tec_langmuir</span> <span class="kn">import</span> <span class="n">TEC_Langmuir</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;barrier&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;voltage&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;position&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;richardson&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;emissivity&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">co_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;barrier&quot;</span><span class="p">:</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;voltage&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;position&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;richardson&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;emissivity&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;Emitter&quot;</span><span class="p">:</span><span class="n">em_dict</span><span class="p">,</span> <span class="s">&quot;Collector&quot;</span><span class="p">:</span><span class="n">co_dict</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">example_tec</span> <span class="o">=</span> <span class="n">TEC_Langmuir</span><span class="p">(</span><span class="n">input_dict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;saturation_pt&quot;</span><span class="p">][</span><span class="s">&quot;output_voltage&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;saturation_pt&quot;</span><span class="p">][</span><span class="s">&quot;output_current_density&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;critical_pt&quot;</span><span class="p">][</span><span class="s">&quot;output_voltage&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;critical_pt&quot;</span><span class="p">][</span><span class="s">&quot;output_current_density&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;dps&quot;</span><span class="p">])</span>
+<span class="go">&lt;class &#39;tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln&#39;&gt;</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="tec.models.Langmuir.calc_back_current_density">
+<tt class="descname">calc_back_current_density</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.models.Langmuir.calc_back_current_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Always 0 since back emission is ignored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.Langmuir.calc_critical_pt">
+<tt class="descname">calc_critical_pt</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.models.Langmuir.calc_critical_pt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine critical point condition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Dictionary with keys &#8220;output_voltage&#8221; [V] and &#8220;output_current_density&#8221; [A m^-2] at the critical point.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.Langmuir.calc_motive">
+<tt class="descname">calc_motive</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.models.Langmuir.calc_motive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the motive (meta)data and populates the &#8216;motive_data&#8217; attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.Langmuir.calc_saturation_pt">
+<tt class="descname">calc_saturation_pt</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.models.Langmuir.calc_saturation_pt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine saturation point condition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Dictionary with keys &#8220;output_voltage&#8221; [V] and &#8220;output_current_density&#8221; [A m^-2] at the saturation point.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.Langmuir.critical_point_target_function">
+<tt class="descname">critical_point_target_function</tt><big>(</big><em>output_current_density</em><big>)</big><a class="headerlink" href="#tec.models.Langmuir.critical_point_target_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target function for critical point rootfinder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.Langmuir.get_max_motive_ht">
+<tt class="descname">get_max_motive_ht</tt><big>(</big><em>with_position=False</em><big>)</big><a class="headerlink" href="#tec.models.Langmuir.get_max_motive_ht" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value of the maximum motive relative to ground in J.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>with_position</strong> (<em>bool</em>) &#8211; True returns the position at max motive instead.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.Langmuir.get_motive">
+<tt class="descname">get_motive</tt><big>(</big><em>pos</em><big>)</big><a class="headerlink" href="#tec.models.Langmuir.get_motive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value of motive relative to ground for given value(s) of position in J.</p>
+<p>Position must be of numerical type or numpy array. Returns NaN if position 
+falls outside of the interelectrode space.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.Langmuir.output_voltage_target_function">
+<tt class="descname">output_voltage_target_function</tt><big>(</big><em>output_current_density</em><big>)</big><a class="headerlink" href="#tec.models.Langmuir.output_voltage_target_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target function for the output voltage rootfinder.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tec.models.NEAC">
+<em class="property">class </em><tt class="descclassname">tec.models.</tt><tt class="descname">NEAC</tt><big>(</big><em>input_params</em><big>)</big><a class="headerlink" href="#tec.models.NEAC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Considers space charge and collector NEA, assumes emitter PEA, ignores back emission.</p>
+<p>This class explicitly ignres the possibility that the emitter has PEA but considers the possibility the collector features NEA. The model is based on [10.1063/1.4826202].</p>
+<p><a class="reference internal" href="#tec.models.NEAC" title="tec.models.NEAC"><tt class="xref py py-class docutils literal"><span class="pre">NEAC</span></tt></a> objects have the same attributes as <a class="reference internal" href="api.html#tec.TECBase" title="tec.TECBase"><tt class="xref py py-class docutils literal"><span class="pre">tec.TECBase</span></tt></a>; &#8220;motive_data&#8221; is structured specifically for this model and contains the following data. For brevity, &#8220;dimensionless&#8221; prefix omitted from &#8220;position&#8221; and &#8220;motive&#8221; variable names.</p>
+<ul class="simple">
+<li>saturation_pt: Dictionary with keys &#8220;output_voltage&#8221; [V] and &#8220;output_current_density&#8221; [A m^-2] at the saturation point.</li>
+<li>virt_critical_pt: Dictionary with keys &#8220;output_voltage&#8221; [V] and &#8220;output_current_density&#8221; [A m^-2] at the critical point.</li>
+<li>dps: Langmuir&#8217;s dimensionless Poisson&#8217;s equation solution object.</li>
+<li>spclmbs_max_dist: Space charge limited mode boundary surface (spclmbs) maximum distance [m]. The distance below which the TEC experiences no space charge limited mode.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tec_neac</span> <span class="kn">import</span> <span class="n">TEC_NEAC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;barrier&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;voltage&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;position&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;richardson&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;emissivity&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">co_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;barrier&quot;</span><span class="p">:</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;voltage&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;position&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;richardson&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;emissivity&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;nea&quot;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;Emitter&quot;</span><span class="p">:</span><span class="n">em_dict</span><span class="p">,</span> <span class="s">&quot;Collector&quot;</span><span class="p">:</span><span class="n">co_dict</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">example_tec</span> <span class="o">=</span> <span class="n">TEC_NEAC</span><span class="p">(</span><span class="n">input_dict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;saturation_pt&quot;</span><span class="p">][</span><span class="s">&quot;output_voltage&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;saturation_pt&quot;</span><span class="p">][</span><span class="s">&quot;output_current_density&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;virt_critical_pt&quot;</span><span class="p">][</span><span class="s">&quot;output_voltage&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;virt_critical_pt&quot;</span><span class="p">][</span><span class="s">&quot;output_current_density&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;spclmbs_max_dist&quot;</span><span class="p">],</span><span class="nb">float</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">example_tec</span><span class="p">[</span><span class="s">&quot;motive_data&quot;</span><span class="p">][</span><span class="s">&quot;dps&quot;</span><span class="p">])</span>
+<span class="go">&lt;class &#39;tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln&#39;&gt;</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="tec.models.NEAC.calc_motive">
+<tt class="descname">calc_motive</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.models.NEAC.calc_motive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the motive (meta)data and populates the &#8216;motive_data&#8217; attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.NEAC.calc_saturation_pt">
+<tt class="descname">calc_saturation_pt</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.models.NEAC.calc_saturation_pt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine saturation point condition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Dictionary with keys &#8220;output_voltage&#8221; [V] and &#8220;output_current_density&#8221; [A m^-2] at the saturation point.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.NEAC.calc_spclmbs_max_dist">
+<tt class="descname">calc_spclmbs_max_dist</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.models.NEAC.calc_spclmbs_max_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Space charge limited mode boundary surface (spclmbs) maximum interelectrode distance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The distance below which the no space charge limited mode is experienced [m].</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.NEAC.calc_virt_critical_pt">
+<tt class="descname">calc_virt_critical_pt</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.models.NEAC.calc_virt_critical_pt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine virtual critical point condition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Dictionary with keys &#8220;output_voltage&#8221; [V] and &#8220;output_current_density&#8221; [A m^-2] at the virtual critical point.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.NEAC.output_voltage_target_function">
+<tt class="descname">output_voltage_target_function</tt><big>(</big><em>output_current_density</em><big>)</big><a class="headerlink" href="#tec.models.NEAC.output_voltage_target_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target function for the output voltage rootfinder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.models.NEAC.virt_critical_point_target_function">
+<tt class="descname">virt_critical_point_target_function</tt><big>(</big><em>output_current_density</em><big>)</big><a class="headerlink" href="#tec.models.NEAC.virt_critical_point_target_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target function for virtual critical point rootfinder.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="previous chapter">Base Library (<tt class="docutils literal"><span class="pre">tec</span></tt>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/models.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="Base Library (tec)"
+             >previous</a> |</li>
+        <li><a href="index.html">tec 0.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Joshua Ryan Smith.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

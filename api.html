@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Base Library (tec) &mdash; tec 0.3.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="tec 0.3.3 documentation" href="index.html" />
+    <link rel="next" title="Models (tec.models)" href="models.html" />
+    <link rel="prev" title="tec - Utils for simulating vacuum thermionic energy conversion devices" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="models.html" title="Models (tec.models)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="tec - Utils for simulating vacuum thermionic energy conversion devices"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">tec 0.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-tec"></span><div class="section" id="base-library-tec">
+<h1>Base Library (<a class="reference internal" href="#module-tec" title="tec"><tt class="xref py py-mod docutils literal"><span class="pre">tec</span></tt></a>)<a class="headerlink" href="#base-library-tec" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="tec.Electrode">
+<em class="property">class </em><tt class="descclassname">tec.</tt><tt class="descname">Electrode</tt><big>(</big><em>input_params</em><big>)</big><a class="headerlink" href="#tec.Electrode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thermionic electrode.</p>
+<p>An Electrode object is instantiated by a dict with the keys, constraints, and
+units listed below. Additional keys will be ignored, and there are no default
+values for instantiation. Note that despite the units listed below, the
+Electrode stores and returns its quantities in SI units.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_params</strong> (<em>dict</em>) &#8211; Initializing values for Electrode.</li>
+<li><strong>input_params[&#8220;temp&#8221;]</strong> (<em>float</em>) &#8211; Temperature &gt; 0 [K]</li>
+<li><strong>input_params[&#8220;barrier&#8221;]</strong> (<em>float</em>) &#8211; Emission barrier &gt;=0 [eV] Sometimes</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>referred to as work function. The barrier is the difference between the lowest
+energy for which an electron inside a material can escape and the Fermi 
+energy.
+:param float input_params[&#8220;voltage&#8221;]: Voltage [V] Measured with respect to
+ground.
+:param float input_params[&#8220;position&#8221;]: Position [um] Position of the electrode
+with respect to the origin.
+:param float input_params[&#8220;richardson&#8221;]: Richardson Constant &gt;=0 
+[A cm^{-2} K^{-2}]
+:param float input_params[&#8220;emissivity&#8221;]: Stefan-Boltzmann emissivity &lt; 1 &amp; &gt; 0
+:param float input_params[&#8220;nea&#8221;]: Negative electron affinity &gt;=0 [eV] 
+(Optional) Increases as the difference between the vacuum energy and 
+conduction band minimum increases.</p>
+<p>The user can set either temp or richardson equal to zero to &#8220;switch off&#8221; the 
+electrode &#8211; the <a class="reference internal" href="#tec.Electrode.calc_saturation_current_density" title="tec.Electrode.calc_saturation_current_density"><tt class="xref py py-meth docutils literal"><span class="pre">calc_saturation_current_density()</span></tt></a> method will return a value 
+of zero in either case.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">input_params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="s">&quot;barrier&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="s">&quot;voltage&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="s">&quot;position&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="s">&quot;richardson&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="s">&quot;emissivity&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">El</span> <span class="o">=</span> <span class="n">Electrode</span><span class="p">(</span><span class="n">input_params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">El</span>
+<span class="go">{&#39;barrier&#39;: 1.6021764600000001e-19,</span>
+<span class="go"> &#39;emissivity&#39;: 0.5,</span>
+<span class="go"> &#39;position&#39;: 0.0,</span>
+<span class="go"> &#39;richardson&#39;: 100000.0,</span>
+<span class="go"> &#39;temp&#39;: 1000.0,</span>
+<span class="go"> &#39;voltage&#39;: 0.0}</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="tec.Electrode.calc_barrier_ht">
+<tt class="descname">calc_barrier_ht</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.Electrode.calc_barrier_ht" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value of barrier height in J relative to ground.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.Electrode.calc_motive_bc">
+<tt class="descname">calc_motive_bc</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.Electrode.calc_motive_bc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Motive boundary condition in J relative to ground.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.Electrode.calc_saturation_current_density">
+<tt class="descname">calc_saturation_current_density</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.Electrode.calc_saturation_current_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saturation current in A m^{-2} calculated according to Richardson-Dushman.</p>
+<p>If either temp or richardson are equal to 0, this  method returns a value of 0.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.Electrode.calc_vacuum_energy">
+<tt class="descname">calc_vacuum_energy</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.Electrode.calc_vacuum_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position of the vacuum energy relative to Fermi energy in J.</p>
+<p>If the Electrode does not have NEA, the vacuum energy occurs at the top of 
+the barrier and is therefore equal to the barrier. If the Electrode does 
+have NEA, the vacuum level is the barrier reduced by the value of the NEA.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.Electrode.param_changed_and_reset">
+<tt class="descname">param_changed_and_reset</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.Electrode.param_changed_and_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True, reset to False if a parameter affecting motive has just been changed.</p>
+<p>Parameters which affect motive are temp, barrier, voltage, position, richardson, and nea.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tec.TECBase">
+<em class="property">class </em><tt class="descclassname">tec.</tt><tt class="descname">TECBase</tt><big>(</big><em>input_params</em><big>)</big><a class="headerlink" href="#tec.TECBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base thermionic engine class.</p>
+<p>This class provides the base API for subclasses which implement particular models of TEC electron transport. Even though it isn&#8217;t intended to be a model, this class implements a model of electron transport which completely ignores the negative space charge effect, similar to the model described on p. 51 of <a class="reference internal" href="index.html#id2" id="id1">[HG73]</a>.</p>
+<p>The TECBase class is instantiated by a dict with two keys, &#8220;Emitter&#8221; and &#8220;Collector&#8221;. Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_params</strong> (<em>dict</em>) &#8211; Dict containing sub-dicts which can instantiate <a class="reference internal" href="#tec.Electrode" title="tec.Electrode"><tt class="xref py py-class docutils literal"><span class="pre">Electrode</span></tt></a> objects.</li>
+<li><strong>input_params[&#8220;Emitter&#8221;]</strong> (<em>dict</em>) &#8211; Initializes the emitter electrode.</li>
+<li><strong>input_params[&#8220;Collector&#8221;]</strong> (<em>dict</em>) &#8211; Initializes the collector electrode.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The attributes of the object are accessed like a dictionary. The object has three attributes, &#8220;Emitter&#8221; and &#8220;Collector&#8221; are both Electrode objects. &#8220;motive_data&#8221; is a dictionary containing (meta)data calculated during the motive calculation. There is no requirement on the structure or contents of the &#8220;motive_data&#8221; attribute because each particular implementation of a model may have its own specific requirements. Such requirements will be documented in teh subclass&#8217;s docstring. In the case of TECBase, &#8220;motive_data&#8221; contains the following data:</p>
+<ul class="simple">
+<li>motive_array: A two-element array containing the electrostatic boundary conditions, i.e. the vacuum level of the emitter and collector, respectively.</li>
+<li>position_array: A two-element array containing the values of position corresponding to the values in motive_array.</li>
+<li>motive_interp: A scipy.interpolate.interp1d object that interpolates the two arrays described above used in the class&#8217;s convenience methods.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">em_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;barrier&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;voltage&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;position&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;richardson&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;emissivity&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">co_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;temp&quot;</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;barrier&quot;</span><span class="p">:</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;voltage&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;position&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;richardson&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&quot;emissivity&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;Emitter&quot;</span><span class="p">:</span><span class="n">em_dict</span><span class="p">,</span> <span class="s">&quot;Collector&quot;</span><span class="p">:</span><span class="n">co_dict</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">example_tec</span> <span class="o">=</span> <span class="n">TECBase</span><span class="p">(</span><span class="n">input_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>[1] &#8220;Thermionic Energy Conversion, Vol. I.&#8221; Hatsopoulous and Gyftopoulous. p. 48.</p>
+<dl class="method">
+<dt id="tec.TECBase.barrier_artist">
+<tt class="descname">barrier_artist</tt><big>(</big><em>ax</em>, <em>el</em><big>)</big><a class="headerlink" href="#tec.TECBase.barrier_artist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper method to properly draw barrier on the motive diagram using spines.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_back_current_density">
+<tt class="descname">calc_back_current_density</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_back_current_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Back current density in A m^{-2}.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_carnot_efficiency">
+<tt class="descname">calc_carnot_efficiency</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_carnot_efficiency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Carnot efficiency in the range 0 to 1.</p>
+<p>This method will return a negative value if the emitter temperature is less
+than the collector temperature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_contact_potential">
+<tt class="descname">calc_contact_potential</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_contact_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contact potential in V.</p>
+<p>The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by <a class="reference internal" href="#tec.TECBase.calc_output_voltage" title="tec.TECBase.calc_output_voltage"><tt class="xref py py-meth docutils literal"><span class="pre">calc_output_voltage()</span></tt></a> which is the voltage difference between the collector and emitter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_electronic_efficiency">
+<tt class="descname">calc_electronic_efficiency</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_electronic_efficiency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Efficiency considering only electronic heat transport in range 0 to 1.</p>
+<p>This method will return nan if the output power is less than zero. See <a class="reference internal" href="index.html#id2" id="id2">[HG73]</a> p. 73 for a description of how the electronic efficiency is calculated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_forward_current_density">
+<tt class="descname">calc_forward_current_density</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_forward_current_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forward current density in A m^{-2}.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_interelectrode_spacing">
+<tt class="descname">calc_interelectrode_spacing</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_interelectrode_spacing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distance between collector and emitter in m.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_load_resistance">
+<tt class="descname">calc_load_resistance</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_load_resistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load resistance in ohms.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_motive">
+<tt class="descname">calc_motive</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_motive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the motive (meta)data and populates the &#8216;motive_data&#8217; attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_output_current_density">
+<tt class="descname">calc_output_current_density</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_output_current_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Net current density flowing across device in A m^{-2}.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_output_power_density">
+<tt class="descname">calc_output_power_density</tt><big>(</big><em>action=None</em>, <em>set_voltage=False</em><big>)</big><a class="headerlink" href="#tec.TECBase.calc_output_power_density" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>action</strong> &#8211; Key indicating the method&#8217;s desired action.</li>
+<li><strong>action==None</strong> &#8211; Simply returns the current value of the method.</li>
+<li><strong>action==&#8221;max&#8221;</strong> &#8211; Returns the maximum value of the method relative to the output voltage.</li>
+<li><strong>action==&#8221;voltage&#8221;</strong> &#8211; Returns the voltage at which the maximum output occurs.</li>
+<li><strong>action==&#8221;full&#8221;</strong> &#8211; Returns all of the data that the minimization method returns.</li>
+<li><strong>set_voltage</strong> (<em>bool</em>) &#8211; If True, leave the voltage set such that the desired output is maximized. Parameter has no effect unless the action argument is &#8220;max&#8221;, &#8220;voltage&#8221;, or &#8220;full&#8221;.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_output_voltage">
+<tt class="descname">calc_output_voltage</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_output_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Voltage difference between emitter and collector in V.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_radiation_efficiency">
+<tt class="descname">calc_radiation_efficiency</tt><big>(</big><big>)</big><a class="headerlink" href="#tec.TECBase.calc_radiation_efficiency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Efficiency considering only blackbody heat transport in range 0 to 1.</p>
+<p>This method will return nan if the output power is less than zero. See <a class="reference internal" href="index.html#id2" id="id3">[HG73]</a> p. 73 for a description of how the radiation efficiency is calculated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.calc_total_efficiency">
+<tt class="descname">calc_total_efficiency</tt><big>(</big><em>action=None</em>, <em>set_voltage=False</em><big>)</big><a class="headerlink" href="#tec.TECBase.calc_total_efficiency" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>action</strong> &#8211; Key indicating the method&#8217;s desired action.</li>
+<li><strong>action==None</strong> &#8211; Simply returns the current value of the method.</li>
+<li><strong>action==&#8221;max&#8221;</strong> &#8211; Returns the maximum value of the method relative to the output voltage.</li>
+<li><strong>action==&#8221;voltage&#8221;</strong> &#8211; Returns the voltage at which the maximum output occurs.</li>
+<li><strong>action==&#8221;full&#8221;</strong> &#8211; Returns all of the data that the minimization method returns.</li>
+<li><strong>set_voltage</strong> (<em>bool</em>) &#8211; If True, leave the voltage set such that the desired output is maximized. Parameter has no effect unless the action argument is &#8220;max&#8221;, &#8220;voltage&#8221;, or &#8220;full&#8221;.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.dimension_line">
+<tt class="descname">dimension_line</tt><big>(</big><em>label</em>, <em>x</em>, <em>y_lo</em>, <em>y_hi</em>, <em>label_loc='mi'</em>, <em>label_pos='left'</em><big>)</big><a class="headerlink" href="#tec.TECBase.dimension_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper method to plot vertical dimension line on the motive diagram.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>label</strong> (<em>string</em>) &#8211; Dict containing sub-dicts which can instantiate</li>
+<li><strong>label</strong> &#8211; Label for dimension line.</li>
+<li><strong>x</strong> (<em>float</em>) &#8211; Horizontal placement of dimension line.</li>
+<li><strong>y_lo</strong> (<em>float</em>) &#8211; Lower extent of dimension line.</li>
+<li><strong>y_hi</strong> (<em>float</em>) &#8211; Upper extent of dimension line.</li>
+<li><strong>label_loc</strong> (<em>str</em>) &#8211; Vertical placement of the label. Can be &#8220;lo&#8221; &#8220;mi&#8221; or &#8220;hi&#8221;.</li>
+<li><strong>label_pos</strong> (<em>str</em>) &#8211; Which side of the dimension line the label is placed (&#8220;left&#8221; or &#8220;right&#8221;).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.get_max_motive_ht">
+<tt class="descname">get_max_motive_ht</tt><big>(</big><em>with_position=False</em><big>)</big><a class="headerlink" href="#tec.TECBase.get_max_motive_ht" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value of the maximum motive relative to ground in J.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>with_position</strong> (<em>bool</em>) &#8211; True returns the position at max motive instead.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.get_motive">
+<tt class="descname">get_motive</tt><big>(</big><em>position</em><big>)</big><a class="headerlink" href="#tec.TECBase.get_motive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value of motive relative to ground for given value(s) of position in J.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>position</strong> &#8211; float or numpy array at which motive is to be evaluated. Returns NaN if position falls outside of the interelectrode space.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tec.TECBase.plot_motive">
+<tt class="descname">plot_motive</tt><big>(</big><em>axl=None</em>, <em>show=False</em>, <em>fontsize=False</em>, <em>output_voltage=False</em><big>)</big><a class="headerlink" href="#tec.TECBase.plot_motive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot an annotated motive diagram relative to ground.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>axl</strong> &#8211; <tt class="xref py py-class docutils literal"><span class="pre">matplotlib.Axes</span></tt> object on which to draw motive diagram. None results in a new figure with a subplot(111) as the location to draw the motive diagram.</li>
+<li><strong>show</strong> (<em>bool</em>) &#8211; If True, <tt class="xref py py-meth docutils literal"><span class="pre">pyplot.show()</span></tt> the result.</li>
+<li><strong>fontsize</strong> (<em>int</em>) &#8211; Annotation font size.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">tec - Utils for simulating vacuum thermionic energy conversion devices</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="models.html"
+                        title="next chapter">Models (<tt class="docutils literal"><span class="pre">tec.models</span></tt>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="models.html" title="Models (tec.models)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="tec - Utils for simulating vacuum thermionic energy conversion devices"
+             >previous</a> |</li>
+        <li><a href="index.html">tec 0.3.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Joshua Ryan Smith.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
