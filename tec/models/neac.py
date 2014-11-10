@@ -10,7 +10,7 @@ class NEAC(Langmuir):
   """
   Considers space charge and collector NEA, assumes emitter PEA, ignores back emission.
 
-  This class explicitly ignres the possibility that the emitter has PEA but considers the possibility the collector features NEA. The model is based on :cite:`paper-2013.01.16_nea_collector`.
+  This class explicitly ignres the possibility that the emitter has PEA but considers the possibility the collector features NEA. The model is based on :cite:`10.1063/1.4826202`.
 
   Attributes
   ----------
