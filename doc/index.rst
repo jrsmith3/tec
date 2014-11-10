@@ -36,7 +36,7 @@ If you have pip installed, things should be pretty easy. Just execute
 
 Quickstart
 ==========
-TEC models are built by subclassing the TECBase class and adding functionality to calculate the motive. As a quick example, say the user wanted to simulate the device described in Hatsopoulous and Gyftopoulous :cite:`0-262-08059-1`
+TEC models are built by subclassing the TECBase class and adding functionality to calculate the motive. As a quick example, say the user wanted to simulate the device described in Hatsopoulous and Gyftopoulous :cite:`978-0-26-208059-0`
 
    >>> # Pull in Langmuir's model.
    >>> from tec.models import Langmuir
