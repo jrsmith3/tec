@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from distutils.core import setup
+import electrode
 
 setup(name = "electrode",
-      version = "1.2.0",
+      version = electrode.__version__,
       author = "Joshua Ryan Smith",
       author_email = "joshua.r.smith@gmail.com",
       packages = ["electrode"],
