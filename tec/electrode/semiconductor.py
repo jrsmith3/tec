@@ -14,27 +14,27 @@ class SC(Metal):
 
     el_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
     """
-    Effective mass of electrons >0 [kg].
+    Effective mass of electrons >0 [:math:`kg`].
     """
 
     ho_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
     """
-    Effective mass of holes >0 [kg].
+    Effective mass of holes >0 [:math:`kg`].
     """
 
     accept_conc = PhysicalProperty(unit = "1/cm3", lo_bnd = 0)
     """
-    Acceptor dopant concentration >0 [cm^{-3}]
+    Acceptor dopant concentration >0 [:math:`cm^{-3}`]
     """
 
     accept_ionization_energy = PhysicalProperty(unit = "meV", lo_bnd = 0)
     """
-    Acceptor dopant ionization energy >0 [eV]
+    Acceptor dopant ionization energy >0 [:math:`eV`]
     """
 
     bandgap = PhysicalProperty(unit = "eV", lo_bnd = 0)
     """
-    Bandgap of semiconductor at 300K. >0 [eV].
+    Bandgap of semiconductor at 300K. >0 [:math:`eV`].
     """
 
     def __init__(self, params):
@@ -43,7 +43,7 @@ class SC(Metal):
 
     def calc_cond_band_effective_dos(self):
         """
-        Effective density of states in conduction band in [cm^-3].
+        Effective density of states in conduction band in [:math:`cm^-3`].
         """
         dos = 2 * \
             ((2 * np.pi * self.el_effective_mass * constants.k_B * self.temp) / \
@@ -53,7 +53,7 @@ class SC(Metal):
 
     def calc_val_band_effective_dos(self):
         """
-        Effective density of states in conduction band in [cm^-3].
+        Effective density of states in conduction band in [:math:`cm^-3`].
         """
         dos = 2 * \
             ((2 * np.pi * self.ho_effective_mass * constants.k_B * self.temp) / \
@@ -63,7 +63,7 @@ class SC(Metal):
 
     def calc_el_carrier_conc(self):
         """
-        Equilibrium electron carrier concentration in [cm^-3].
+        Equilibrium electron carrier concentration in [:math:`cm^-3`].
         """
         exponent = ((self.bandgap - self.calc_fermi_energy()) / \
             (constants.k_B * self.temp)).decompose()
@@ -72,7 +72,7 @@ class SC(Metal):
 
     def calc_ho_carrier_conc(self):
         """
-        Equilibrium hole carrier concentration in [cm^-3].
+        Equilibrium hole carrier concentration in [:math:`cm^-3`].
         """
         exponent = (self.calc_fermi_energy() / \
             (constants.k_B * self.temp)).decompose()
@@ -81,7 +81,7 @@ class SC(Metal):
 
     def calc_fermi_energy(self):
         """
-        Value of Fermi energy relative to valence band max in [eV].
+        Value of Fermi energy relative to valence band max in [:math:`eV`].
         """
         lo = 0
         hi = self.bandgap.value
