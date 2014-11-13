@@ -8,5 +8,5 @@ Base Library (:mod:`electrode`)
 .. currentmodule:: electrode
 """
 
-from electrode import *
+from metal import *
 from semiconductor import *

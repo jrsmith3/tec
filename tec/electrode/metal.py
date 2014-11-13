@@ -5,11 +5,11 @@ from astropy import units
 from astropy import constants
 from tec import PhysicalProperty, find_PhysicalProperty
 
-class Electrode(object):
+class Metal(object):
     """
-    Thermoelectron electrode.
+    Metal thermoelectron electrode.
 
-    An Electrode is instantiated with a dict having keys identical to the class's public data attributes. Each key's value must satisfy the constraints noted with the corresponding public data attribute. Dictionary values can be some kind of numeric type or of type `astropy.units.Quantity` so long as the units are compatible with what's listed.
+    A `Metal` electrode is instantiated with a dict having keys identical to the class's public data attributes. Each key's value must satisfy the constraints noted with the corresponding public data attribute. Dictionary values can be some kind of numeric type or of type `astropy.units.Quantity` so long as the units are compatible with what's listed.
 
     All numerical methods return data of type astropy.units.Quantity.
     """

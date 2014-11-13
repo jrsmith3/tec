@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from tec.electrode import Electrode
+from tec.electrode import Metal
 from astropy.units import Quantity
 from astropy.units import Unit
 import unittest
@@ -17,26 +17,26 @@ class TestBaseJustInputParams(unittest.TestCase):
     """
     Base class for tests.
 
-    This class defines a common setUp method that features an attribute which can be used to instantiate `Electrode` objects.
+    This class defines a common setUp method that features an attribute which can be used to instantiate `Metal` objects.
     """
     def setUp(self):
         """
-        Set up a dictionary that can properly instantiate an `Electrode` object.
+        Set up a dictionary that can properly instantiate an `Metal` object.
         """
         self.input_params = copy.copy(input_params)
 
 
-class TestBaseWithElectrode(unittest.TestCase):
+class TestBaseWithMetal(unittest.TestCase):
     """
     Base class for tests.
 
-    This class defines a common setUp method that features an attribute which is an `Electrode` object.
+    This class defines a common setUp method that features an attribute which is an `Metal` object.
     """
     def setUp(self):
         """
-        Set up an `Electrode` object.
+        Set up an `Metal` object.
         """
-        self.El = Electrode(copy.copy(input_params))
+        self.El = Metal(copy.copy(input_params))
 
 
 # Test classes
@@ -47,15 +47,15 @@ class InstantiationInputNonDict(unittest.TestCase):
     """
     def test_no_input_arg(self):
         """
-        Electrode instantiation without input argument is invalid.
+        Metal instantiation without input argument is invalid.
         """
-        self.assertRaises(TypeError, Electrode, None)
+        self.assertRaises(TypeError, Metal, None)
 
     def test_non_dict_input_arg(self):
         """
-        Electrode instantiation with non-dict input argument is invalid.
+        Metal instantiation with non-dict input argument is invalid.
         """
-        self.assertRaises(TypeError, Electrode, "this string is not a dict.")
+        self.assertRaises(TypeError, Metal, "this string is not a dict.")
 
 
 class InstantiationInputIncomplete(TestBaseJustInputParams):
@@ -64,24 +64,24 @@ class InstantiationInputIncomplete(TestBaseJustInputParams):
     """
     def test_temp_missing(self):
         """
-        Electrode instantiating dict requires `temp` key.
+        Metal instantiating dict requires `temp` key.
         """
         del(self.input_params["temp"])
-        self.assertRaises(KeyError, Electrode, self.input_params)
+        self.assertRaises(KeyError, Metal, self.input_params)
 
     def test_barrier_missing(self):
         """
-        Electrode instantiating dict requires `barrier` key.
+        Metal instantiating dict requires `barrier` key.
         """
         del(self.input_params["barrier"])
-        self.assertRaises(KeyError, Electrode, self.input_params)
+        self.assertRaises(KeyError, Metal, self.input_params)
 
     def test_richardson_missing(self):
         """
-        Electrode instantiating dict requires `richardson` key.
+        Metal instantiating dict requires `richardson` key.
         """
         del(self.input_params["richardson"])
-        self.assertRaises(KeyError, Electrode, self.input_params)
+        self.assertRaises(KeyError, Metal, self.input_params)
 
 
 class InstantiationInputSuperfluousKeys(TestBaseJustInputParams):
@@ -90,11 +90,11 @@ class InstantiationInputSuperfluousKeys(TestBaseJustInputParams):
     """
     def test_superfluous_keys(self):
         """
-        Electrode can be instantiated with dict with superfluous keys.
+        Metal can be instantiated with dict with superfluous keys.
         """
         self.input_params["superfluous"] = "value not even numeric!"
         try:
-            El = Electrode(self.input_params)
+            El = Metal(self.input_params)
         except:
             self.fail("Superfluous key in input param dict caused failure of instantiation.")
 
@@ -105,40 +105,40 @@ class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
     """
     def test_temp_non_numeric(self):
         """
-        Electrode instantiation requires numeric `temp` value.
+        Metal instantiation requires numeric `temp` value.
         """
         self.input_params["temp"] = "this string is non-numeric."
 
         try:
-            El = Electrode(self.input_params)
+            El = Metal(self.input_params)
         except TypeError:
-            # Instantiating an Electrode with a dict with key `temp` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an Metal with a dict with key `temp` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
             self.fail("`temp` field of instantiating dict must be numeric.")
 
     def test_barrier_non_numeric(self):
         """
-        Electrode instantiation requires numeric `barrier` value.
+        Metal instantiation requires numeric `barrier` value.
         """
         self.input_params["barrier"] = "this string is non-numeric."
         try:
-            El = Electrode(self.input_params)
+            El = Metal(self.input_params)
         except TypeError:
-            # Instantiating an Electrode with a dict with key `barrier` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an Metal with a dict with key `barrier` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
             self.fail("`barrier` field of instantiating dict must be numeric.")
 
     def test_richardson_non_numeric(self):
         """
-        Electrode instantiation requires numeric `richardson` value.
+        Metal instantiation requires numeric `richardson` value.
         """
         self.input_params["richardson"] = "this string is non-numeric."
         try:
-            El = Electrode(self.input_params)
+            El = Metal(self.input_params)
         except TypeError:
-            # Instantiating an Electrode with a dict with key `richardson` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an Metal with a dict with key `richardson` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
             self.fail("`richardson` field of instantiating dict must be numeric.")
@@ -153,33 +153,33 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
     """
     def test_temp_less_than_zero(self):
         """
-        Electrode instantiation requires `temp` > 0.
+        Metal instantiation requires `temp` > 0.
         """
         self.input_params["temp"] = -1.1
-        self.assertRaises(ValueError, Electrode, self.input_params)
+        self.assertRaises(ValueError, Metal, self.input_params)
 
     def test_barrier_less_than_zero(self):
         """
-        Electrode instantiation requires `barrier` > 0.
+        Metal instantiation requires `barrier` > 0.
         """
         self.input_params["barrier"] = -1.1
-        self.assertRaises(ValueError, Electrode, self.input_params)
+        self.assertRaises(ValueError, Metal, self.input_params)
 
     def test_richardson_less_than_zero(self):
         """
-        Electrode instantiation requires `richardson` > 0.
+        Metal instantiation requires `richardson` > 0.
         """
         self.input_params["richardson"] = -1.1
-        self.assertRaises(ValueError, Electrode, self.input_params)
+        self.assertRaises(ValueError, Metal, self.input_params)
 
 
-class SetDataWrongType(TestBaseWithElectrode):
+class SetDataWrongType(TestBaseWithMetal):
     """
     Tests setting attributes with non-numeric data.
     """
     def test_temp_non_numeric(self):
         """
-        Electrode can only set `temp` with numeric value.
+        Metal can only set `temp` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
@@ -192,7 +192,7 @@ class SetDataWrongType(TestBaseWithElectrode):
 
     def test_barrier_non_numeric(self):
         """
-        Electrode can only set `barrier` with numeric value.
+        Metal can only set `barrier` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
@@ -205,7 +205,7 @@ class SetDataWrongType(TestBaseWithElectrode):
 
     def test_richardson_non_numeric(self):
         """
-        Electrode can only set `richardson` with numeric value.
+        Metal can only set `richardson` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
@@ -217,7 +217,7 @@ class SetDataWrongType(TestBaseWithElectrode):
             self.fail("`richardson` attribute can be assigned a non-numeric value.")
 
 
-class SetDataOutsideConstraints(TestBaseWithElectrode):
+class SetDataOutsideConstraints(TestBaseWithMetal):
     """
     Tests setting attributes when input values are outside their constraints.
 
@@ -226,7 +226,7 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
     """
     def test_temp_less_than_zero(self):
         """
-        Electrode must set `temp` > 0.
+        Metal must set `temp` > 0.
         """
         try:
             self.El.temp = -1.1
@@ -238,7 +238,7 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
 
     def test_barrier_less_than_zero(self):
         """
-        Electrode must set `barrier` > 0.
+        Metal must set `barrier` > 0.
         """
         try:
             self.El.barrier = -1.1
@@ -250,7 +250,7 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
 
     def test_richardson_less_than_zero(self):
         """
-        Electrode must set `richardson` > 0.
+        Metal must set `richardson` > 0.
         """
         try:
             self.El.richardson = -1.1
@@ -261,29 +261,29 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
             self.fail("`richardson` attribute can be assigned a negative value.")
 
 
-class CalculatorsReturnType(TestBaseWithElectrode):
+class CalculatorsReturnType(TestBaseWithMetal):
     """
     Tests output types of the calculator methods.
     """
     def test_calc_richardson_current_density(self):
         """
-        Electrode.calc_richardson_current_density should return an astropy.units.Quantity.
+        Metal.calc_richardson_current_density should return an astropy.units.Quantity.
         """
         self.assertIsInstance(
             self.El.calc_richardson_current_density(), Quantity)
 
-class CalculatorsReturnUnits(TestBaseWithElectrode):
+class CalculatorsReturnUnits(TestBaseWithMetal):
     """
     Tests output units, where applicable, of the calculator methods.
     """
     def test_calc_richardson_current_density(self):
         """
-        Electrode.calc_richardson_current_density should return a value with unit A/cm2.
+        Metal.calc_richardson_current_density should return a value with unit A/cm2.
         """
         self.assertEqual(
             self.El.calc_richardson_current_density().unit, Unit("A/cm2"))
 
-class CalculatorsReturnValues(TestBaseWithElectrode):
+class CalculatorsReturnValues(TestBaseWithMetal):
     """
     Tests values of calculator methods against known values.
     """

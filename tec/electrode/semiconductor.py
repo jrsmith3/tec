@@ -4,10 +4,10 @@ import numpy as np
 from scipy import optimize
 from astropy import units
 from astropy import constants
-from electrode import Electrode
+from metal import Metal
 from tec import PhysicalProperty, find_PhysicalProperty
 
-class SC_Electrode(Electrode):
+class SC_Electrode(Metal):
     """
     Implements basic semiconductor calculations for p-type Si.
     """
