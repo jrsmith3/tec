@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from astropy import units
 import unittest
-from electrode import PhysicalProperty
+from tec import PhysicalProperty
 
 # Classes used in tests
 # =====================
@@ -61,7 +61,7 @@ class StandaloneInstantiation(unittest.TestCase):
         pp = PhysicalProperty()
         qty = units.Quantity(100., "km")
         
-        self.assertRaises(units.UnitsException, pp.__set__, MockClassEmpty, qty)
+        self.assertRaises(units.UnitsError, pp.__set__, MockClassEmpty, qty)
 
     def test_set_numeric_above_up_bnd(self):
         """
