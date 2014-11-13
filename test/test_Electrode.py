@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from electrode import Electrode
+from tec.electrode import Electrode
 from astropy.units import Quantity
 from astropy.units import Unit
 import unittest

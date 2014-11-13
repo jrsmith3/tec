@@ -5,7 +5,7 @@ from scipy import optimize
 from astropy import units
 from astropy import constants
 from electrode import Electrode
-from physicalproperty import PhysicalProperty, find_PhysicalProperty
+from tec import PhysicalProperty, find_PhysicalProperty
 
 class SC_Electrode(Electrode):
     """
