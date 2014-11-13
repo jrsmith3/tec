@@ -7,7 +7,7 @@ from astropy import constants
 from metal import Metal
 from tec import PhysicalProperty, find_PhysicalProperty
 
-class SC_Electrode(Metal):
+class SC(Metal):
     """
     Implements basic semiconductor calculations for p-type Si.
     """

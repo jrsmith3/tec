@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from tec.electrode import SC_Electrode
+from tec.electrode import SC
 from astropy.units import Quantity
 from astropy.units import Unit
 import unittest
@@ -24,11 +24,11 @@ class TestBaseJustInputParams(unittest.TestCase):
     """
     Base class for tests.
 
-    This class defines a common setUp method that features an attribute which can be used to instantiate `SC_Electrode` objects.
+    This class defines a common setUp method that features an attribute which can be used to instantiate `SC` objects.
     """
     def setUp(self):
         """
-        Set up a dictionary that can properly instantiate an `SC_Electrode` object.
+        Set up a dictionary that can properly instantiate an `SC` object.
         """
         self.input_params = copy.copy(input_params)
 
@@ -41,9 +41,9 @@ class TestBaseWithElectrode(unittest.TestCase):
     """
     def setUp(self):
         """
-        Set up an `SC_Electrode` object.
+        Set up an `SC` object.
         """
-        self.El = SC_Electrode(copy.copy(input_params))
+        self.El = SC(copy.copy(input_params))
 
 
 # Test classes
@@ -54,15 +54,15 @@ class InstantiationInputNonDict(unittest.TestCase):
     """
     def test_no_input_arg(self):
         """
-        SC_Electrode instantiation without input argument is invalid.
+        SC instantiation without input argument is invalid.
         """
-        self.assertRaises(TypeError, SC_Electrode, None)
+        self.assertRaises(TypeError, SC, None)
 
     def test_non_dict_input_arg(self):
         """
-        SC_Electrode instantiation with non-dict input argument is invalid.
+        SC instantiation with non-dict input argument is invalid.
         """
-        self.assertRaises(TypeError, SC_Electrode, "this string is not a dict.")
+        self.assertRaises(TypeError, SC, "this string is not a dict.")
 
 
 class InstantiationInputIncomplete(TestBaseJustInputParams):
@@ -71,71 +71,71 @@ class InstantiationInputIncomplete(TestBaseJustInputParams):
     """
     def test_temp_missing(self):
         """
-        SC_Electrode instantiating dict requires `temp` key.
+        SC instantiating dict requires `temp` key.
         """
         del(self.input_params["temp"])
-        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+        self.assertRaises(KeyError, SC, self.input_params)
 
     def test_barrier_missing(self):
         """
-        SC_Electrode instantiating dict requires `barrier` key.
+        SC instantiating dict requires `barrier` key.
         """
         del(self.input_params["barrier"])
-        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+        self.assertRaises(KeyError, SC, self.input_params)
 
     def test_richardson_missing(self):
         """
-        SC_Electrode instantiating dict requires `richardson` key.
+        SC instantiating dict requires `richardson` key.
         """
         del(self.input_params["richardson"])
-        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+        self.assertRaises(KeyError, SC, self.input_params)
 
     def test_el_effective_mass_missing(self):
         """
-        SC_Electrode instantiating dict requires `el_effective_mass` key.
+        SC instantiating dict requires `el_effective_mass` key.
         """
         del(self.input_params["el_effective_mass"])
-        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+        self.assertRaises(KeyError, SC, self.input_params)
 
     def test_ho_effective_mass_missing(self):
         """
-        SC_Electrode instantiating dict requires `ho_effective_mass` key.
+        SC instantiating dict requires `ho_effective_mass` key.
         """
         del(self.input_params["ho_effective_mass"])
-        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+        self.assertRaises(KeyError, SC, self.input_params)
 
     def test_accept_conc_missing(self):
         """
-        SC_Electrode instantiating dict requires `accept_conc` key.
+        SC instantiating dict requires `accept_conc` key.
         """
         del(self.input_params["accept_conc"])
-        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+        self.assertRaises(KeyError, SC, self.input_params)
 
     def test_accept_ionization_energy_missing(self):
         """
-        SC_Electrode instantiating dict requires `accept_ionization_energy` key.
+        SC instantiating dict requires `accept_ionization_energy` key.
         """
         del(self.input_params["accept_ionization_energy"])
-        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+        self.assertRaises(KeyError, SC, self.input_params)
 
     def test_bandgap_missing(self):
         """
-        SC_Electrode instantiating dict requires `bandgap` key.
+        SC instantiating dict requires `bandgap` key.
         """
         del(self.input_params["bandgap"])
-        self.assertRaises(KeyError, SC_Electrode, self.input_params)
+        self.assertRaises(KeyError, SC, self.input_params)
 
 
 class InstantiationInputSuperfluousKeys(TestBaseJustInputParams):
     """
-    SC_Electrode can be instantiated with dict with superfluous keys.
+    SC can be instantiated with dict with superfluous keys.
     """
 
-    def test_SC_Electrode_input_superfluous_keys(self):
+    def test_SC_input_superfluous_keys(self):
         """Instantiating argument with additional key."""
         self.input_params["superfluous"] = "value not even numeric!"
         try:
-            El = SC_Electrode(self.input_params)
+            El = SC(self.input_params)
         except:
             self.fail("Superfluous key in input param dict caused failure of instantiation.")
 
@@ -146,70 +146,70 @@ class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
     """
     def test_el_effective_mass_non_numeric(self):
         """
-        SC_Electrode instantiation requires numeric `el_effective_mass` value.
+        SC instantiation requires numeric `el_effective_mass` value.
         """
         self.input_params["el_effective_mass"] = "this string is non-numeric."
 
         try:
-            El = SC_Electrode(self.input_params)
+            El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC_Electrode with a dict with key `el_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `el_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
             self.fail("`el_effective_mass` field of instantiating dict must be numeric.")
 
     def test_ho_effective_mass_non_numeric(self):
         """
-        SC_Electrode instantiation requires numeric `ho_effective_mass` value.
+        SC instantiation requires numeric `ho_effective_mass` value.
         """
         self.input_params["ho_effective_mass"] = "this string is non-numeric."
 
         try:
-            El = SC_Electrode(self.input_params)
+            El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC_Electrode with a dict with key `ho_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `ho_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
             self.fail("`ho_effective_mass` field of instantiating dict must be numeric.")
 
     def test_accept_conc_non_numeric(self):
         """
-        SC_Electrode instantiation requires numeric `accept_conc` value.
+        SC instantiation requires numeric `accept_conc` value.
         """
         self.input_params["accept_conc"] = "this string is non-numeric."
 
         try:
-            El = SC_Electrode(self.input_params)
+            El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC_Electrode with a dict with key `accept_conc` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `accept_conc` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
             self.fail("`accept_conc` field of instantiating dict must be numeric.")
 
     def test_accept_ionization_energy_non_numeric(self):
         """
-        SC_Electrode instantiation requires numeric `accept_ionization_energy` value.
+        SC instantiation requires numeric `accept_ionization_energy` value.
         """
         self.input_params["accept_ionization_energy"] = "this string is non-numeric."
 
         try:
-            El = SC_Electrode(self.input_params)
+            El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC_Electrode with a dict with key `accept_ionization_energy` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `accept_ionization_energy` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
             self.fail("`accept_ionization_energy` field of instantiating dict must be numeric.")
 
     def test_bandgap_non_numeric(self):
         """
-        SC_Electrode instantiation requires numeric `bandgap` value.
+        SC instantiation requires numeric `bandgap` value.
         """
         self.input_params["bandgap"] = "this string is non-numeric."
 
         try:
-            El = SC_Electrode(self.input_params)
+            El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC_Electrode with a dict with key `bandgap` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `bandgap` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
             self.fail("`bandgap` field of instantiating dict must be numeric.")
@@ -224,38 +224,38 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
     """
     def test_el_effective_mass_less_than_zero(self):
         """
-        SC_Electrode instantiation requires `el_effective_mass` > 0.
+        SC instantiation requires `el_effective_mass` > 0.
         """
         self.input_params["el_effective_mass"] = -1.1
-        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+        self.assertRaises(ValueError, SC, self.input_params)
 
     def test_ho_effective_mass_less_than_zero(self):
         """
-        SC_Electrode instantiation requires `ho_effective_mass` > 0.
+        SC instantiation requires `ho_effective_mass` > 0.
         """
         self.input_params["ho_effective_mass"] = -1.1
-        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+        self.assertRaises(ValueError, SC, self.input_params)
 
     def test_accept_conc_less_than_zero(self):
         """
-        SC_Electrode instantiation requires `accept_conc` > 0.
+        SC instantiation requires `accept_conc` > 0.
         """
         self.input_params["accept_conc"] = -1.1
-        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+        self.assertRaises(ValueError, SC, self.input_params)
 
     def test_accept_ionization_energy_less_than_zero(self):
         """
-        SC_Electrode instantiation requires `accept_ionization_energy` > 0.
+        SC instantiation requires `accept_ionization_energy` > 0.
         """
         self.input_params["accept_ionization_energy"] = -1.1
-        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+        self.assertRaises(ValueError, SC, self.input_params)
 
     def test_bandgap_less_than_zero(self):
         """
-        SC_Electrode instantiation requires `bandgap` > 0.
+        SC instantiation requires `bandgap` > 0.
         """
         self.input_params["bandgap"] = -1.1
-        self.assertRaises(ValueError, SC_Electrode, self.input_params)
+        self.assertRaises(ValueError, SC, self.input_params)
 
 
 class SetDataWrongType(TestBaseWithElectrode):
@@ -264,7 +264,7 @@ class SetDataWrongType(TestBaseWithElectrode):
     """
     def test_el_effective_mass_non_numeric(self):
         """
-        SC_Electrode can only set `el_effective_mass` with numeric value.
+        SC can only set `el_effective_mass` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
@@ -277,7 +277,7 @@ class SetDataWrongType(TestBaseWithElectrode):
 
     def test_ho_effective_mass_non_numeric(self):
         """
-        SC_Electrode can only set `ho_effective_mass` with numeric value.
+        SC can only set `ho_effective_mass` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
@@ -290,7 +290,7 @@ class SetDataWrongType(TestBaseWithElectrode):
 
     def test_accept_conc_non_numeric(self):
         """
-        SC_Electrode can only set `accept_conc` with numeric value.
+        SC can only set `accept_conc` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
@@ -303,7 +303,7 @@ class SetDataWrongType(TestBaseWithElectrode):
 
     def test_accept_ionization_energy_non_numeric(self):
         """
-        SC_Electrode can only set `accept_ionization_energy` with numeric value.
+        SC can only set `accept_ionization_energy` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
@@ -316,7 +316,7 @@ class SetDataWrongType(TestBaseWithElectrode):
 
     def test_bandgap_non_numeric(self):
         """
-        SC_Electrode can only set `bandgap` with numeric value.
+        SC can only set `bandgap` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
@@ -337,7 +337,7 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
     """
     def test_el_effective_mass_less_than_zero(self):
         """
-        SC_Electrode must set `el_effective_mass` > 0.
+        SC must set `el_effective_mass` > 0.
         """
         try:
             self.El.el_effective_mass = -1.1
@@ -349,7 +349,7 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
 
     def test_ho_effective_mass_less_than_zero(self):
         """
-        SC_Electrode must set `ho_effective_mass` > 0.
+        SC must set `ho_effective_mass` > 0.
         """
         try:
             self.El.ho_effective_mass = -1.1
@@ -361,7 +361,7 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
 
     def test_accept_conc_less_than_zero(self):
         """
-        SC_Electrode must set `accept_conc` > 0.
+        SC must set `accept_conc` > 0.
         """
         try:
             self.El.accept_conc = -1.1
@@ -373,7 +373,7 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
 
     def test_accept_ionization_energy_less_than_zero(self):
         """
-        SC_Electrode must set `accept_ionization_energy` > 0.
+        SC must set `accept_ionization_energy` > 0.
         """
         try:
             self.El.accept_ionization_energy = -1.1
@@ -385,7 +385,7 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
 
     def test_bandgap_less_than_zero(self):
         """
-        SC_Electrode must set `bandgap` > 0.
+        SC must set `bandgap` > 0.
         """
         try:
             self.El.bandgap = -1.1
