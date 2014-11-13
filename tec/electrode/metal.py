@@ -15,17 +15,17 @@ class Metal(object):
     """
     temp = PhysicalProperty(unit = "K", lo_bnd = 0)
     """
-    Temperature > 0 [K]
+    Temperature > 0 [:math:`K`]
     """
 
     barrier = PhysicalProperty(unit = "eV", lo_bnd = 0)
     """
-    Emission barrier >=0 [eV]. Sometimes referred to as work function. The barrier is the difference between the lowest energy for which an electron inside a material can escape and the Fermi energy.
+    Emission barrier >=0 [:math:`eV`]. Sometimes referred to as work function. The barrier is the difference between the lowest energy for which an electron inside a material can escape and the Fermi energy.
     """
 
     richardson = PhysicalProperty(unit = "A/(cm2 K2)", lo_bnd = 0)
     """
-    Richardson Constant >=0 [A cm^{-2} K^{-2}]
+    Richardson Constant >=0 [:math:`A cm^{-2} K^{-2}`]
     """
 
 
@@ -47,9 +47,11 @@ class Metal(object):
 
     def calc_richardson_current_density(self):
         """
-        Current density according to the Richardson eqn in [A cm^{-2}].
+        Current density according to the Richardson eqn in [:math:`A cm^{-2}`].
 
-        J = A T^{2} \exp{ \phi / kT }
+        .. math::
+
+            J = A T^{2} \exp{ \phi / kT }
 
         If either temp or richardson are equal to 0, this  method returns a value of 0.
         """
