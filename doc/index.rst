@@ -93,6 +93,7 @@ Reference
    	:maxdepth: 2
 
    	api
+      electrode
    	models
 
 
