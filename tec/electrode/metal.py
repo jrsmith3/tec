@@ -51,7 +51,7 @@ class Metal(object):
 
         .. math::
 
-            J = A T^{2} \exp{ \phi / kT }
+            J = A T^{2} \exp \left( \\frac{\phi}{kT} \\right)
 
         If either temp or richardson are equal to 0, this  method returns a value of 0.
         """
