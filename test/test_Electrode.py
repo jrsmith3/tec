@@ -265,23 +265,23 @@ class CalculatorsReturnType(TestBaseWithMetal):
     """
     Tests output types of the calculator methods.
     """
-    def test_calc_richardson_current_density(self):
+    def test_calc_thermoelectron_current_density(self):
         """
-        Metal.calc_richardson_current_density should return an astropy.units.Quantity.
+        Metal.calc_thermoelectron_current_density should return an astropy.units.Quantity.
         """
         self.assertIsInstance(
-            self.El.calc_richardson_current_density(), Quantity)
+            self.El.calc_thermoelectron_current_density(), Quantity)
 
 class CalculatorsReturnUnits(TestBaseWithMetal):
     """
     Tests output units, where applicable, of the calculator methods.
     """
-    def test_calc_richardson_current_density(self):
+    def test_calc_thermoelectron_current_density(self):
         """
-        Metal.calc_richardson_current_density should return a value with unit A/cm2.
+        Metal.calc_thermoelectron_current_density should return a value with unit A/cm2.
         """
         self.assertEqual(
-            self.El.calc_richardson_current_density().unit, Unit("A/cm2"))
+            self.El.calc_thermoelectron_current_density().unit, Unit("A/cm2"))
 
 class CalculatorsReturnValues(TestBaseWithMetal):
     """

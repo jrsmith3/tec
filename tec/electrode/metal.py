@@ -45,7 +45,7 @@ class Metal(object):
 
         return dict(zip(physical_prop_names, physical_prop_vals))
 
-    def calc_richardson_current_density(self):
+    def calc_thermoelectron_current_density(self):
         """
         Current density according to the Richardson eqn in [:math:`A cm^{-2}`].
 
