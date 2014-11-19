@@ -7,25 +7,31 @@ from tec import PhysicalProperty, find_PhysicalProperty
 
 class Metal(object):
     """
-    Metal thermoelectron electrode.
+    Metal thermoelectron electrode
 
     A `Metal` electrode is instantiated with a dict having keys identical to the class's public data attributes. Each key's value must satisfy the constraints noted with the corresponding public data attribute. Dictionary values can be some kind of numeric type or of type `astropy.units.Quantity` so long as the units are compatible with what's listed.
-
-    All numerical methods return data of type astropy.units.Quantity.
     """
     temp = PhysicalProperty(unit = "K", lo_bnd = 0)
     """
-    Temperature > 0 [:math:`K`]
+    Temperature
+
+    Symbol: :math:`T`
     """
 
     barrier = PhysicalProperty(unit = "eV", lo_bnd = 0)
     """
-    Emission barrier >=0 [:math:`eV`]. Sometimes referred to as work function. The barrier is the difference between the lowest energy for which an electron inside a material can escape and the Fermi energy.
+    Emission barrier (a.k.a. work function) 
+
+    The barrier is the difference between the vacuum energy of the surface and the Fermi energy. 
+
+    Symbol: :math:`\phi`
     """
 
     richardson = PhysicalProperty(unit = "A/(cm2 K2)", lo_bnd = 0)
     """
-    Richardson Constant >=0 [:math:`A cm^{-2} K^{-2}`]
+    Richardson constant
+
+    Symbol: :math:`A`
     """
 
 
@@ -47,13 +53,17 @@ class Metal(object):
 
     def calc_thermoelectron_current_density(self):
         """
-        Current density according to the Richardson eqn in [:math:`A cm^{-2}`].
+        Thermoelectron emission current density
+
+        This quantity is calculated according to the Richardson equation
 
         .. math::
 
             J = A T^{2} \exp \left( \\frac{\phi}{kT} \\right)
 
-        If either temp or richardson are equal to 0, this  method returns a value of 0.
+        If either the `temp` or `richardson` attributes are equal to 0, this  method returns a value of 0.
+
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         """
         if self.temp.value == 0:
           current_density = units.Quantity(0, "A/cm2")
