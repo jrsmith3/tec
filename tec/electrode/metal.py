@@ -15,7 +15,7 @@ class Metal(object):
     """
     Temperature
 
-    Symbol: :math:`T`
+    :symbol: :math:`T`
     """
 
     barrier = PhysicalProperty(unit = "eV", lo_bnd = 0)
@@ -24,14 +24,14 @@ class Metal(object):
 
     The barrier is the difference between the vacuum energy of the surface and the Fermi energy. 
 
-    Symbol: :math:`\phi`
+    :symbol: :math:`\phi`
     """
 
     richardson = PhysicalProperty(unit = "A/(cm2 K2)", lo_bnd = 0)
     """
     Richardson constant
 
-    Symbol: :math:`A`
+    :symbol: :math:`A`
     """
 
 
@@ -59,11 +59,12 @@ class Metal(object):
 
         .. math::
 
-            J = A T^{2} \exp \left( \\frac{\phi}{kT} \\right)
+            J_{RD} = A T^{2} \exp \left( \\frac{\phi}{kT} \\right)
 
         If either the `temp` or `richardson` attributes are equal to 0, this  method returns a value of 0.
 
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{RD}`
         """
         if self.temp.value == 0:
           current_density = units.Quantity(0, "A/cm2")

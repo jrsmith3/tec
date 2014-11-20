@@ -16,28 +16,28 @@ class SC(Metal):
     """
     Density-of-states electron effective mass
 
-    Symbol: :math:`m_{n}^{*}`
+    :symbol: :math:`m_{n}^{*}`
     """
 
     hole_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
     """
     Density-of-states hole effective mass
 
-    Symbol: :math:`m_{p}^{*}`
+    :symbol: :math:`m_{p}^{*}`
     """
 
     acceptor_concentration = PhysicalProperty(unit = "1/cm3", lo_bnd = 0)
     """
     Acceptor dopant concentration
 
-    Symbol: :math:`N_{A}`
+    :symbol: :math:`N_{A}`
     """
 
     acceptor_ionization_energy = PhysicalProperty(unit = "meV", lo_bnd = 0)
     """
     Acceptor ionization energy relative to valence band edge
 
-    Symbol: :math:`E_{A}`
+    :symbol: :math:`E_{A}`
     """
 
     bandgap = PhysicalProperty(unit = "eV", lo_bnd = 0)
@@ -47,7 +47,7 @@ class SC(Metal):
     .. math::
         E_{g} = E_{C} - E_{V}
 
-    Symbol: :math:`E_{g}`
+    :symbol: :math:`E_{g}`
     """
 
     def __init__(self, params):
@@ -64,8 +64,7 @@ class SC(Metal):
             N_{C} = 2 \left( \\frac{2 \pi m_{n}^{*}kT}{h^{2}} \\right)^{3/2}
 
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
-
-        Symbol: :math:`N_{C}`
+        :symbol: :math:`N_{C}`
         """
         dos = 2 * \
             ((2 * np.pi * self.electron_effective_mass * constants.k_B * self.temp) / \
@@ -83,8 +82,7 @@ class SC(Metal):
             N_{V} = 2 \left( \\frac{2 \pi m_{p}^{*}kT}{h^{2}} \\right)^{3/2}
 
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
-
-        Symbol: :math:`N_{V}`
+        :symbol: :math:`N_{V}`
         """
         dos = 2 * \
             ((2 * np.pi * self.hole_effective_mass * constants.k_B * self.temp) / \
@@ -102,8 +100,7 @@ class SC(Metal):
             n_{0} = N_{C} \exp \left( -\\frac{E_{C} - E_{F}}{kT} \\right)
 
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
-
-        Symbol: :math:`n_{0}`
+        :symbol: :math:`n_{0}`
         """
         exponent = ((self.bandgap - self.calc_fermi_energy()) / \
             (constants.k_B * self.temp)).decompose()
@@ -120,8 +117,7 @@ class SC(Metal):
             p_{0} = N_{V} \exp \left( -\\frac{E_{F} - E_{V}}{kT} \\right)
 
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
-
-        Symbol: :math:`p_{0}`
+        :symbol: :math:`p_{0}`
         """
         exponent = (self.calc_fermi_energy() / \
             (constants.k_B * self.temp)).decompose()
@@ -149,8 +145,7 @@ class SC(Metal):
             E_{F} - E_{V}
 
         :returns: `astropy.units.Quantity` in units of :math:`eV`
-
-        Symbol: :math:`E_{F}`
+        :symbol: :math:`E_{F}`
         """
         lo = 0
         hi = self.bandgap.value
