@@ -9,19 +9,19 @@ from tec import PhysicalProperty, find_PhysicalProperty
 
 class SC(Metal):
     """
-    Implements basic semiconductor calculations for p-type Si.
+    P-type semiconductor thermoelectron electrode
     """
 
     electron_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
     """
-    Effective mass of electrons
+    Density-of-states electron effective mass
 
     Symbol: :math:`m_{n}^{*}`
     """
 
     hole_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
     """
-    Effective mass of holes
+    Density-of-states hole effective mass
 
     Symbol: :math:`m_{p}^{*}`
     """
@@ -35,7 +35,7 @@ class SC(Metal):
 
     acceptor_ionization_energy = PhysicalProperty(unit = "meV", lo_bnd = 0)
     """
-    Acceptor dopant ionization energy
+    Acceptor ionization energy relative to valence band edge
 
     Symbol: :math:`E_{A}`
     """
@@ -43,6 +43,9 @@ class SC(Metal):
     bandgap = PhysicalProperty(unit = "eV", lo_bnd = 0)
     """
     Bandgap of semiconductor at 300K
+
+    .. math::
+        E_{g} = E_{C} - E_{V}
 
     Symbol: :math:`E_{g}`
     """
@@ -53,9 +56,16 @@ class SC(Metal):
 
     def calc_cb_effective_dos(self):
         """
-        Effective density of states in conduction band
+        Conduction band effective density of states
+
+        According to Streetman and Banerjee :cite:`9780130255389`, the conduction band effective density of states can be expressed as
+
+        .. math::
+            N_{C} = 2 \left( \\frac{2 \pi m_{n}^{*}kT}{h^{2}} \\right)^{3/2}
 
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
+
+        Symbol: :math:`N_{C}`
         """
         dos = 2 * \
             ((2 * np.pi * self.electron_effective_mass * constants.k_B * self.temp) / \
@@ -65,9 +75,16 @@ class SC(Metal):
 
     def calc_vb_effective_dos(self):
         """
-        Effective density of states in valence band
+        Valence band effective density of states
+
+        According to Streetman and Banerjee :cite:`9780130255389`, the valence band effective density of states can be expressed as
+
+        .. math::
+            N_{V} = 2 \left( \\frac{2 \pi m_{p}^{*}kT}{h^{2}} \\right)^{3/2}
 
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
+
+        Symbol: :math:`N_{V}`
         """
         dos = 2 * \
             ((2 * np.pi * self.hole_effective_mass * constants.k_B * self.temp) / \
@@ -77,7 +94,12 @@ class SC(Metal):
 
     def calc_electron_concentration(self):
         """
-        Equilibrium electron carrier concentration
+        Equlibrium conduction band electron concentration
+
+        The equlibrium conduction band electron concentration can be expressed as
+
+        .. math::
+            n_{0} = N_{C} \exp \left( -\\frac{E_{C} - E_{F}}{kT} \\right)
 
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
 
@@ -90,7 +112,12 @@ class SC(Metal):
 
     def calc_hole_concentration(self):
         """
-        Equilibrium hole carrier concentration
+        Equlibrium valence band hole concentration
+
+        The equlibrium valence band hole concentration can be expressed as
+
+        .. math::
+            p_{0} = N_{V} \exp \left( -\\frac{E_{F} - E_{V}}{kT} \\right)
 
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
 
@@ -104,6 +131,22 @@ class SC(Metal):
     def calc_fermi_energy(self):
         """
         Value of Fermi energy relative to valence band maximum
+
+        The Fermi energy is calculated by solving the charge neutrality condition
+
+        .. math::
+            n_{0} + N_{A}^{-} = p_{0} + N_{D}^{+}
+
+        Expanding and moving the terms to the same side, this method solves for :math:`E_{F}` in the following equation:
+
+        .. math::
+            0 = N_{C} \exp \left( -\\frac{E_{C} - E_{F}}{kT} \\right) - N_{V} \exp \left( -\\frac{E_{F} - E_{V}}{kT} \\right) + N_{A} \left( 1 + g_{A} \exp \left( \\frac{E_{A} - E_{F}}{kT} \\right) \\right)^{-1} - N_{D} \left( 1 + g_{D} \exp \left( \\frac{E_{F} - E_{D}}{kT} \\right) \\right)^{-1}
+
+
+        Strictly speaking, this method returns the difference between the Fermi energy and the valence band maximum:
+
+        .. math::
+            E_{F} - E_{V}
 
         :returns: `astropy.units.Quantity` in units of :math:`eV`
 
