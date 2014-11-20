@@ -11,10 +11,10 @@ input_params = {"temp": 300.,
                 "barrier": 1.0,
                 "richardson": 100.0,
 
-                "el_effective_mass": 9.84e-31,
-                "ho_effective_mass": 7.38e-31,
-                "accept_conc": 1e18,
-                "accept_ionization_energy": 45.,
+                "electron_effective_mass": 9.84e-31,
+                "hole_effective_mass": 7.38e-31,
+                "acceptor_concentration": 1e18,
+                "acceptor_ionization_energy": 45.,
                 "bandgap": 1.11,}
 
 
@@ -90,32 +90,32 @@ class InstantiationInputIncomplete(TestBaseJustInputParams):
         del(self.input_params["richardson"])
         self.assertRaises(KeyError, SC, self.input_params)
 
-    def test_el_effective_mass_missing(self):
+    def test_electron_effective_mass_missing(self):
         """
-        SC instantiating dict requires `el_effective_mass` key.
+        SC instantiating dict requires `electron_effective_mass` key.
         """
-        del(self.input_params["el_effective_mass"])
+        del(self.input_params["electron_effective_mass"])
         self.assertRaises(KeyError, SC, self.input_params)
 
-    def test_ho_effective_mass_missing(self):
+    def test_hole_effective_mass_missing(self):
         """
-        SC instantiating dict requires `ho_effective_mass` key.
+        SC instantiating dict requires `hole_effective_mass` key.
         """
-        del(self.input_params["ho_effective_mass"])
+        del(self.input_params["hole_effective_mass"])
         self.assertRaises(KeyError, SC, self.input_params)
 
-    def test_accept_conc_missing(self):
+    def test_acceptor_concentration_missing(self):
         """
-        SC instantiating dict requires `accept_conc` key.
+        SC instantiating dict requires `acceptor_concentration` key.
         """
-        del(self.input_params["accept_conc"])
+        del(self.input_params["acceptor_concentration"])
         self.assertRaises(KeyError, SC, self.input_params)
 
-    def test_accept_ionization_energy_missing(self):
+    def test_acceptor_ionization_energy_missing(self):
         """
-        SC instantiating dict requires `accept_ionization_energy` key.
+        SC instantiating dict requires `acceptor_ionization_energy` key.
         """
-        del(self.input_params["accept_ionization_energy"])
+        del(self.input_params["acceptor_ionization_energy"])
         self.assertRaises(KeyError, SC, self.input_params)
 
     def test_bandgap_missing(self):
@@ -144,61 +144,61 @@ class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
     """
     Tests instantiating when input dict has non-numeric data items.
     """
-    def test_el_effective_mass_non_numeric(self):
+    def test_electron_effective_mass_non_numeric(self):
         """
-        SC instantiation requires numeric `el_effective_mass` value.
+        SC instantiation requires numeric `electron_effective_mass` value.
         """
-        self.input_params["el_effective_mass"] = "this string is non-numeric."
+        self.input_params["electron_effective_mass"] = "this string is non-numeric."
 
         try:
             El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC with a dict with key `el_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `electron_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`el_effective_mass` field of instantiating dict must be numeric.")
+            self.fail("`electron_effective_mass` field of instantiating dict must be numeric.")
 
-    def test_ho_effective_mass_non_numeric(self):
+    def test_hole_effective_mass_non_numeric(self):
         """
-        SC instantiation requires numeric `ho_effective_mass` value.
+        SC instantiation requires numeric `hole_effective_mass` value.
         """
-        self.input_params["ho_effective_mass"] = "this string is non-numeric."
+        self.input_params["hole_effective_mass"] = "this string is non-numeric."
 
         try:
             El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC with a dict with key `ho_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `hole_effective_mass` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`ho_effective_mass` field of instantiating dict must be numeric.")
+            self.fail("`hole_effective_mass` field of instantiating dict must be numeric.")
 
-    def test_accept_conc_non_numeric(self):
+    def test_acceptor_concentration_non_numeric(self):
         """
-        SC instantiation requires numeric `accept_conc` value.
+        SC instantiation requires numeric `acceptor_concentration` value.
         """
-        self.input_params["accept_conc"] = "this string is non-numeric."
+        self.input_params["acceptor_concentration"] = "this string is non-numeric."
 
         try:
             El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC with a dict with key `accept_conc` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `acceptor_concentration` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`accept_conc` field of instantiating dict must be numeric.")
+            self.fail("`acceptor_concentration` field of instantiating dict must be numeric.")
 
-    def test_accept_ionization_energy_non_numeric(self):
+    def test_acceptor_ionization_energy_non_numeric(self):
         """
-        SC instantiation requires numeric `accept_ionization_energy` value.
+        SC instantiation requires numeric `acceptor_ionization_energy` value.
         """
-        self.input_params["accept_ionization_energy"] = "this string is non-numeric."
+        self.input_params["acceptor_ionization_energy"] = "this string is non-numeric."
 
         try:
             El = SC(self.input_params)
         except TypeError:
-            # Instantiating an SC with a dict with key `accept_ionization_energy` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Instantiating an SC with a dict with key `acceptor_ionization_energy` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`accept_ionization_energy` field of instantiating dict must be numeric.")
+            self.fail("`acceptor_ionization_energy` field of instantiating dict must be numeric.")
 
     def test_bandgap_non_numeric(self):
         """
@@ -222,32 +222,32 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
     See the Electrode class docstring for information about the constraints on
     the input data.
     """
-    def test_el_effective_mass_less_than_zero(self):
+    def test_electron_effective_mass_less_than_zero(self):
         """
-        SC instantiation requires `el_effective_mass` > 0.
+        SC instantiation requires `electron_effective_mass` > 0.
         """
-        self.input_params["el_effective_mass"] = -1.1
+        self.input_params["electron_effective_mass"] = -1.1
         self.assertRaises(ValueError, SC, self.input_params)
 
-    def test_ho_effective_mass_less_than_zero(self):
+    def test_hole_effective_mass_less_than_zero(self):
         """
-        SC instantiation requires `ho_effective_mass` > 0.
+        SC instantiation requires `hole_effective_mass` > 0.
         """
-        self.input_params["ho_effective_mass"] = -1.1
+        self.input_params["hole_effective_mass"] = -1.1
         self.assertRaises(ValueError, SC, self.input_params)
 
-    def test_accept_conc_less_than_zero(self):
+    def test_acceptor_concentration_less_than_zero(self):
         """
-        SC instantiation requires `accept_conc` > 0.
+        SC instantiation requires `acceptor_concentration` > 0.
         """
-        self.input_params["accept_conc"] = -1.1
+        self.input_params["acceptor_concentration"] = -1.1
         self.assertRaises(ValueError, SC, self.input_params)
 
-    def test_accept_ionization_energy_less_than_zero(self):
+    def test_acceptor_ionization_energy_less_than_zero(self):
         """
-        SC instantiation requires `accept_ionization_energy` > 0.
+        SC instantiation requires `acceptor_ionization_energy` > 0.
         """
-        self.input_params["accept_ionization_energy"] = -1.1
+        self.input_params["acceptor_ionization_energy"] = -1.1
         self.assertRaises(ValueError, SC, self.input_params)
 
     def test_bandgap_less_than_zero(self):
@@ -262,57 +262,57 @@ class SetDataWrongType(TestBaseWithElectrode):
     """
     Tests setting attributes when input data is non-numeric.
     """
-    def test_el_effective_mass_non_numeric(self):
+    def test_electron_effective_mass_non_numeric(self):
         """
-        SC can only set `el_effective_mass` with numeric value.
+        SC can only set `electron_effective_mass` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.el_effective_mass = non_num
+            self.El.electron_effective_mass = non_num
         except TypeError:
-            # Setting `el_effective_mass` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `electron_effective_mass` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
         else:
-            self.fail("`el_effective_mass` attribute can be assigned a non-numeric value.")
+            self.fail("`electron_effective_mass` attribute can be assigned a non-numeric value.")
 
-    def test_ho_effective_mass_non_numeric(self):
+    def test_hole_effective_mass_non_numeric(self):
         """
-        SC can only set `ho_effective_mass` with numeric value.
+        SC can only set `hole_effective_mass` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.ho_effective_mass = non_num
+            self.El.hole_effective_mass = non_num
         except TypeError:
-            # Setting `ho_effective_mass` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `hole_effective_mass` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
         else:
-            self.fail("`ho_effective_mass` attribute can be assigned a non-numeric value.")
+            self.fail("`hole_effective_mass` attribute can be assigned a non-numeric value.")
 
-    def test_accept_conc_non_numeric(self):
+    def test_acceptor_concentration_non_numeric(self):
         """
-        SC can only set `accept_conc` with numeric value.
+        SC can only set `acceptor_concentration` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.accept_conc = non_num
+            self.El.acceptor_concentration = non_num
         except TypeError:
-            # Setting `accept_conc` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `acceptor_concentration` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
         else:
-            self.fail("`accept_conc` attribute can be assigned a non-numeric value.")
+            self.fail("`acceptor_concentration` attribute can be assigned a non-numeric value.")
 
-    def test_accept_ionization_energy_non_numeric(self):
+    def test_acceptor_ionization_energy_non_numeric(self):
         """
-        SC can only set `accept_ionization_energy` with numeric value.
+        SC can only set `acceptor_ionization_energy` with numeric value.
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.accept_ionization_energy = non_num
+            self.El.acceptor_ionization_energy = non_num
         except TypeError:
-            # Setting `accept_ionization_energy` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `acceptor_ionization_energy` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
         else:
-            self.fail("`accept_ionization_energy` attribute can be assigned a non-numeric value.")
+            self.fail("`acceptor_ionization_energy` attribute can be assigned a non-numeric value.")
 
     def test_bandgap_non_numeric(self):
         """
@@ -335,53 +335,53 @@ class SetDataOutsideConstraints(TestBaseWithElectrode):
     See the Electrode class docstring for information about the constraints on
     the data.
     """
-    def test_el_effective_mass_less_than_zero(self):
+    def test_electron_effective_mass_less_than_zero(self):
         """
-        SC must set `el_effective_mass` > 0.
+        SC must set `electron_effective_mass` > 0.
         """
         try:
-            self.El.el_effective_mass = -1.1
+            self.El.electron_effective_mass = -1.1
         except ValueError:
-            # Attempting to set the `el_effective_mass` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `electron_effective_mass` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`el_effective_mass` attribute can be assigned a negative value.")
+            self.fail("`electron_effective_mass` attribute can be assigned a negative value.")
 
-    def test_ho_effective_mass_less_than_zero(self):
+    def test_hole_effective_mass_less_than_zero(self):
         """
-        SC must set `ho_effective_mass` > 0.
+        SC must set `hole_effective_mass` > 0.
         """
         try:
-            self.El.ho_effective_mass = -1.1
+            self.El.hole_effective_mass = -1.1
         except ValueError:
-            # Attempting to set the `ho_effective_mass` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `hole_effective_mass` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`ho_effective_mass` attribute can be assigned a negative value.")
+            self.fail("`hole_effective_mass` attribute can be assigned a negative value.")
 
-    def test_accept_conc_less_than_zero(self):
+    def test_acceptor_concentration_less_than_zero(self):
         """
-        SC must set `accept_conc` > 0.
+        SC must set `acceptor_concentration` > 0.
         """
         try:
-            self.El.accept_conc = -1.1
+            self.El.acceptor_concentration = -1.1
         except ValueError:
-            # Attempting to set the `accept_conc` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `acceptor_concentration` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`accept_conc` attribute can be assigned a negative value.")
+            self.fail("`acceptor_concentration` attribute can be assigned a negative value.")
 
-    def test_accept_ionization_energy_less_than_zero(self):
+    def test_acceptor_ionization_energy_less_than_zero(self):
         """
-        SC must set `accept_ionization_energy` > 0.
+        SC must set `acceptor_ionization_energy` > 0.
         """
         try:
-            self.El.accept_ionization_energy = -1.1
+            self.El.acceptor_ionization_energy = -1.1
         except ValueError:
-            # Attempting to set the `accept_ionization_energy` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `acceptor_ionization_energy` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`accept_ionization_energy` attribute can be assigned a negative value.")
+            self.fail("`acceptor_ionization_energy` attribute can be assigned a negative value.")
 
     def test_bandgap_less_than_zero(self):
         """

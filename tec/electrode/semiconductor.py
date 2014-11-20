@@ -12,28 +12,28 @@ class SC(Metal):
     Implements basic semiconductor calculations for p-type Si.
     """
 
-    el_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
+    electron_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
     """
     Effective mass of electrons
 
     Symbol: :math:`m_{n}^{*}`
     """
 
-    ho_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
+    hole_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
     """
     Effective mass of holes
 
     Symbol: :math:`m_{p}^{*}`
     """
 
-    accept_conc = PhysicalProperty(unit = "1/cm3", lo_bnd = 0)
+    acceptor_concentration = PhysicalProperty(unit = "1/cm3", lo_bnd = 0)
     """
     Acceptor dopant concentration
 
     Symbol: :math:`N_{A}`
     """
 
-    accept_ionization_energy = PhysicalProperty(unit = "meV", lo_bnd = 0)
+    acceptor_ionization_energy = PhysicalProperty(unit = "meV", lo_bnd = 0)
     """
     Acceptor dopant ionization energy
 
@@ -58,7 +58,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         """
         dos = 2 * \
-            ((2 * np.pi * self.el_effective_mass * constants.k_B * self.temp) / \
+            ((2 * np.pi * self.electron_effective_mass * constants.k_B * self.temp) / \
             (constants.h ** 2))**(3./2)
 
         return dos.to("1/cm3")
@@ -70,7 +70,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         """
         dos = 2 * \
-            ((2 * np.pi * self.ho_effective_mass * constants.k_B * self.temp) / \
+            ((2 * np.pi * self.hole_effective_mass * constants.k_B * self.temp) / \
             (constants.h ** 2))**(3./2)
 
         return dos.to("1/cm3")
@@ -125,13 +125,13 @@ class SC(Metal):
         exponent_1 = ((self.bandgap - fermi_energy) / \
             (constants.k_B * self.temp)).decompose()
         exponent_2 = (fermi_energy / (constants.k_B * self.temp)).decompose()
-        exponent_3 = ((self.accept_ionization_energy - fermi_energy) / \
+        exponent_3 = ((self.acceptor_ionization_energy - fermi_energy) / \
             (constants.k_B * self.temp)).decompose()
 
         el_carrier_conc = self.calc_cond_band_effective_dos() * np.exp(-exponent_1)
         ho_carrier_conc = self.calc_val_band_effective_dos() * np.exp(-exponent_2)
 
         ret_val =  el_carrier_conc - ho_carrier_conc + \
-            self.accept_conc / (1 + 4 * np.exp(exponent_3))
+            self.acceptor_concentration / (1 + 4 * np.exp(exponent_3))
 
         return ret_val.value
