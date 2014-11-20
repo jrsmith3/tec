@@ -51,7 +51,7 @@ class SC(Metal):
         for attr in find_PhysicalProperty(self):
             setattr(self, attr, params[attr])
 
-    def calc_cond_band_effective_dos(self):
+    def calc_cb_effective_dos(self):
         """
         Effective density of states in conduction band
 
@@ -63,7 +63,7 @@ class SC(Metal):
 
         return dos.to("1/cm3")
 
-    def calc_val_band_effective_dos(self):
+    def calc_vb_effective_dos(self):
         """
         Effective density of states in valence band
 
@@ -75,7 +75,7 @@ class SC(Metal):
 
         return dos.to("1/cm3")
 
-    def calc_el_carrier_conc(self):
+    def calc_electron_concentration(self):
         """
         Equilibrium electron carrier concentration
 
@@ -86,9 +86,9 @@ class SC(Metal):
         exponent = ((self.bandgap - self.calc_fermi_energy()) / \
             (constants.k_B * self.temp)).decompose()
 
-        return self.calc_cond_band_effective_dos() * np.exp(-exponent)
+        return self.calc_cb_effective_dos() * np.exp(-exponent)
 
-    def calc_ho_carrier_conc(self):
+    def calc_hole_concentration(self):
         """
         Equilibrium hole carrier concentration
 
@@ -99,7 +99,7 @@ class SC(Metal):
         exponent = (self.calc_fermi_energy() / \
             (constants.k_B * self.temp)).decompose()
 
-        return self.calc_val_band_effective_dos() * np.exp(-exponent)
+        return self.calc_vb_effective_dos() * np.exp(-exponent)
 
     def calc_fermi_energy(self):
         """
@@ -128,8 +128,8 @@ class SC(Metal):
         exponent_3 = ((self.acceptor_ionization_energy - fermi_energy) / \
             (constants.k_B * self.temp)).decompose()
 
-        el_carrier_conc = self.calc_cond_band_effective_dos() * np.exp(-exponent_1)
-        ho_carrier_conc = self.calc_val_band_effective_dos() * np.exp(-exponent_2)
+        el_carrier_conc = self.calc_cb_effective_dos() * np.exp(-exponent_1)
+        ho_carrier_conc = self.calc_vb_effective_dos() * np.exp(-exponent_2)
 
         ret_val =  el_carrier_conc - ho_carrier_conc + \
             self.acceptor_concentration / (1 + 4 * np.exp(exponent_3))

@@ -400,29 +400,29 @@ class CalculatorsReturnType(TestBaseWithElectrode):
     """
     Tests output types of the calculator methods.
     """
-    def test_calc_cond_band_effective_dos_type(self):
+    def test_calc_cb_effective_dos_type(self):
         """
-        calc_cond_band_effective_dos should return an astropy.units.Quantity.
+        calc_cb_effective_dos should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.calc_cond_band_effective_dos(), Quantity)
+        self.assertIsInstance(self.El.calc_cb_effective_dos(), Quantity)
 
-    def test_calc_val_band_effective_dos_type(self):
+    def test_calc_vb_effective_dos_type(self):
         """
-        calc_val_band_effective_dos should return an astropy.units.Quantity.
+        calc_vb_effective_dos should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.calc_val_band_effective_dos(), Quantity)
+        self.assertIsInstance(self.El.calc_vb_effective_dos(), Quantity)
 
-    def test_calc_el_carrier_conc_type(self):
+    def test_calc_electron_concentration_type(self):
         """
-        calc_el_carrier_conc should return an astropy.units.Quantity.
+        calc_electron_concentration should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.calc_el_carrier_conc(), Quantity)
+        self.assertIsInstance(self.El.calc_electron_concentration(), Quantity)
 
-    def test_calc_ho_carrier_conc_type(self):
+    def test_calc_hole_concentration_type(self):
         """
-        calc_ho_carrier_conc should return an astropy.units.Quantity.
+        calc_hole_concentration should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.calc_ho_carrier_conc(), Quantity)
+        self.assertIsInstance(self.El.calc_hole_concentration(), Quantity)
 
     def test_calc_fermi_energy_type(self):
         """
@@ -435,29 +435,29 @@ class CalculatorsReturnUnits(TestBaseWithElectrode):
     """
     Tests output units, where applicable, of the calculator methods.
     """
-    def test_calc_cond_band_effective_dos_unit(self):
+    def test_calc_cb_effective_dos_unit(self):
         """
-        calc_cond_band_effective_dos should return a value with unit 1/cm3.
+        calc_cb_effective_dos should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.El.calc_cond_band_effective_dos().unit, Unit("1/cm3"))
+        self.assertEqual(self.El.calc_cb_effective_dos().unit, Unit("1/cm3"))
 
-    def test_calc_val_band_effective_dos_unit(self):
+    def test_calc_vb_effective_dos_unit(self):
         """
-        calc_val_band_effective_dos should return a value with unit 1/cm3.
+        calc_vb_effective_dos should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.El.calc_val_band_effective_dos().unit, Unit("1/cm3"))
+        self.assertEqual(self.El.calc_vb_effective_dos().unit, Unit("1/cm3"))
 
-    def test_calc_el_carrier_conc_unit(self):
+    def test_calc_electron_concentration_unit(self):
         """
-        calc_el_carrier_conc should return a value with unit 1/cm3.
+        calc_electron_concentration should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.El.calc_el_carrier_conc().unit, Unit("1/cm3"))
+        self.assertEqual(self.El.calc_electron_concentration().unit, Unit("1/cm3"))
 
-    def test_calc_ho_carrier_conc_unit(self):
+    def test_calc_hole_concentration_unit(self):
         """
-        calc_ho_carrier_conc should return a value with unit 1/cm3.
+        calc_hole_concentration should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.El.calc_ho_carrier_conc().unit, Unit("1/cm3"))
+        self.assertEqual(self.El.calc_hole_concentration().unit, Unit("1/cm3"))
 
     def test_calc_fermi_energy_unit(self):
         """
