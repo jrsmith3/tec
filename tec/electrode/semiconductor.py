@@ -5,7 +5,7 @@ from scipy import optimize
 from astropy import units
 from astropy import constants
 from metal import Metal
-from tec import PhysicalProperty, find_PhysicalProperty
+from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
 class SC(Metal):
     """

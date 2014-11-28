@@ -7,7 +7,6 @@ Base Library (:mod:`tec`)
 .. currentmodule:: tec
 """
 
-from physicalproperty import *
 from base import *
 import models
 import electrode

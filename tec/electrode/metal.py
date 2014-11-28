@@ -3,7 +3,7 @@
 import numpy as np
 from astropy import units
 from astropy import constants
-from tec import PhysicalProperty, find_PhysicalProperty
+from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
 class Metal(object):
     """
