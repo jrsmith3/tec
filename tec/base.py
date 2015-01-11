@@ -123,34 +123,7 @@ class TECBase(object):
       
     self.calc_motive()
   
-  def __setitem__(self,key,item):
-    """
-    Sets attribute values according to Electrode constraints.
-    """
-    # Try to turn the argument into an Electrode. The Electrode class has a lot
-    # of error checking and if the argument can't make it through that checking,
-    # its not worth proceeding.
-    if key in ["Emitter","Collector"]:
-      item = Electrode(item)
-    
-    # Set value.
-    dict.__setitem__(self,key,item)
-    
-  def __getitem__(self,key):
-    """
-    Return attribute, recalculating motive_data if necessary.
-    """
-    
-    # By the time we are calling this method, the object has been instantiated. Therefore it has all of the necessary attributes (Emitter, Collector, motive_data). It is possible that one of the Electrodes' data has changed in such a way that it is no longer consistant with motive_data. The Electrode already knows it has changed because it now has an item called, "param_changed". At this point all I have to do is look for that attribute in both Electrodes, delete it, delete "motive_data" and then call calc_motive().
-    
-    for el in ["Emitter","Collector"]:
-      El = dict.__getitem__(self,el)
-      if El.param_changed_and_reset():
-        del self["motive_data"]
-        self.calc_motive()
-      
-    return dict.__getitem__(self,key)
-  
+
   # Methods regarding motive --------------------------------------------------
   def calc_motive(self):
     """
