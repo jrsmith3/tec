@@ -64,45 +64,35 @@ class TECBase(object):
 
   This class provides the base API for subclasses which implement particular models of TEC electron transport. Even though this class isn't intended to be a model, it implements a model of electron transport which completely ignores the negative space charge effect, similar to the model described on p. 51 of :cite:`978-0-26-208059-0`.
 
-  :param dict emitter: Initializes the emitter electrode.
-  :param dict collector: Initializes the collector electrode.
+  :param emitter: Object from `tec.electrode` which initializes emitter.
+  :param collector: Object from `tec.electrode` which initializes collector.
 
   Attributes
   ==========
-  `TECBase` objects have two attributes: `emitter` and `collector`, both of which are `tec.electrode` objects.
+  `TECBase` objects have two attributes: `emitter` and `collector`, both of which are objects from `tec.electrode`.
 
   Examples
   ========
-  >>> em_dict = {"temp":1000,
-  ...            "barrier":1,
-  ...            "voltage":0,
-  ...            "position":0,
-  ...            "richardson":10,
-  ...            "emissivity":0.5}
-  >>> co_dict = {"temp":300,
-  ...            "barrier":0.8,
-  ...            "voltage":0,
-  ...            "position":10,
-  ...            "richardson":10,
-  ...            "emissivity":0.5}
-  >>> example_tec = TECBase(emitter = em_dict, collector = co_dict)
+  >>> from tec.electrode import Metal
+  >>> from tec import TECBase
+  >>> em = Metal({"temp":1000,
+  ...             "barrier":1,
+  ...             "voltage":0,
+  ...             "position":0,
+  ...             "richardson":10,
+  ...             "emissivity":0.5})
+  >>> co = Metal({"temp":300,
+  ...             "barrier":0.8,
+  ...             "voltage":0,
+  ...             "position":10,
+  ...             "richardson":10,
+  ...             "emissivity":0.5})
+  >>> example_tec = TECBase(emitter = em, collector = co)
   """
   
-  def __init__(self,input_params):
-    # is input_params a dict?
-    if not isinstance(input_params,dict):
-      raise TypeError("Inputs must be of type dict.")
-
-    # Ensure that the required fields are present in input_params.
-    req_fields = ["Emitter","Collector"]
-    input_param_keys = set(input_params.keys())
-    
-    if not set(req_fields).issubset(input_param_keys):
-      raise KeyError("Input dict is missing one or more keys.")
-    
-    # Try to set the object's attributes:
-    for key in req_fields:
-      self[key] = input_params[key]
+  def __init__(self,emitter, collector):
+    self.emitter = emitter
+    self.collector = collector
       
     self.calc_motive()
   
