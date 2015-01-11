@@ -60,26 +60,19 @@ def max_value(calculator):
 
 class TECBase(object):
   """
-  Base thermionic engine class.
+  Base thermoelectron engine class
 
-  This class provides the base API for subclasses which implement particular models of TEC electron transport. Even though it isn't intended to be a model, this class implements a model of electron transport which completely ignores the negative space charge effect, similar to the model described on p. 51 of :cite:`978-0-26-208059-0`.
+  This class provides the base API for subclasses which implement particular models of TEC electron transport. Even though this class isn't intended to be a model, it implements a model of electron transport which completely ignores the negative space charge effect, similar to the model described on p. 51 of :cite:`978-0-26-208059-0`.
 
-  The TECBase class is instantiated by a dict with two keys, "Emitter" and "Collector". Both keys have data that is also of type dict which are configured to instantiate an Electrode object. Additional keys will be ignored and there are no default values for instantiation.
-
-  :param dict input_params: Dict containing sub-dicts which can instantiate :class:`Electrode` objects.
-  :param dict input_params["Emitter"]: Initializes the emitter electrode.
-  :param dict input_params["Collector"]: Initializes the collector electrode.
+  :param dict emitter: Initializes the emitter electrode.
+  :param dict collector: Initializes the collector electrode.
 
   Attributes
-  ----------
-  The attributes of the object are accessed like a dictionary. The object has three attributes, "Emitter" and "Collector" are both Electrode objects. "motive_data" is a dictionary containing (meta)data calculated during the motive calculation. There is no requirement on the structure or contents of the "motive_data" attribute because each particular implementation of a model may have its own specific requirements. Such requirements will be documented in teh subclass's docstring. In the case of TECBase, "motive_data" contains the following data:
-
-  * motive_array: A two-element array containing the electrostatic boundary conditions, i.e. the vacuum level of the emitter and collector, respectively.
-  * position_array: A two-element array containing the values of position corresponding to the values in motive_array.
-  * motive_interp: A scipy.interpolate.interp1d object that interpolates the two arrays described above used in the class's convenience methods.
+  ==========
+  `TECBase` objects have two attributes: `emitter` and `collector`, both of which are `tec.electrode` objects.
 
   Examples
-  --------
+  ========
   >>> em_dict = {"temp":1000,
   ...            "barrier":1,
   ...            "voltage":0,
@@ -92,12 +85,7 @@ class TECBase(object):
   ...            "position":10,
   ...            "richardson":10,
   ...            "emissivity":0.5}
-  >>> input_dict = {"Emitter":em_dict, "Collector":co_dict}
-  >>> example_tec = TECBase(input_dict)
-  
-  Bibliography
-  ------------
-  [1] "Thermionic Energy Conversion, Vol. I." Hatsopoulous and Gyftopoulous. p. 48.
+  >>> example_tec = TECBase(emitter = em_dict, collector = co_dict)
   """
   
   def __init__(self,input_params):
