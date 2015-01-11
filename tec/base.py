@@ -2,12 +2,7 @@ import numpy as np
 from scipy import interpolate, optimize
 import matplotlib.pyplot as plt
 import matplotlib
-
-physical_constants = {"boltzmann": 1.3806488e-23,
-                      "permittivity0": 8.85418781762e-12,
-                      "electron_charge": 1.602176565e-19,
-                      "electron_mass": 9.1093897e-31,
-                      "sigma0": 5.67050e-8}
+from astropy import units, constants
 
 
 def max_value(calculator):
@@ -31,7 +26,7 @@ def max_value(calculator):
       # Set up the bounds for the minimization.
       lo = self["Emitter"]["voltage"]
       hi = (self["Emitter"]["barrier"] + self["Collector"]["barrier"]) / \
-        physical_constants["electron_charge"] + self["Emitter"]["voltage"]
+        constants.e + self["Emitter"]["voltage"]
         
       # God, this is fugly and probably wrong.
       output = optimize.fminbound(target_function,lo,hi,[self],full_output = True)
@@ -184,7 +179,7 @@ class TECBase(object):
     The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by :meth:`calc_output_voltage` which is the voltage difference between the collector and emitter.
     """
     return (self["Emitter"]["barrier"] - \
-      self["Collector"]["barrier"])/physical_constants["electron_charge"]
+      self["Collector"]["barrier"])/constants.e
     
     
   # Methods regarding current and power ---------------------------------------
@@ -198,7 +193,7 @@ class TECBase(object):
     else:
       barrier = self.get_max_motive_ht() - self["Emitter"].calc_barrier_ht()
       return self["Emitter"].calc_saturation_current_density() * \
-	np.exp(-barrier/(physical_constants["boltzmann"]*self["Emitter"]["temp"]))
+	np.exp(-barrier/(constants.k_B*self["Emitter"]["temp"]))
   
   def calc_back_current_density(self):
     """
@@ -210,7 +205,7 @@ class TECBase(object):
     else:
       barrier = self.get_max_motive_ht() - self["Collector"].calc_barrier_ht()
       return self["Collector"].calc_saturation_current_density() * \
-	np.exp(-barrier/(physical_constants["boltzmann"]*self["Collector"]["temp"]))
+	np.exp(-barrier/(constants.k_B*self["Collector"]["temp"]))
   
   
   def calc_output_current_density(self):
@@ -292,11 +287,11 @@ class TECBase(object):
     A description of electronic losses can be found in :cite:`978-0-26-208059-0`, page 69 (eq. 2.57a).
     """
     elecHeatTransportForward = self.calc_forward_current_density()*(self.get_max_motive_ht()+\
-      2 * physical_constants["boltzmann"] * self["Emitter"]["temp"]) / \
-      physical_constants["electron_charge"]
+      2 * constants.k_B * self["Emitter"]["temp"]) / \
+      constants.e
     elecHeatTransportBackward = self.calc_back_current_density()*(self.get_max_motive_ht()+\
-      2 * physical_constants["boltzmann"] * self["Collector"]["temp"]) / \
-      physical_constants["electron_charge"]
+      2 * constants.k_B * self["Collector"]["temp"]) / \
+      constants.e
     return elecHeatTransportForward - elecHeatTransportBackward
   
   def __calc_black_body_heat_transport(self):
@@ -305,7 +300,7 @@ class TECBase(object):
 
     Equation for radiative heat transfer taken from :cite:`978-0-471-45727-5` p. 793, Eq. 13.19.
     """
-    return physical_constants["sigma0"] * \
+    return constants.sigma_sb * \
       (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
       ((1./self["Emitter"]["emissivity"]) + (1./self["Collector"]["emissivity"]) - 1)
 
@@ -329,7 +324,7 @@ class TECBase(object):
 
     # Generate the position and corresponding motive values.
     pos = np.linspace(self["Emitter"]["position"],self["Collector"]["position"],100)
-    mot = self.get_motive(pos) / physical_constants["electron_charge"]
+    mot = self.get_motive(pos) / constants.e
 
     # Plot all the items on the emitter-side axes.
     axl.plot(pos,mot,"k")
@@ -338,18 +333,18 @@ class TECBase(object):
     x_interval = self["Collector"]["position"] - self["Emitter"]["position"]
 
     # maximum motive
-    plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"], 'k+')
+    plt.plot(self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / constants.e, 'k+')
     plt.annotate("$\psi_{m}$", 
-      xytext = (1.1 * self.get_max_motive_ht(with_position=True), 1.05 * self.get_max_motive_ht() / physical_constants["electron_charge"]),
-      xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / physical_constants["electron_charge"]))
+      xytext = (1.1 * self.get_max_motive_ht(with_position=True), 1.05 * self.get_max_motive_ht() / constants.e),
+      xy = (self.get_max_motive_ht(with_position=True), self.get_max_motive_ht() / constants.e))
     
     # labels and dimension lines
     for el, factr in zip(["Emitter", "Collector"],[-1,1]):
       if "nea" in self[el]:
         nea = "$\chi_{" + el[0] + "}$"
         self.dimension_line(nea, self[el]["position"] + (factr * 0.25 * x_interval), 
-          self[el].calc_motive_bc() / physical_constants["electron_charge"], 
-          self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+          self[el].calc_motive_bc() / constants.e, 
+          self[el].calc_barrier_ht() / constants.e)
         barrier = "$\zeta_{" + el[0] + "}$"
         barrier_pos = 0.6
       else:
@@ -358,7 +353,7 @@ class TECBase(object):
       self.dimension_line(barrier,self[el]["position"] + \
         (factr * barrier_pos * x_interval), 
         self[el]["voltage"], 
-        self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+        self[el].calc_barrier_ht() / constants.e)
 
       # Code for output voltage
       if output_voltage:
@@ -384,8 +379,8 @@ class TECBase(object):
     # y-scaling
     y_lo = min([0, self["Emitter"]["voltage"], self["Collector"]["voltage"]])
     y_hi = max([self["Emitter"].calc_barrier_ht() / \
-      physical_constants["electron_charge"], 
-      self["Collector"].calc_barrier_ht() / physical_constants["electron_charge"], 
+      constants.e, 
+      self["Collector"].calc_barrier_ht() / constants.e, 
       self.get_max_motive_ht()])
 
     axl.set_ylim([y_lo, 1.1 * y_hi])
@@ -441,7 +436,7 @@ class TECBase(object):
 
     ax.spines[loc].set_position(("data", x_loc))
     ax.spines[loc].set_bounds(self[el]["voltage"], 
-      self[el].calc_barrier_ht() / physical_constants["electron_charge"])
+      self[el].calc_barrier_ht() / constants.e)
 
     # Set up ticks and labels for emitter.
     ticks_labels = ["$\mu_{" + el[0] + "}$",
@@ -449,12 +444,12 @@ class TECBase(object):
               "$\psi_{" + el[0] + ",CBM}$"]
     if "nea" in self[el]:
       ticks_loc = matplotlib.ticker.FixedLocator([self[el]["voltage"],
-        self[el].calc_motive_bc() / physical_constants["electron_charge"],
-        self[el].calc_barrier_ht() / physical_constants["electron_charge"]])
+        self[el].calc_motive_bc() / constants.e,
+        self[el].calc_barrier_ht() / constants.e])
     else:
       del ticks_labels[-1]
       ticks_loc = matplotlib.ticker.FixedLocator([self[el]["voltage"],
-        self[el].calc_barrier_ht() / physical_constants["electron_charge"]])
+        self[el].calc_barrier_ht() / constants.e])
 
     ticks_format = matplotlib.ticker.FixedFormatter(ticks_labels)
 
