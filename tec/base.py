@@ -170,54 +170,68 @@ class TECBase(object):
   # Methods regarding current and power -----------------------------
   def calc_forward_current_density(self):
     """
-    Forward current density in A m^{-2}.
+    Net current moving from emitter to collector
+
+    :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+    :symbol: :math:`J_{f}`
     """
-    
-    if self["Emitter"].calc_barrier_ht() >= self.get_max_motive_ht():
-      return self["Emitter"].calc_saturation_current_density()
+    sat_current_density = self.emitter.calc_saturation_current_density()
+
+    if self.emitter.calc_barrier_ht() >= self.get_max_motive_ht():
+      current_density = sat_current_density
     else:
-      barrier = self.get_max_motive_ht() - self["Emitter"].calc_barrier_ht()
-      return self["Emitter"].calc_saturation_current_density() * \
-	np.exp(-barrier/(constants.k_B*self["Emitter"]["temp"]))
-  
+      barrier = self.get_max_motive_ht() - self.emitter.calc_barrier_ht()
+      kT = constants.k_B * self.emitter.temp
+      exponent = (barrier / kT).decompose()
+
+      current_density = sat_current_density * np.exp(-exponent)
+
+    return current_density
+
+
   def calc_back_current_density(self):
     """
-    Back current density in A m^{-2}.
+    Net current moving from collector to emitter
+
+    :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+    :symbol: :math:`J_{b}`
     """
-    
-    if self["Collector"].calc_barrier_ht() >= self.get_max_motive_ht():
-      return self["Collector"].calc_saturation_current_density()
+    sat_current_density = self.collector.calc_saturation_current_density()
+
+    if self.collector.calc_barrier_ht() >= self.get_max_motive_ht():
+      current_density = sat_current_density
     else:
-      barrier = self.get_max_motive_ht() - self["Collector"].calc_barrier_ht()
-      return self["Collector"].calc_saturation_current_density() * \
-	np.exp(-barrier/(constants.k_B*self["Collector"]["temp"]))
-  
+      barrier = self.get_max_motive_ht() - self.collector.calc_barrier_ht()
+      kT = constants.k_B * self.emitter.temp
+      exponent = (barrier  kT).decompose()
+
+      current_density = sat_current_density * np.exp(-exponent)
+
+    return current_density
+
   
   def calc_output_current_density(self):
     """
-    Net current density flowing across device in A m^{-2}.
+    Net current density flowing across device
+
+    :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+    :symbol: :math:`J`
     """
-    return self.calc_forward_current_density() - \
-      self.calc_back_current_density()
+    return self.calc_forward_current_density() - self.calc_back_current_density()
   
-  @max_value
+
+  # @max_value
   def calc_output_power_density(self):
     """
-    Return output power density in W m^{-2}.
+    Output power density of device
+
+    :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+    :symbol: :math:`w`
     """
-    return self.calc_output_current_density() * self.calc_output_voltage()
-  
-  # This method needs work: voltage/current density is not resistance
-  def calc_load_resistance(self):
-    """
-    Load resistance in ohms.
-    """
-    # There is something fishy about the units in this calculation.
-    if self.calc_output_current_density() != 0:
-      return self.calc_output_voltage() / self.calc_output_current_density()
-    else:
-      return np.nan
-  
+    power_dens = self.calc_output_current_density() * self.calc_output_voltage()
+
+    return power_dens.to("W/cm2")
+
 
   # Methods regarding efficiency ------------------------------------
   def calc_carnot_efficiency(self):
