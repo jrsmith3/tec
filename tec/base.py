@@ -63,7 +63,7 @@ def max_value(calculator):
 
   return wrapper
 
-class TECBase(dict):
+class TECBase(object):
   """
   Base thermionic engine class.
 
