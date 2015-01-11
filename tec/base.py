@@ -236,13 +236,19 @@ class TECBase(object):
   # Methods regarding efficiency ------------------------------------
   def calc_carnot_efficiency(self):
     """
-    Carnot efficiency in the range 0 to 1.
+    Carnot efficiency
     
-    This method will return a negative value if the emitter temperature is less
-    than the collector temperature.
+    :returns: float between 0 and 1 where unity is 100% efficiency. Returns NaN if collector temperature is greater than emitter temperature.
+    :symbol: :math:`J`
     """
-    return 1 - (self["Collector"]["temp"]/self["Emitter"]["temp"])
+    if self.emitter.temp >= self.collector.temp:
+      efficiency = 1 - (self.collector.temp / self.emitter.temp)
+    else:
+      efficiency = np.NaN
+
+    return efficiency
   
+
   def calc_radiation_efficiency(self):
     """
     Efficiency considering only blackbody heat transport in range 0 to 1.
@@ -254,6 +260,7 @@ class TECBase(object):
     else:
       return np.nan
   
+
   def calc_electronic_efficiency(self):
     """
     Efficiency considering only electronic heat transport in range 0 to 1.
@@ -265,6 +272,7 @@ class TECBase(object):
     else:
       return np.nan
   
+
   @max_value
   def calc_total_efficiency(self):
     """
@@ -278,6 +286,7 @@ class TECBase(object):
         (self.__calc_black_body_heat_transport() + self.__calc_electronic_heat_transport())
     else:
       return np.nan
+
 
   def __calc_electronic_heat_transport(self):
     """
@@ -293,6 +302,7 @@ class TECBase(object):
       constants.e
     return elecHeatTransportForward - elecHeatTransportBackward
   
+
   def __calc_black_body_heat_transport(self):
     """
     Returns the radiation transport of a TECBase object.
@@ -303,6 +313,8 @@ class TECBase(object):
       (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
       ((1./self["Emitter"]["emissivity"]) + (1./self["Collector"]["emissivity"]) - 1)
 
+
+  # Methods for plotting --------------------------------------------
   def plot_motive(self, axl = None, show = False, fontsize = False, output_voltage = False):
     """
     Plot an annotated motive diagram relative to ground.
