@@ -203,7 +203,7 @@ class TECBase(object):
     else:
       barrier = self.get_max_motive_ht() - self.collector.calc_barrier_ht()
       kT = constants.k_B * self.emitter.temp
-      exponent = (barrier  kT).decompose()
+      exponent = (barrier/kT).decompose()
 
       current_density = sat_current_density * np.exp(-exponent)
 
