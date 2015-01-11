@@ -140,24 +140,31 @@ class TECBase(object):
   # Methods returning basic data about the TEC ----------------------
   def calc_interelectrode_spacing(self):
     """
-    Distance between collector and emitter in m.
+    Distance between collector and emitter
+
+    :returns: `astropy.units.Quantity` in units of :math:`um`.
+    :symbol: :math:`d`
     """
-    return self["Collector"]["position"] - self["Emitter"]["position"]
+    return self.collector.position - self.emitter.position
+
   
   def calc_output_voltage(self):
     """
-    Voltage difference between emitter and collector in V.
+    Voltage difference between collector and emitter
+
+    :returns: `astropy.units.Quantity` in units of :math:`V`.
+    :symbol: :math:`V`
     """
-    return self["Collector"]["voltage"] - self["Emitter"]["voltage"]
+    return self.collector.voltage - self.emitter.voltage
+
   
   def calc_contact_potential(self):
     """
-    Contact potential in V.
+    Contact potential between collector and emitter
     
     The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by :meth:`calc_output_voltage` which is the voltage difference between the collector and emitter.
     """
-    return (self["Emitter"]["barrier"] - \
-      self["Collector"]["barrier"])/constants.e
+    return (self.emitter.barrier - self.collector.barrier) / constants.e
     
     
   # Methods regarding current and power -----------------------------
