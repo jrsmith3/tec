@@ -97,7 +97,7 @@ class TECBase(object):
     self.calc_motive()
   
 
-  # Methods regarding motive --------------------------------------------------
+  # Methods regarding motive ----------------------------------------
   def calc_motive(self):
     """
     Calculates the motive (meta)data and populates the 'motive_data' attribute.
@@ -137,7 +137,7 @@ class TECBase(object):
       return max_motive
       
   
-  # Methods returning basic data about the TEC --------------------------------
+  # Methods returning basic data about the TEC ----------------------
   def calc_interelectrode_spacing(self):
     """
     Distance between collector and emitter in m.
@@ -160,7 +160,7 @@ class TECBase(object):
       self["Collector"]["barrier"])/constants.e
     
     
-  # Methods regarding current and power ---------------------------------------
+  # Methods regarding current and power -----------------------------
   def calc_forward_current_density(self):
     """
     Forward current density in A m^{-2}.
@@ -212,7 +212,7 @@ class TECBase(object):
       return np.nan
   
 
-  # Methods regarding efficiency ----------------------------------------------
+  # Methods regarding efficiency ------------------------------------
   def calc_carnot_efficiency(self):
     """
     Carnot efficiency in the range 0 to 1.
