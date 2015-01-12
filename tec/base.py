@@ -271,9 +271,7 @@ class TECBase(object):
 
     See :meth:`calc_heat_supply_rate` for more information about :math:`Q_{in}`.
 
-    This method returns NaN if the output power is less than zero.
-
-    :returns: `astropy.units.Quantity` in dimensionless units.
+    :returns: float between 0 and 1 where unity is 100% efficiency. Returns NaN if the output power is less than zero.
     :symbol: :math:`\eta`
     """
     if self.calc_output_power_density() > 0:
