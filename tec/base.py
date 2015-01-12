@@ -249,30 +249,6 @@ class TECBase(object):
     return efficiency
   
 
-  def calc_radiation_efficiency(self):
-    """
-    Efficiency considering only blackbody heat transport in range 0 to 1.
-
-    This method will return nan if the output power is less than zero. See :cite:`978-0-26-208059-0` p. 73 for a description of how the radiation efficiency is calculated.
-    """
-    if self.calc_output_power_density() > 0:
-      return self.calc_output_power_density() / self.__calc_black_body_heat_transport()
-    else:
-      return np.nan
-  
-
-  def calc_electronic_efficiency(self):
-    """
-    Efficiency considering only electronic heat transport in range 0 to 1.
-
-    This method will return nan if the output power is less than zero. See :cite:`978-0-26-208059-0` p. 73 for a description of how the electronic efficiency is calculated.
-    """
-    if self.calc_output_power_density() > 0:
-      return self.calc_output_power_density() / self.__calc_electronic_heat_transport()
-    else:
-      return np.nan
-  
-
   @max_value
   def calc_total_efficiency(self):
     """
