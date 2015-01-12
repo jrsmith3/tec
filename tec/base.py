@@ -275,9 +275,11 @@ class TECBase(object):
     :symbol: :math:`\eta`
     """
     if self.calc_output_power_density() > 0:
-      return self.calc_output_power_density() / self.calc_heat_supply_rate()
+      efficiency = self.calc_output_power_density() / self.calc_heat_supply_rate()
     else:
-      return np.nan
+      efficiency = np.nan
+
+    return efficiency
 
 
   def calc_heat_supply_rate(self):
