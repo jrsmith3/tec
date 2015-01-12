@@ -326,17 +326,26 @@ class TECBase(object):
     cooling_rate = (forward - back).to("W/cm2")
 
     return cooling_rate
-  
 
-  def __calc_black_body_heat_transport(self):
-    """
-    Returns the radiation transport of a TECBase object.
 
-    Equation for radiative heat transfer taken from :cite:`978-0-471-45727-5` p. 793, Eq. 13.19.
+  def calc_thermal_rad_rate(self):
     """
-    return constants.sigma_sb * \
-      (self["Emitter"]["temp"]**4 - self["Collector"]["temp"]**4) / \
-      ((1./self["Emitter"]["emissivity"]) + (1./self["Collector"]["emissivity"]) - 1)
+    Interelectrode thermal radiation rate
+
+    This method calculates the heat transfer carried across the interelectrode space via blackbody photons. Since the emitter and collector can have different values of emissivity, the TEC will have a net emissivity, accounted for by (NAME) :cite:`9780471457275` p. 793, Eq. 13.19. The thermal radiation rate is given by
+
+    .. math::
+        Q_{r} = \\frac{\sigma (T_{E}^{4} - T_{C}^{4})}{\\frac{1}{\epsilon_{E}} + \\frac{1}{\epsilon_{C}} - 1}
+
+    :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+    :symbol: :math:`Q_{r}`
+    """
+    ideal_rad_rate = constants.sigma_sb * (self.emitter.temp**4 - self.collector.temp**4)
+    net_emissivity = (1./self.emitter.emissivity) + (1./self.collector.emissivity) - 1.
+
+    rad_rate = ideal_rad_rate / net_emissivity
+
+    return rad_rate
 
 
   # Methods for plotting --------------------------------------------
