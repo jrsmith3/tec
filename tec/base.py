@@ -62,7 +62,7 @@ class TECBase(object):
   """
   Base thermoelectron engine class
 
-  This class provides the base API for subclasses which implement particular models of TEC electron transport. Even though this class isn't intended to be a model, it implements a model of electron transport which completely ignores the negative space charge effect, similar to the model described on p. 51 of :cite:`978-0-26-208059-0`.
+  This class provides the base API for subclasses which implement particular models of TEC electron transport. Even though this class isn't intended to be a model, it implements a model of electron transport which completely ignores the negative space charge effect, similar to the model described on p. 51 of :cite:`9780262080590`.
 
   :param emitter: Object from `tec.electrode` which initializes emitter.
   :param collector: Object from `tec.electrode` which initializes collector.
