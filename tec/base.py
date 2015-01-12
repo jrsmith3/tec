@@ -264,10 +264,10 @@ class TECBase(object):
     .. math::
         Q_{in} = W_{T} + Q_{out}
 
-    The quantities :math:`Q_{in}` and :math:`Q_{out}` are determined by accounting for all the flows of energy into and out of the system. For the purposes of calculating the efficiency, :math:`Q_{in}` accounts for the heat transport via electrons (see :meth:`calc_electron_cooling_rate`, denoted by :math:`Q_{e}`) and photons (see :meth:`calc_thermal_rad_rate`, denoted by :math:`Q_{r}`). This efficiency calculation *does not* presently account for heat conducted via the leads. Therefore, :math:`Q_{in}` is given by
+    The quantities :math:`Q_{in}` and :math:`Q_{out}` are determined by accounting for all the flows of energy into and out of the system. For the purposes of calculating the efficiency, :math:`Q_{in}` accounts for the heat transport via electrons (see :meth:`calc_electron_cooling_rate`, denoted by :math:`Q_{E}`) and photons (see :meth:`calc_thermal_rad_rate`, denoted by :math:`Q_{r}`). This efficiency calculation *does not* presently account for heat conducted via the leads. Therefore, :math:`Q_{in}` is given by
 
     .. math::
-        Q_{in} = Q_{e} + Q_{r}
+        Q_{in} = Q_{E} + Q_{r}
 
     See :meth:`calc_heat_supply_rate` for more information about :math:`Q_{in}`.
 
@@ -280,6 +280,25 @@ class TECBase(object):
       return self.calc_output_power_density() / self.calc_heat_supply_rate()
     else:
       return np.nan
+
+
+  def calc_heat_supply_rate(self):
+    """
+    Rate at which heat enters device
+
+    The heat supply rate is the sum of all rates of heat transferred to the emitter. Currently this method accounts for heat transferred via thermoelectrons and photons, *but not* heat transferred through the electrical leads of the device. 
+
+    .. math::
+        Q_{in} = Q_{E} + Q_{r}
+
+    where :math:`Q_{E}` and :math:`Q_{r}` are calculated using :meth:`calc_electron_cooling_rate` and :meth:`calc_thermal_rad_rate`, respectively.
+
+    :returns: `astropy.units.Quantity` in dimensionless units.
+    :symbol: :math:`Q_{in}`
+    """
+    heat_supply_rate = self.calc_electron_cooling_rate() + self.calc_thermal_rad_rate()
+
+    return heat_supply_rate
 
 
   def __calc_electronic_heat_transport(self):
