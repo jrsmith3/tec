@@ -293,7 +293,7 @@ class TECBase(object):
 
     where :math:`Q_{E}` and :math:`Q_{r}` are calculated using :meth:`calc_electron_cooling_rate` and :meth:`calc_thermal_rad_rate`, respectively.
 
-    :returns: `astropy.units.Quantity` in dimensionless units.
+    :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
     :symbol: :math:`Q_{in}`
     """
     heat_supply_rate = self.calc_electron_cooling_rate() + self.calc_thermal_rad_rate()
@@ -301,19 +301,31 @@ class TECBase(object):
     return heat_supply_rate
 
 
-  def __calc_electronic_heat_transport(self):
+  def calc_electron_cooling_rate(self):
     """
-    Returns the electronic heat transport of a TECBase object.
+    Electronic cooling rate of emitter
+
+    This method calculates the net heat flow carried by electrons from the emitter according to Hatsopoulos and Gyftopoulos :cite:`97802620800590` Eq. 2.57a, repeated below
+
+    .. math::
+        Q_{E} = S J_{f} \\frac{\psi_{max} - \mu_{E} + 2kT_{E}}{e} - S J_{b}\\frac{\psi_{max} - \mu_{E} + 2kT_{C}}{e}
+
+    The quantity :math:`S` is the area of the electrode, and taken to be unit area (1 cm^2) here.
     
-    A description of electronic losses can be found in :cite:`978-0-26-208059-0`, page 69 (eq. 2.57a).
+    :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+    :symbol: :math:`Q_{E}`
     """
-    elecHeatTransportForward = self.calc_forward_current_density()*(self.get_max_motive_ht()+\
-      2 * constants.k_B * self["Emitter"]["temp"]) / \
-      constants.e
-    elecHeatTransportBackward = self.calc_back_current_density()*(self.get_max_motive_ht()+\
-      2 * constants.k_B * self["Collector"]["temp"]) / \
-      constants.e
-    return elecHeatTransportForward - elecHeatTransportBackward
+    kT_E2 = 2 * constants.k_B * self.emitter.temp
+    kT_C2 = 2 * constants.k_B * self.collector.temp
+
+    unit_area = units.Quantity(1.,"cm2")
+
+    forward = unit_area * self.calc_forward_current_density() * (self.calc_max_motive_height + kT_E2) / constants.e
+    back = unit_area * self.calc_back_current_density * (self.calc_max_motive_height + kT_C2) / constants.e
+
+    cooling_rate = (forward - back).to("W/cm2")
+
+    return cooling_rate
   
 
   def __calc_black_body_heat_transport(self):
