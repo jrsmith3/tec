@@ -249,17 +249,35 @@ class TECBase(object):
     return efficiency
   
 
-  @max_value
-  def calc_total_efficiency(self):
+  # @max_value
+  def calc_efficiency(self):
     """
-    Return total efficiency considering all heat transport mechanisms.
-    
-    The output will be between 0 and 1. If the output power is less than zero,
-    return nan.
+    Total thermal efficiency
+
+    This method calculates the thermal efficiency of a TEC after Hatsopoulos and Gyftopoulos :cite:`97802620800590` Sec. 2.7. Efficiency, :math:`\eta`, is defined as the ratio of the output power, :math:`W_{T}`, to the rate at which heat is added to the device, :math:`Q_{in}`.
+
+    .. math::
+        \eta = \\frac{W_{T}}{Q_{in}}
+
+    The law of conservation of energy determines the relationship between these quantities and the heat rejection rate, :math:`Q_{out}`
+
+    .. math::
+        Q_{in} = W_{T} + Q_{out}
+
+    The quantities :math:`Q_{in}` and :math:`Q_{out}` are determined by accounting for all the flows of energy into and out of the system. For the purposes of calculating the efficiency, :math:`Q_{in}` accounts for the heat transport via electrons (see :meth:`calc_electron_cooling_rate`, denoted by :math:`Q_{e}`) and photons (see :meth:`calc_thermal_rad_rate`, denoted by :math:`Q_{r}`). This efficiency calculation *does not* presently account for heat conducted via the leads. Therefore, :math:`Q_{in}` is given by
+
+    .. math::
+        Q_{in} = Q_{e} + Q_{r}
+
+    See :meth:`calc_heat_supply_rate` for more information about :math:`Q_{in}`.
+
+    This method returns NaN if the output power is less than zero.
+
+    :returns: `astropy.units.Quantity` in dimensionless units.
+    :symbol: :math:`\eta`
     """
     if self.calc_output_power_density() > 0:
-      return self.calc_output_power_density() / \
-        (self.__calc_black_body_heat_transport() + self.__calc_electronic_heat_transport())
+      return self.calc_output_power_density() / self.calc_heat_supply_rate()
     else:
       return np.nan
 
