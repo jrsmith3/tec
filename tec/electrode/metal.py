@@ -15,16 +15,25 @@ class Metal(object):
     :param temp: Temperature (:math:`T`).
     :param barrier: Emission barrier (a.k.a. work function). The barrier is the difference between the vacuum energy of the surface and the Fermi energy. (:math:`\phi`)
     :param richardson: Richardson's constant (:math:`A`)
+    :param voltage: Bias voltage relative to ground (:math:`V`).
+    :param position: Position (:math:`x`).
+    :param emissivity: Radiative emissivity (:math:`epsilon`).
     """
 
     temp = PhysicalProperty(unit="K", lo_bnd=0)
     barrier = PhysicalProperty(unit="eV", lo_bnd=0)
     richardson = PhysicalProperty(unit="A/(cm2 K2)", lo_bnd=0)
+    voltage = PhysicalProperty(unit="V")
+    position = PhysicalProperty(unit="um")
+    emissivity = PhysicalProperty(lo_bnd=0, up_bnd=1)
 
-    def __init__(self, temp, barrier, richardson):
+    def __init__(self, temp, barrier, richardson, voltage=0, position=0, emissivity=0):
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
+        self.voltage = voltage
+        self.position = position
+        self.emissivity = emissivity
 
     def __repr__(self):
         return str(self._to_dict())
