@@ -5,58 +5,6 @@ import matplotlib
 from astropy import units, constants
 
 
-def max_value(calculator):
-  """
-  Decorator method to calculate the max value, etc. of the requested method.
-  """
-  def wrapper(self, action = None, set_voltage = False):
-    """
-    :param action: Key indicating the method's desired action. 
-    :param action==None: Simply returns the current value of the method. 
-    :param action=="max": Returns the maximum value of the method relative to the output voltage.
-    :param action=="voltage": Returns the voltage at which the maximum output occurs.
-    :param action=="full": Returns all of the data that the minimization method returns.
-    :param set_voltage: If True, leave the voltage set such that the desired output is maximized. Parameter has no effect unless the action argument is "max", "voltage", or "full".
-    :type set_voltage: bool
-    """
-    if action in ["max","voltage","full"]:
-      # Save the collector voltage because we are going to be moving it around.
-      saved_voltage = self["Collector"]["voltage"]
-      
-      # Set up the bounds for the minimization.
-      lo = self["Emitter"]["voltage"]
-      hi = (self["Emitter"]["barrier"] + self["Collector"]["barrier"]) / constants.e + self["Emitter"]["voltage"]
-        
-      # God, this is fugly and probably wrong.
-      output = optimize.fminbound(target_function,lo,hi,[self],full_output = True)
-      
-      # I don't know if this code is the best way to set the voltage.
-      if set_voltage is True:
-        # Just leave everything alone.
-        pass
-      else:
-        # Put everything back like it was.
-        self["Collector"]["voltage"] = saved_voltage
-    else:    
-      return calculator(self)
-    
-    # Figure out what to return.
-    if action == "max":
-      return -1 * output[1]
-    elif action == "voltage":
-      return output[0]
-    elif action == "full":
-      return output
-  
-  def target_function(voltage,obj):
-    """
-    Target function of the max_value decorator.
-    """
-    obj["Collector"]["voltage"] = voltage
-    return -1 * calculator(obj)
-
-  return wrapper
-
 class TECBase(object):
   """
   Base thermoelectron engine class
