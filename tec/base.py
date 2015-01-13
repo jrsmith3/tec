@@ -118,22 +118,23 @@ class TECBase(object):
     return motive
     
   
-  def get_max_motive_ht(self, with_position=False):
+  def calc_max_motive(self):
     """
-    Value of the maximum motive relative to ground in J.
+    Value of maximum motive relative to electrical ground
     
-    :param bool with_position: True returns the position at max motive instead.
+    :returns: `astropy.units.Quantity` in units of :math:`eV`.
+    :symbol: :math:`\psi_{m}`
     """
-    
-    max_motive = self["motive_data"]["motive_array"].max()
-    max_motive_indx = self["motive_data"]["motive_array"].argmax()
-    position_at_max_motive = self["motive_data"]["position_array"][max_motive_indx]
-    
-    if with_position:
-      return position_at_max_motive
+    emitter_motive = self.emitter.barrier + self.emitter.voltage
+    collector_motive = self.collector.barrier + self.collector.voltage
+
+    if emitter_motive > collector_motive:
+        max_motive = emitter_motive
     else:
-      return max_motive
-      
+        max_motive = collector_motive
+
+    return max_motive
+          
   
   # Methods returning basic data about the TEC ----------------------
   def calc_interelectrode_spacing(self):
