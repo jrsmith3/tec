@@ -7,7 +7,7 @@ Base Library (:mod:`tec`)
 .. currentmodule:: tec
 """
 
-from base import *
+# from tec.base import TECBase
 # import models
 import electrode
 
