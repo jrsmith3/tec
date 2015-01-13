@@ -8,7 +8,7 @@ import copy
 
 input_params = {"temp": 300.,
                 "barrier": 2.0,
-                "richardson": 10.,}
+                "richardson": 10., }
 
 
 # Base classes
@@ -213,6 +213,7 @@ class CalculatorsReturnType(TestBaseWithMetal):
         """
         self.assertIsInstance(self.El.calc_thermoelectron_current_density(), Quantity)
 
+
 class CalculatorsReturnUnits(TestBaseWithMetal):
     """
     Tests output units, where applicable, of the calculator methods.
@@ -222,6 +223,7 @@ class CalculatorsReturnUnits(TestBaseWithMetal):
         Metal.calc_thermoelectron_current_density should return a value with unit A/cm2.
         """
         self.assertEqual(self.El.calc_thermoelectron_current_density().unit, Unit("A/cm2"))
+
 
 class CalculatorsReturnValues(TestBaseWithMetal):
     """
