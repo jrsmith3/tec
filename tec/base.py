@@ -25,8 +25,7 @@ def max_value(calculator):
       
       # Set up the bounds for the minimization.
       lo = self["Emitter"]["voltage"]
-      hi = (self["Emitter"]["barrier"] + self["Collector"]["barrier"]) / \
-        constants.e + self["Emitter"]["voltage"]
+      hi = (self["Emitter"]["barrier"] + self["Collector"]["barrier"]) / constants.e + self["Emitter"]["voltage"]
         
       # God, this is fugly and probably wrong.
       output = optimize.fminbound(target_function,lo,hi,[self],full_output = True)
