@@ -96,13 +96,27 @@ class TECBase(object):
       
 
   # Methods regarding motive ----------------------------------------
-  def get_motive(self, position):
+  def calc_motive(self, position):
     """
-    Value of motive relative to ground for given value(s) of position in J.
+    Value of motive relative to electrical ground
     
-    :param position: float or numpy array at which motive is to be evaluated. Returns NaN if position falls outside of the interelectrode space.
+    :param position: float or numpy array at which motive is to be evaluated.
+    :raises: ValueError if position falls outside interelectrode space
+    :returns: `astropy.units.Quantity` in units of :math:`eV`.
+    :symbol: :math:`\psi`
     """
-    return self["motive_data"]["motive_interp"](position)
+    emitter_motive = self.emitter.barrier + self.emitter.voltage
+    collector_motive = self.collector.barrier + self.collector.voltage
+
+    abscissae = np.array([emitter.position, collector.position])
+    ordinates = np.array([emitter_motive, collector_motive])
+
+    spl = interpolate.UnivariateSpline(abscissae, ordinates, k = 1, ext = 2)
+
+    motive = spl(position)
+
+    return motive
+    
   
   def get_max_motive_ht(self, with_position=False):
     """
@@ -353,7 +367,7 @@ class TECBase(object):
 
     # Generate the position and corresponding motive values.
     pos = np.linspace(self["Emitter"]["position"],self["Collector"]["position"],100)
-    mot = self.get_motive(pos) / constants.e
+    mot = self.calc_motive(pos) / constants.e
 
     # Plot all the items on the emitter-side axes.
     axl.plot(pos,mot,"k")
