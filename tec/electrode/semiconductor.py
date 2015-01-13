@@ -24,6 +24,9 @@ class SC(Metal):
     :param bandgap: Bandgap of semiconductor at 300K (:math:`E_{g}`). Note that this quantity is expressed as
     .. math::
         E_{g} = E_{C} - E_{V}
+    :param voltage: Bias voltage relative to ground (:math:`V`).
+    :param position: Position (:math:`x`).
+    :param emissivity: Radiative emissivity (:math:`epsilon`).
     """
 
     electron_effective_mass = PhysicalProperty(unit="kg", lo_bnd=0)
@@ -32,7 +35,7 @@ class SC(Metal):
     acceptor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
     bandgap = PhysicalProperty(unit="eV", lo_bnd=0)
 
-    def __init__(self, temp, barrier, richardson, electron_effective_mass, hole_effective_mass, acceptor_concentration, acceptor_ionization_energy, bandgap):
+    def __init__(self, temp, barrier, richardson, electron_effective_mass, hole_effective_mass, acceptor_concentration, acceptor_ionization_energy, bandgap, voltage=0, position=0, emissivity=0):
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
@@ -41,6 +44,9 @@ class SC(Metal):
         self.acceptor_concentration = acceptor_concentration
         self.acceptor_ionization_energy = acceptor_ionization_energy
         self.bandgap = bandgap
+        self.voltage = voltage
+        self.position = position
+        self.emissivity = emissivity
 
     def calc_cb_effective_dos(self):
         """
