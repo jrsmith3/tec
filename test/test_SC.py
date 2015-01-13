@@ -15,7 +15,7 @@ input_params = {"temp": 300.,
                 "hole_effective_mass": 7.38e-31,
                 "acceptor_concentration": 1e18,
                 "acceptor_ionization_energy": 45.,
-                "bandgap": 1.11,}
+                "bandgap": 1.11}
 
 
 # Base classes
