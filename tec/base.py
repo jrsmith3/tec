@@ -52,11 +52,8 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi`
         """
-        emitter_motive = self.emitter.barrier + self.emitter.voltage
-        collector_motive = self.collector.barrier + self.collector.voltage
-
         abscissae = np.array([emitter.position, collector.position])
-        ordinates = np.array([emitter_motive, collector_motive])
+        ordinates = np.array([emitter.calc_motive(), collector.calc_motive()])
 
         spl = interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext=2)
 
@@ -72,13 +69,10 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi_{m}`
         """
-        emitter_motive = self.emitter.barrier + self.emitter.voltage
-        collector_motive = self.collector.barrier + self.collector.voltage
-
-        if emitter_motive > collector_motive:
-            max_motive = emitter_motive
+        if emitter.calc_motive() > collector.calc_motive():
+            max_motive = emitter.calc_motive()
         else:
-            max_motive = collector_motive
+            max_motive = collector.calc_motive()
 
         return max_motive
 
@@ -90,10 +84,7 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`um`.
         :symbol: :math:`\x_{m}`
         """
-        emitter_motive = self.emitter.barrier + self.emitter.voltage
-        collector_motive = self.collector.barrier + self.collector.voltage
-
-        if emitter_motive > collector_motive:
+        if emitter.calc_motive() > collector.calc_motive():
             max_motive_position = emitter.position
         else:
             max_motive_position = collector.position
