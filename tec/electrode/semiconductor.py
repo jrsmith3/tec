@@ -11,49 +11,36 @@ from physicalproperty import PhysicalProperty, find_PhysicalProperty
 class SC(Metal):
     """
     P-type semiconductor thermoelectron electrode
+
+    A `SC` electrode is instantiated with values to populate its public data attributes. Each argument's value must satisfy the constraints noted with the corresponding public data attribute. Arguments can be some kind of numeric type or of type `astropy.units.Quantity` so long as the units are compatible with what's listed.
+
+    :param temp: Temperature (:math:`T`).
+    :param barrier: Emission barrier (a.k.a. work function). The barrier is the difference between the vacuum energy of the surface and the Fermi energy. (:math:`\phi`)
+    :param richardson: Richardson's constant (:math:`A`)
+    :param electron_effective_mass: Density-of-states electron effective mass (:math:`m_{n}^{*}`).
+    :param hole_effective_mass: Density-of-states hole effective mass (:math:`m_{p}^{*}`).
+    :param acceptor_concentration: Acceptor dopant concentration (:math:`N_{A}`).
+    :param acceptor_ionization_energy: Acceptor ionization energy relative to valence band edge (:math:`E_{A}`).
+    :param bandgap: Bandgap of semiconductor at 300K (:math:`E_{g}`). Note that this quantity is expressed as
+    .. math::
+        E_{g} = E_{C} - E_{V}
     """
 
     electron_effective_mass = PhysicalProperty(unit="kg", lo_bnd=0)
-    """
-    Density-of-states electron effective mass
-
-    :symbol: :math:`m_{n}^{*}`
-    """
-
     hole_effective_mass = PhysicalProperty(unit="kg", lo_bnd=0)
-    """
-    Density-of-states hole effective mass
-
-    :symbol: :math:`m_{p}^{*}`
-    """
-
     acceptor_concentration = PhysicalProperty(unit="1/cm3", lo_bnd=0)
-    """
-    Acceptor dopant concentration
-
-    :symbol: :math:`N_{A}`
-    """
-
     acceptor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
-    """
-    Acceptor ionization energy relative to valence band edge
-
-    :symbol: :math:`E_{A}`
-    """
-
     bandgap = PhysicalProperty(unit="eV", lo_bnd=0)
-    """
-    Bandgap of semiconductor at 300K
 
-    .. math::
-        E_{g} = E_{C} - E_{V}
-
-    :symbol: :math:`E_{g}`
-    """
-
-    def __init__(self, params):
-        for attr in find_PhysicalProperty(self):
-            setattr(self, attr, params[attr])
+    def __init__(self, temp, barrier, richardson, electron_effective_mass, hole_effective_mass, acceptor_concentration, acceptor_ionization_energy, bandgap):
+        self.temp = temp
+        self.barrier = barrier
+        self.richardson = richardson
+        self.electron_effective_mass = electron_effective_mass
+        self.hole_effective_mass = hole_effective_mass
+        self.acceptor_concentration = acceptor_concentration
+        self.acceptor_ionization_energy = acceptor_ionization_energy
+        self.bandgap = bandgap
 
     def calc_cb_effective_dos(self):
         """
