@@ -22,18 +22,8 @@ class TECBase(object):
     ========
     >>> from tec.electrode import Metal
     >>> from tec import TECBase
-    >>> em = Metal({"temp":1000,
-    ...             "barrier":1,
-    ...             "voltage":0,
-    ...             "position":0,
-    ...             "richardson":10,
-    ...             "emissivity":0.5})
-    >>> co = Metal({"temp":300,
-    ...             "barrier":0.8,
-    ...             "voltage":0,
-    ...             "position":10,
-    ...             "richardson":10,
-    ...             "emissivity":0.5})
+    >>> em = Metal(temp=1000, barrier=1, richardson=10, voltage=0, position=0, emissivity=0.5)
+    >>> co = Metal(temp=300, barrier=0.8, richardson=10, emissivity=0.5, voltage=0, position=10,)
     >>> example_tec = TECBase(emitter = em, collector = co)
     """
 
