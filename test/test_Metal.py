@@ -168,7 +168,7 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
         self.assertRaises(ValueError, Metal, **self.input_params)
 
 
-class SetDataWrongType(TestBaseWithMetal):
+class SetAttribsWrongType(TestBaseWithMetal):
     """
     Tests setting attributes with non-numeric data
     """
@@ -251,7 +251,7 @@ class SetDataWrongType(TestBaseWithMetal):
             self.fail("`emissivity` attribute can be assigned a non-numeric value.")
 
 
-class SetDataOutsideConstraints(TestBaseWithMetal):
+class SetAttribsOutsideConstraints(TestBaseWithMetal):
     """
     Tests setting attributes when input values are outside their constraints
 

@@ -166,7 +166,7 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
         self.assertRaises(ValueError, SC, **self.input_params)
 
 
-class SetDataWrongType(TestBaseWithElectrode):
+class SetAttribsWrongType(TestBaseWithElectrode):
     """
     Tests setting attributes when input data is non-numeric.
     """
@@ -236,7 +236,7 @@ class SetDataWrongType(TestBaseWithElectrode):
             self.fail("`bandgap` attribute can be assigned a non-numeric value.")
 
 
-class SetDataOutsideConstraints(TestBaseWithElectrode):
+class SetAttribsOutsideConstraints(TestBaseWithElectrode):
     """
     Tests setting attributes when input values are outside their constraints.
 
