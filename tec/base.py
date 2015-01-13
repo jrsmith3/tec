@@ -94,24 +94,8 @@ class TECBase(object):
     self.emitter = emitter
     self.collector = collector
       
-    self.calc_motive()
-  
 
   # Methods regarding motive ----------------------------------------
-  def calc_motive(self):
-    """
-    Calculates the motive (meta)data and populates the 'motive_data' attribute.
-    """
-    motive_array = np.array([self["Emitter"].calc_motive_bc(), \
-      self["Collector"].calc_motive_bc()])
-    position_array = np.array([self["Emitter"]["position"], \
-      self["Collector"]["position"]])
-    motive_interp = interpolate.InterpolatedUnivariateSpline(position_array, motive_array, k = 1)
-    
-    self["motive_data"] = {"motive_array":motive_array, \
-                           "position_array":position_array, \
-                           "motive_interp":motive_interp}
-
   def get_motive(self, position):
     """
     Value of motive relative to ground for given value(s) of position in J.
