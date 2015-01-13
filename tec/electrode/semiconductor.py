@@ -7,40 +7,41 @@ from astropy import constants
 from metal import Metal
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
+
 class SC(Metal):
     """
     P-type semiconductor thermoelectron electrode
     """
 
-    electron_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
+    electron_effective_mass = PhysicalProperty(unit="kg", lo_bnd=0)
     """
     Density-of-states electron effective mass
 
     :symbol: :math:`m_{n}^{*}`
     """
 
-    hole_effective_mass = PhysicalProperty(unit = "kg", lo_bnd = 0)
+    hole_effective_mass = PhysicalProperty(unit="kg", lo_bnd=0)
     """
     Density-of-states hole effective mass
 
     :symbol: :math:`m_{p}^{*}`
     """
 
-    acceptor_concentration = PhysicalProperty(unit = "1/cm3", lo_bnd = 0)
+    acceptor_concentration = PhysicalProperty(unit="1/cm3", lo_bnd=0)
     """
     Acceptor dopant concentration
 
     :symbol: :math:`N_{A}`
     """
 
-    acceptor_ionization_energy = PhysicalProperty(unit = "meV", lo_bnd = 0)
+    acceptor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
     """
     Acceptor ionization energy relative to valence band edge
 
     :symbol: :math:`E_{A}`
     """
 
-    bandgap = PhysicalProperty(unit = "eV", lo_bnd = 0)
+    bandgap = PhysicalProperty(unit="eV", lo_bnd=0)
     """
     Bandgap of semiconductor at 300K
 
@@ -66,9 +67,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`N_{C}`
         """
-        dos = 2 * \
-            ((2 * np.pi * self.electron_effective_mass * constants.k_B * self.temp) / \
-            (constants.h ** 2))**(3./2)
+        dos = 2 * ((2 * np.pi * self.electron_effective_mass * constants.k_B * self.temp) / (constants.h ** 2))**(3./2)
 
         return dos.to("1/cm3")
 
@@ -84,9 +83,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`N_{V}`
         """
-        dos = 2 * \
-            ((2 * np.pi * self.hole_effective_mass * constants.k_B * self.temp) / \
-            (constants.h ** 2))**(3./2)
+        dos = 2 * ((2 * np.pi * self.hole_effective_mass * constants.k_B * self.temp) / (constants.h ** 2))**(3./2)
 
         return dos.to("1/cm3")
 
@@ -102,8 +99,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`n_{0}`
         """
-        exponent = ((self.bandgap - self.calc_fermi_energy()) / \
-            (constants.k_B * self.temp)).decompose()
+        exponent = ((self.bandgap - self.calc_fermi_energy()) / (constants.k_B * self.temp)).decompose()
 
         return self.calc_cb_effective_dos() * np.exp(-exponent)
 
@@ -119,8 +115,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`p_{0}`
         """
-        exponent = (self.calc_fermi_energy() / \
-            (constants.k_B * self.temp)).decompose()
+        exponent = (self.calc_fermi_energy() / (constants.k_B * self.temp)).decompose()
 
         return self.calc_vb_effective_dos() * np.exp(-exponent)
 
@@ -160,16 +155,13 @@ class SC(Metal):
         """
         fermi_energy = units.Quantity(fermi_energy, "eV")
 
-        exponent_1 = ((self.bandgap - fermi_energy) / \
-            (constants.k_B * self.temp)).decompose()
+        exponent_1 = ((self.bandgap - fermi_energy) / (constants.k_B * self.temp)).decompose()
         exponent_2 = (fermi_energy / (constants.k_B * self.temp)).decompose()
-        exponent_3 = ((self.acceptor_ionization_energy - fermi_energy) / \
-            (constants.k_B * self.temp)).decompose()
+        exponent_3 = ((self.acceptor_ionization_energy - fermi_energy) / (constants.k_B * self.temp)).decompose()
 
         el_carrier_conc = self.calc_cb_effective_dos() * np.exp(-exponent_1)
         ho_carrier_conc = self.calc_vb_effective_dos() * np.exp(-exponent_2)
 
-        ret_val =  el_carrier_conc - ho_carrier_conc + \
-            self.acceptor_concentration / (1 + 4 * np.exp(exponent_3))
+        ret_val = el_carrier_conc - ho_carrier_conc + self.acceptor_concentration / (1 + 4 * np.exp(exponent_3))
 
         return ret_val.value
