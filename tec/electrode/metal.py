@@ -10,34 +10,21 @@ class Metal(object):
     """
     Metal thermoelectron electrode
 
-    A `Metal` electrode is instantiated with a dict having keys identical to the class's public data attributes. Each key's value must satisfy the constraints noted with the corresponding public data attribute. Dictionary values can be some kind of numeric type or of type `astropy.units.Quantity` so long as the units are compatible with what's listed.
+    A `Metal` electrode is instantiated with values to populate its public data attributes. Each argument's value must satisfy the constraints noted with the corresponding public data attribute. Arguments can be some kind of numeric type or of type `astropy.units.Quantity` so long as the units are compatible with what's listed.
+
+    :param temp: Temperature (:math:`T`).
+    :param barrier: Emission barrier (a.k.a. work function). The barrier is the difference between the vacuum energy of the surface and the Fermi energy. (:math:`\phi`)
+    :param richardson: Richardson's constant (:math:`A`)
     """
+
     temp = PhysicalProperty(unit="K", lo_bnd=0)
-    """
-    Temperature
-
-    :symbol: :math:`T`
-    """
-
     barrier = PhysicalProperty(unit="eV", lo_bnd=0)
-    """
-    Emission barrier (a.k.a. work function)
-
-    The barrier is the difference between the vacuum energy of the surface and the Fermi energy.
-
-    :symbol: :math:`\phi`
-    """
-
     richardson = PhysicalProperty(unit="A/(cm2 K2)", lo_bnd=0)
-    """
-    Richardson constant
 
-    :symbol: :math:`A`
-    """
-
-    def __init__(self, params):
-        for attr in find_PhysicalProperty(self):
-            setattr(self, attr, params[attr])
+    def __init__(self, temp, barrier, richardson):
+        self.temp = temp
+        self.barrier = barrier
+        self.richardson = richardson
 
     def __repr__(self):
         return str(self._to_dict())

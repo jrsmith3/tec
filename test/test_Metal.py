@@ -15,133 +15,75 @@ input_params = {"temp": 300.,
 # ============
 class TestBaseJustInputParams(unittest.TestCase):
     """
-    Base class for tests.
+    Base class for tests
 
-    This class defines a common setUp method that features an attribute which can be used to instantiate `Metal` objects.
+    This class defines a common `setUp` method that features an attribute which can be used to instantiate `Metal` objects.
     """
     def setUp(self):
         """
-        Set up a dictionary that can properly instantiate an `Metal` object.
+        Create dict attribute that can instantiate a `Metal` object
         """
         self.input_params = copy.copy(input_params)
 
 
 class TestBaseWithMetal(unittest.TestCase):
     """
-    Base class for tests.
+    Base class for tests
 
-    This class defines a common setUp method that features an attribute which is an `Metal` object.
+    This class defines a common setUp method that features an attribute which is a `Metal` object.
     """
     def setUp(self):
         """
-        Set up an `Metal` object.
+        Set up a `Metal` object
         """
-        self.El = Metal(copy.copy(input_params))
+        self.El = Metal(**input_params)
 
 
 # Test classes
 # ============
-class InstantiationInputNonDict(unittest.TestCase):
+class InstantiationInputArgsWrongType(TestBaseJustInputParams):
     """
-    Tests instantiation when non-dict data is used.
-    """
-    def test_no_input_arg(self):
-        """
-        Metal instantiation without input argument is invalid.
-        """
-        self.assertRaises(TypeError, Metal, None)
-
-    def test_non_dict_input_arg(self):
-        """
-        Metal instantiation with non-dict input argument is invalid.
-        """
-        self.assertRaises(TypeError, Metal, "this string is not a dict.")
-
-
-class InstantiationInputIncomplete(TestBaseJustInputParams):
-    """
-    Tests instantiating when input dict is missing required data.
-    """
-    def test_temp_missing(self):
-        """
-        Metal instantiating dict requires `temp` key.
-        """
-        del(self.input_params["temp"])
-        self.assertRaises(KeyError, Metal, self.input_params)
-
-    def test_barrier_missing(self):
-        """
-        Metal instantiating dict requires `barrier` key.
-        """
-        del(self.input_params["barrier"])
-        self.assertRaises(KeyError, Metal, self.input_params)
-
-    def test_richardson_missing(self):
-        """
-        Metal instantiating dict requires `richardson` key.
-        """
-        del(self.input_params["richardson"])
-        self.assertRaises(KeyError, Metal, self.input_params)
-
-
-class InstantiationInputSuperfluousKeys(TestBaseJustInputParams):
-    """
-    Tests instantiation with dict with superfluous keys.
-    """
-    def test_superfluous_keys(self):
-        """
-        Metal can be instantiated with dict with superfluous keys.
-        """
-        self.input_params["superfluous"] = "value not even numeric!"
-        try:
-            El = Metal(self.input_params)
-        except:
-            self.fail("Superfluous key in input param dict caused failure of instantiation.")
-
-
-class InstantiationInputFieldsWrongType(TestBaseJustInputParams):
-    """
-    Tests instantiating when input dict has non-numeric data items.
+    Test instantiation with non-numeric args
     """
     def test_temp_non_numeric(self):
         """
-        Metal instantiation requires numeric `temp` value.
+        Metal instantiation requires numeric `temp` value
         """
         self.input_params["temp"] = "this string is non-numeric."
 
         try:
-            El = Metal(self.input_params)
+            El = Metal(**self.input_params)
         except TypeError:
-            # Instantiating an Metal with a dict with key `temp` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `temp` argument raised a TypeError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`temp` field of instantiating dict must be numeric.")
+            self.fail("Shouldn't be able to instantiate with non-numeric `temp` argument.")
 
     def test_barrier_non_numeric(self):
         """
-        Metal instantiation requires numeric `barrier` value.
+        Metal instantiation requires numeric `barrer` value
         """
         self.input_params["barrier"] = "this string is non-numeric."
         try:
-            El = Metal(self.input_params)
+            El = Metal(**self.input_params)
         except TypeError:
-            # Instantiating an Metal with a dict with key `barrier` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `barrier` argument raised a TypeError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`barrier` field of instantiating dict must be numeric.")
+            self.fail("Shouldn't be able to instantiate with non-numeric `barrier` argument.")
 
     def test_richardson_non_numeric(self):
         """
-        Metal instantiation requires numeric `richardson` value.
+        Metal instantiation requires numeric `richardson` value
         """
         self.input_params["richardson"] = "this string is non-numeric."
         try:
-            El = Metal(self.input_params)
+            El = Metal(**self.input_params)
         except TypeError:
-            # Instantiating an Metal with a dict with key `richardson` having a non-numeric field raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `richardson` argument raised a TypeError which is exactly what we wanted to do.
             pass
         else:
-            self.fail("`richardson` field of instantiating dict must be numeric.")
+            self.fail("Shouldn't be able to instantiate with non-numeric `richardson` argument.")
 
 
 class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
@@ -156,21 +98,21 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
         Metal instantiation requires `temp` > 0.
         """
         self.input_params["temp"] = -1.1
-        self.assertRaises(ValueError, Metal, self.input_params)
+        self.assertRaises(ValueError, Metal, **self.input_params)
 
     def test_barrier_less_than_zero(self):
         """
         Metal instantiation requires `barrier` > 0.
         """
         self.input_params["barrier"] = -1.1
-        self.assertRaises(ValueError, Metal, self.input_params)
+        self.assertRaises(ValueError, Metal, **self.input_params)
 
     def test_richardson_less_than_zero(self):
         """
         Metal instantiation requires `richardson` > 0.
         """
         self.input_params["richardson"] = -1.1
-        self.assertRaises(ValueError, Metal, self.input_params)
+        self.assertRaises(ValueError, Metal, **self.input_params)
 
 
 class SetDataWrongType(TestBaseWithMetal):
@@ -269,8 +211,7 @@ class CalculatorsReturnType(TestBaseWithMetal):
         """
         Metal.calc_thermoelectron_current_density should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(
-            self.El.calc_thermoelectron_current_density(), Quantity)
+        self.assertIsInstance(self.El.calc_thermoelectron_current_density(), Quantity)
 
 class CalculatorsReturnUnits(TestBaseWithMetal):
     """
@@ -280,8 +221,7 @@ class CalculatorsReturnUnits(TestBaseWithMetal):
         """
         Metal.calc_thermoelectron_current_density should return a value with unit A/cm2.
         """
-        self.assertEqual(
-            self.El.calc_thermoelectron_current_density().unit, Unit("A/cm2"))
+        self.assertEqual(self.El.calc_thermoelectron_current_density().unit, Unit("A/cm2"))
 
 class CalculatorsReturnValues(TestBaseWithMetal):
     """
