@@ -83,6 +83,24 @@ class TECBase(object):
         return max_motive
 
 
+    def calc_max_motive_position(self):
+        """
+        Position at maximum motive
+
+        :returns: `astropy.units.Quantity` in units of :math:`um`.
+        :symbol: :math:`\x_{m}`
+        """
+        emitter_motive = self.emitter.barrier + self.emitter.voltage
+        collector_motive = self.collector.barrier + self.collector.voltage
+
+        if emitter_motive > collector_motive:
+            max_motive_position = emitter.position
+        else:
+            max_motive_position = collector.position
+
+        return max_motive_position
+
+
     # Methods returning basic data about the TEC ----------------------
     def calc_interelectrode_spacing(self):
         """
