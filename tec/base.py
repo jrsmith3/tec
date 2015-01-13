@@ -184,7 +184,6 @@ class TECBase(object):
         return self.calc_forward_current_density() - self.calc_back_current_density()
 
 
-    # @max_value
     def calc_output_power_density(self):
         """
         Output power density of device
@@ -213,7 +212,6 @@ class TECBase(object):
         return efficiency
 
 
-    # @max_value
     def calc_efficiency(self):
         """
         Total thermal efficiency
