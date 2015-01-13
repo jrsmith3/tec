@@ -47,6 +47,18 @@ class Metal(object):
 
         return dict(zip(physical_prop_names, physical_prop_vals))
 
+    def calc_motive(self):
+        """
+        Motive just outside electrode
+
+        The motive just outside the electrode is the position of the vacuum energy relative to electrical ground.
+
+        :returns: `astropy.units.Quantity` in units of :math:`eV`.
+        :symbol: :math:`\psi_{E}` (for the emitter, for example)
+        """
+        motive = self.barrier + constants.e.si * self.voltage
+        return motive.to("eV")
+
     def calc_thermoelectron_current_density(self):
         """
         Thermoelectron emission current density
