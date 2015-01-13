@@ -323,9 +323,15 @@ class CalculatorsReturnType(TestBaseWithMetal):
     """
     Tests output types of the calculator methods
     """
+    def test_calc_motive(self):
+        """
+        Metal.calc_motive should return an astropy.units.Quantity
+        """
+        self.assertIsInstance(self.El.calc_motive(), Quantity)
+
     def test_calc_thermoelectron_current_density(self):
         """
-        Metal.calc_thermoelectron_current_density should return an astropy.units.Quantity.
+        Metal.calc_thermoelectron_current_density should return an astropy.units.Quantity
         """
         self.assertIsInstance(self.El.calc_thermoelectron_current_density(), Quantity)
 
@@ -334,9 +340,15 @@ class CalculatorsReturnUnits(TestBaseWithMetal):
     """
     Tests output units, where applicable, of the calculator methods
     """
+    def test_calc_motive(self):
+        """
+        Metal.calc_motive should return a value with unit eV
+        """
+        self.assertEqual(self.El.calc_motive().unit, Unit("eV"))
+
     def test_calc_thermoelectron_current_density(self):
         """
-        Metal.calc_thermoelectron_current_density should return a value with unit A/cm2.
+        Metal.calc_thermoelectron_current_density should return a value with unit A/cm2
         """
         self.assertEqual(self.El.calc_thermoelectron_current_density().unit, Unit("A/cm2"))
 
