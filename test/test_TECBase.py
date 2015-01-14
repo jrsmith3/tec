@@ -46,7 +46,7 @@ class CalculatorsInput(TestBaseWithTEC):
     """
     def test_i64(self):
         """
-        TECBase.calc_motive should exit with valid input
+        calc_motive should exit with valid input
 
         Tests issue #64.
         """
@@ -57,14 +57,14 @@ class CalculatorsInput(TestBaseWithTEC):
 
     def test_calc_motive_non_numeric(self):
         """
-        TECBase.calc_motive should raise TypeError with non-numeric, non astropy.units.Quantity input
+        calc_motive should raise TypeError with non-numeric, non astropy.units.Quantity input
         """
         position = "this string is non-numeric"
         self.assertRaises(TypeError, self.t.calc_motive, position)
 
     def test_calc_motive_num_below_interelectrode_space(self):
         """
-        TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
+        calc_motive should raise ValueError for numerical input below the interelectrode space
         """
         offset = units.Quantity(1., "um")
         position = -np.abs(em.position.value) - offset.value
@@ -72,7 +72,7 @@ class CalculatorsInput(TestBaseWithTEC):
 
     def test_calc_motive_num_above_interelectrode_space(self):
         """
-        TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
+        calc_motive should raise ValueError for numerical input below the interelectrode space
         """
         offset = units.Quantity(1., "um")
         position = np.abs(co.position.value) + offset.value
@@ -80,7 +80,7 @@ class CalculatorsInput(TestBaseWithTEC):
 
     def test_calc_motive_quantity_below_interelectrode_space(self):
         """
-        TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
+        calc_motive should raise ValueError for numerical input below the interelectrode space
         """
         offset = units.Quantity(1., "um")
         position = -np.abs(em.position) - offset
@@ -88,7 +88,7 @@ class CalculatorsInput(TestBaseWithTEC):
 
     def test_calc_motive_quantity_above_interelectrode_space(self):
         """
-        TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
+        calc_motive should raise ValueError for numerical input below the interelectrode space
         """
         offset = units.Quantity(1., "um")
         position = np.abs(co.position) + offset
@@ -101,7 +101,7 @@ class CalculatorsReturnType(TestBaseWithTEC):
     """
     def test_calc_motive(self):
         """
-        TECBase.calc_motive should return an astropy.units.Quantity
+        calc_motive should return an astropy.units.Quantity
         """
         abscissae = units.Quantity([self.t.emitter.position, self.t.collector.position])
         position = abscissae.mean()
@@ -115,7 +115,7 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
     """
     def test_calc_motive(self):
         """
-        TECBase.calc_motive should return a value with unit eV
+        calc_motive should return a value with unit eV
         """
         abscissae = units.Quantity([self.t.emitter.position, self.t.collector.position])
         position = abscissae.mean()
