@@ -8,7 +8,20 @@ import unittest
 import copy
 
 em = Metal(temp=1000., barrier=2., richardson=10.)
-co = Metal(temp=300., barrier=1., richardson=10.)
+co = Metal(temp=300., barrier=1., richardson=10., position=10.)
+
+
+class TestBaseWithTEC(unittest.TestCase):
+    """
+    Provide fresh TECBase object for testing
+
+    This class is intended to be subclassed so that I don't have to rewrite the same `setUp` method for each class containing tests.
+    """
+    def setUp(self):
+        """
+        Create new TECBase object for every test
+        """
+        self.t = TECBase(em, co)
 
 
 class InstantiationInputArgsWrongType(unittest.TestCase):
@@ -25,11 +38,16 @@ class SetAttribsWrongType(unittest.TestCase):
     pass
 
 
-class CalculatorsReturnType(unittest.TestCase):
+class CalculatorsReturnType(TestBaseWithTEC):
     """
     Tests output types of the calculator methods
     """
-    pass
+    def test_calc_motive(self):
+        """
+        TECBase.calc_motive should return an astropy.units.Quantity
+        """
+        pos = (self.t.collector.position - self.t.emitter.position)/2
+        self.assertIsInstance(self.t.calc_motive(pos), Quantity)
 
 
 class CalculatorsReturnUnits(unittest.TestCase):
