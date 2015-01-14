@@ -152,6 +152,12 @@ class CalculatorsReturnType(TestBaseWithTEC):
         """
         self.assertIsInstance(self.t.calc_output_voltage(), units.Quantity)
 
+    def test_calc_contact_potential(self):
+        """
+        calc_contact_potential should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_contact_potential(), units.Quantity)
+
 
 class CalculatorsReturnUnits(TestBaseWithTEC):
     """
