@@ -196,6 +196,12 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
         """
         self.assertEqual(self.t.calc_output_voltage().unit, units.Unit("V"))
 
+    def test_calc_contact_potential(self):
+        """
+        calc_contact_potential should return a value with unit V
+        """
+        self.assertEqual(self.t.calc_contact_potential().unit, units.Unit("V"))
+
 
 class CalculatorsReturnValues(unittest.TestCase):
     """
