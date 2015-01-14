@@ -59,10 +59,10 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi_{m}`
         """
-        if emitter.calc_motive() > collector.calc_motive():
-            max_motive = emitter.calc_motive()
+        if self.emitter.calc_motive() > self.collector.calc_motive():
+            max_motive = self.emitter.calc_motive()
         else:
-            max_motive = collector.calc_motive()
+            max_motive = self.collector.calc_motive()
 
         return max_motive
 
