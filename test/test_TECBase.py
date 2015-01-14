@@ -67,10 +67,18 @@ class CalculatorsReturnType(TestBaseWithTEC):
         self.assertIsInstance(self.t.calc_motive(position), units.Quantity)
 
 
-class CalculatorsReturnUnits(unittest.TestCase):
+class CalculatorsReturnUnits(TestBaseWithTEC):
     """
     Tests output units, where applicable, of the calculator methods
     """
+    def test_calc_motive(self):
+        """
+        TECBase.calc_motive should return a value with unit eV
+        """
+        abscissae = units.Quantity([self.t.emitter.position, self.t.collector.position])
+        position = abscissae.mean()
+
+        self.assertEqual(self.t.calc_motive(position).unit, units.Unit("eV"))
 
 
 class CalculatorsReturnValues(unittest.TestCase):
