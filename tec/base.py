@@ -108,8 +108,16 @@ class TECBase(object):
         Contact potential between collector and emitter
 
         The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by :meth:`calc_output_voltage` which is the voltage difference between the collector and emitter.
+
+        .. math::
+            V_{contact} = \\frac{\psi_{E} - \psi_{C}}{e}
+
+        :returns: `astropy.units.Quantity` in units of :math:`V`.
+        :symbol: :math:`V_{contact}`
         """
-        return (self.emitter.barrier - self.collector.barrier) / constants.e.si
+        contact_potential = (self.emitter.barrier - self.collector.barrier) / constants.e.si
+
+        return contact_potential.to("V")
 
 
     # Methods regarding current and power -----------------------------
