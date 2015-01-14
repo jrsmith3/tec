@@ -158,6 +158,30 @@ class CalculatorsReturnType(TestBaseWithTEC):
         """
         self.assertIsInstance(self.t.calc_contact_potential(), units.Quantity)
 
+    def test_calc_forward_current_density(self):
+        """
+        calc_forward_current_density should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_forward_current_density(), units.Quantity)
+
+    def test_calc_back_current_density(self):
+        """
+        calc_back_current_density should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_back_current_density(), units.Quantity)
+
+    def test_calc_output_current_density(self):
+        """
+        calc_output_current_density should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_output_current_density(), units.Quantity)
+
+    def test_calc_output_power_density(self):
+        """
+        calc_output_power_density should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_output_power_density(), units.Quantity)
+
 
 class CalculatorsReturnUnits(TestBaseWithTEC):
     """
