@@ -148,6 +148,12 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
 
         self.assertEqual(self.t.calc_motive(position).unit, units.Unit("eV"))
 
+    def test_calc_max_motive(self):
+        """
+        calc_max_motive should return a value with unit eV
+        """
+        self.assertEqual(self.t.calc_max_motive().unit, units.Unit("eV"))
+
 
 class CalculatorsReturnValues(unittest.TestCase):
     """
