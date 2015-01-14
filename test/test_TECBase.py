@@ -61,8 +61,10 @@ class CalculatorsReturnType(TestBaseWithTEC):
         """
         TECBase.calc_motive should return an astropy.units.Quantity
         """
-        pos = (self.t.collector.position - self.t.emitter.position)/2
-        self.assertIsInstance(self.t.calc_motive(pos), units.Quantity)
+        abscissae = units.Quantity([self.t.emitter.position, self.t.collector.position])
+        position = abscissae.mean()
+
+        self.assertIsInstance(self.t.calc_motive(position), units.Quantity)
 
 
 class CalculatorsReturnUnits(unittest.TestCase):
