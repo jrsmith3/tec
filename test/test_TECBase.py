@@ -2,8 +2,7 @@
 import numpy as np
 from tec.electrode import Metal
 from tec import TECBase
-from astropy.units import Quantity
-from astropy.units import Unit
+from astropy import units
 import unittest
 import copy
 
@@ -38,6 +37,22 @@ class SetAttribsWrongType(unittest.TestCase):
     pass
 
 
+class CalculatorsInput(TestBaseWithTEC):
+    """
+    Tests calculator methods that take input
+    """
+    def test_i64(self):
+        """
+        TECBase.calc_motive should exit with valid input
+
+        Tests issue #64.
+        """
+        abscissae = units.Quantity([self.t.emitter.position, self.t.collector.position])
+        position = abscissae.mean()
+
+        self.t.calc_motive(position)
+
+
 class CalculatorsReturnType(TestBaseWithTEC):
     """
     Tests output types of the calculator methods
@@ -47,7 +62,7 @@ class CalculatorsReturnType(TestBaseWithTEC):
         TECBase.calc_motive should return an astropy.units.Quantity
         """
         pos = (self.t.collector.position - self.t.emitter.position)/2
-        self.assertIsInstance(self.t.calc_motive(pos), Quantity)
+        self.assertIsInstance(self.t.calc_motive(pos), units.Quantity)
 
 
 class CalculatorsReturnUnits(unittest.TestCase):
