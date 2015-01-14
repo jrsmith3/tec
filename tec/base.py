@@ -191,7 +191,7 @@ class TECBase(object):
         Carnot efficiency
 
         :returns: float between 0 and 1 where unity is 100% efficiency. Returns NaN if collector temperature is greater than emitter temperature.
-        :symbol: :math:`J`
+        :symbol: :math:`\eta_{c}`
         """
         if self.emitter.temp >= self.collector.temp:
             efficiency = 1 - (self.collector.temp / self.emitter.temp)
