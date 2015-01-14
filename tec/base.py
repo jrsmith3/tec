@@ -37,13 +37,13 @@ class TECBase(object):
         """
         Value of motive relative to electrical ground
 
-        :param position: float or numpy array at which motive is to be evaluated.
-        :raises: ValueError if position falls outside interelectrode space
+        :param position: float or numpy array at which motive is to be evaluated. This argument can also be an `astropy.units.Quantity`, but it must be in units of length.
+        :raises: ValueError if position falls outside interelectrode space.
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi`
         """
-        abscissae = np.array([self.emitter.position, self.collector.position])
-        ordinates = np.array([self.emitter.calc_motive(), self.collector.calc_motive()])
+        abscissae = units.Quantity([self.emitter.position, self.collector.position])
+        ordinates = units.Quantity([self.emitter.calc_motive(), self.collector.calc_motive()])
 
         spl = interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext=2)
 
