@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib
 from astropy import units, constants
 
-
 class TECBase(object):
     """
     Base thermoelectron engine class
@@ -42,12 +41,13 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi`
         """
-        abscissae = units.Quantity([self.emitter.position, self.collector.position])
-        ordinates = units.Quantity([self.emitter.calc_motive(), self.collector.calc_motive()])
+        # Explictly set abscissae and ordinates in um and eV, respectively
+        abscissae = units.Quantity([self.emitter.position, self.collector.position], "um")
+        ordinates = units.Quantity([self.emitter.calc_motive(), self.collector.calc_motive()], "eV")
 
         spl = interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext=2)
 
-        motive = spl(position)
+        motive = spl(position) * ordinates.unit
 
         return motive
 
