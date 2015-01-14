@@ -226,6 +226,30 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
         """
         self.assertEqual(self.t.calc_contact_potential().unit, units.Unit("V"))
 
+    def test_calc_forward_current_density(self):
+        """
+        calc_forward_current_density should return a value with unit A/cm2
+        """
+        self.assertEqual(self.t.calc_forward_current_density().unit, units.Unit("A/cm2"))
+
+    def test_calc_back_current_density(self):
+        """
+        calc_back_current_density should return a value with unit A/cm2
+        """
+        self.assertEqual(self.t.calc_back_current_density().unit, units.Unit("A/cm2"))
+
+    def test_calc_output_current_density(self):
+        """
+        calc_output_current_density should return a value with unit A/cm2
+        """
+        self.assertEqual(self.t.calc_output_current_density().unit, units.Unit("A/cm2"))
+
+    def test_calc_output_power_density(self):
+        """
+        calc_output_power_density should return a value with unit W/cm2
+        """
+        self.assertEqual(self.t.calc_output_power_density().unit, units.Unit("W/cm2"))
+
 
 class CalculatorsReturnValues(unittest.TestCase):
     """
