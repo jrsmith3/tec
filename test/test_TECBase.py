@@ -55,6 +55,26 @@ class CalculatorsInput(TestBaseWithTEC):
 
         self.t.calc_motive(position)
 
+    def test_calc_motive_valid_quantity_array(self):
+        """
+        calc_motive should accept valid numpy array input
+
+        Valid input means the values fall within the interelectrode space.
+        """
+        abscissae = units.Quantity([self.t.emitter.position, self.t.collector.position])
+
+        self.t.calc_motive(abscissae)
+        
+    def test_calc_motive_valid_numpy_array(self):
+        """
+        calc_motive should accept valid numpy array input
+
+        Valid input means the values fall within the interelectrode space.
+        """
+        abscissae = units.Quantity([self.t.emitter.position, self.t.collector.position])
+
+        self.t.calc_motive(abscissae.value)
+        
     def test_calc_motive_non_numeric(self):
         """
         calc_motive should raise TypeError with non-numeric, non astropy.units.Quantity input
