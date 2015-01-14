@@ -20,6 +20,9 @@ class TestBaseWithTEC(unittest.TestCase):
         """
         Create new TECBase object for every test
         """
+        if em.position > co.position:
+            raise ValueError("Initialization em.position > co.position.")
+
         self.t = TECBase(em, co)
 
 
