@@ -128,7 +128,7 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{f}`
         """
-        sat_current_density = self.emitter.calc_saturation_current_density()
+        sat_current_density = self.emitter.calc_thermoelectron_current_density()
 
         if self.emitter.calc_barrier_ht() >= self.get_max_motive_ht():
             current_density = sat_current_density
@@ -149,7 +149,7 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{b}`
         """
-        sat_current_density = self.collector.calc_saturation_current_density()
+        sat_current_density = self.collector.calc_thermoelectron_current_density()
 
         if self.collector.calc_barrier_ht() >= self.get_max_motive_ht():
             current_density = sat_current_density
