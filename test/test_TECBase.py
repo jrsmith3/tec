@@ -146,6 +146,12 @@ class CalculatorsReturnType(TestBaseWithTEC):
         """
         self.assertIsInstance(self.t.calc_interelectrode_spacing(), units.Quantity)
 
+    def test_calc_output_voltage(self):
+        """
+        calc_output_voltage should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_output_voltage(), units.Quantity)
+
 
 class CalculatorsReturnUnits(TestBaseWithTEC):
     """
@@ -177,6 +183,12 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
         calc_interelectrode_spacing should return a value with unit um
         """
         self.assertEqual(self.t.calc_interelectrode_spacing().unit, units.Unit("um"))
+
+    def test_calc_output_voltage(self):
+        """
+        calc_output_voltage should return a value with unit V
+        """
+        self.assertEqual(self.t.calc_output_voltage().unit, units.Unit("V"))
 
 
 class CalculatorsReturnValues(unittest.TestCase):
