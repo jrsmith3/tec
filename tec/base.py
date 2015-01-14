@@ -42,8 +42,8 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi`
         """
-        abscissae = np.array([emitter.position, collector.position])
-        ordinates = np.array([emitter.calc_motive(), collector.calc_motive()])
+        abscissae = np.array([self.emitter.position, self.collector.position])
+        ordinates = np.array([self.emitter.calc_motive(), self.collector.calc_motive()])
 
         spl = interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext=2)
 
