@@ -59,25 +59,33 @@ class CalculatorsInput(TestBaseWithTEC):
         """
         TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
         """
-        pass
+        offset = units.Quantity(1., "um")
+        position = -np.abs(em.position.value) - offset.value
+        self.assertRaises(ValueError, self.t.calc_motive, position)
 
     def test_calc_motive_num_above_interelectrode_space(self):
         """
         TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
         """
-        pass
+        offset = units.Quantity(1., "um")
+        position = np.abs(co.position.value) + offset.value
+        self.assertRaises(ValueError, self.t.calc_motive, position)
 
     def test_calc_motive_quantity_below_interelectrode_space(self):
         """
         TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
         """
-        pass
+        offset = units.Quantity(1., "um")
+        position = -np.abs(em.position) - offset
+        self.assertRaises(ValueError, self.t.calc_motive, position)
 
     def test_calc_motive_quantity_above_interelectrode_space(self):
         """
         TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
         """
-        pass
+        offset = units.Quantity(1., "um")
+        position = np.abs(co.position) + offset
+        self.assertRaises(ValueError, self.t.calc_motive, position)
 
 
 class CalculatorsReturnType(TestBaseWithTEC):
