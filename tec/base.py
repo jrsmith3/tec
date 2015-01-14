@@ -109,7 +109,7 @@ class TECBase(object):
 
         The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by :meth:`calc_output_voltage` which is the voltage difference between the collector and emitter.
         """
-        return (self.emitter.barrier - self.collector.barrier) / constants.e
+        return (self.emitter.barrier - self.collector.barrier) / constants.e.si
 
 
     # Methods regarding current and power -----------------------------
@@ -263,8 +263,8 @@ class TECBase(object):
 
         unit_area = units.Quantity(1., "cm2")
 
-        forward = unit_area * self.calc_forward_current_density() * (self.calc_max_motive_height + kT_E2) / constants.e
-        back = unit_area * self.calc_back_current_density * (self.calc_max_motive_height + kT_C2) / constants.e
+        forward = unit_area * self.calc_forward_current_density() * (self.calc_max_motive_height + kT_E2) / constants.e.si
+        back = unit_area * self.calc_back_current_density * (self.calc_max_motive_height + kT_C2) / constants.e.si
 
         cooling_rate = (forward - back).to("W/cm2")
 
