@@ -74,10 +74,10 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`um`.
         :symbol: :math:`x_{m}`
         """
-        if emitter.calc_motive() > collector.calc_motive():
-            max_motive_position = emitter.position
+        if self.emitter.calc_motive() > self.collector.calc_motive():
+            max_motive_position = self.emitter.position
         else:
-            max_motive_position = collector.position
+            max_motive_position = self.collector.position
 
         return max_motive_position
 
