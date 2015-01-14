@@ -140,6 +140,12 @@ class CalculatorsReturnType(TestBaseWithTEC):
         """
         self.assertIsInstance(self.t.calc_max_motive_position(), units.Quantity)
 
+    def test_calc_interelectrode_spacing(self):
+        """
+        calc_interelectrode_spacing should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_interelectrode_spacing(), units.Quantity)
+
 
 class CalculatorsReturnUnits(TestBaseWithTEC):
     """
