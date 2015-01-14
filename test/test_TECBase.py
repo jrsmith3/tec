@@ -172,6 +172,12 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
         """
         self.assertEqual(self.t.calc_max_motive_position().unit, units.Unit("um"))
 
+    def test_calc_interelectrode_spacing(self):
+        """
+        calc_interelectrode_spacing should return a value with unit um
+        """
+        self.assertEqual(self.t.calc_interelectrode_spacing().unit, units.Unit("um"))
+
 
 class CalculatorsReturnValues(unittest.TestCase):
     """
