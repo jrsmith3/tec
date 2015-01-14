@@ -134,6 +134,12 @@ class CalculatorsReturnType(TestBaseWithTEC):
         """
         self.assertIsInstance(self.t.calc_max_motive(), units.Quantity)
 
+    def test_calc_max_motive_position(self):
+        """
+        test_calc_max_motive_position should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_max_motive_position(), units.Quantity)
+
 
 class CalculatorsReturnUnits(TestBaseWithTEC):
     """
