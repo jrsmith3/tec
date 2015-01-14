@@ -55,6 +55,13 @@ class CalculatorsInput(TestBaseWithTEC):
 
         self.t.calc_motive(position)
 
+    def test_calc_motive_non_numeric(self):
+        """
+        TECBase.calc_motive should raise TypeError with non-numeric, non astropy.units.Quantity input
+        """
+        position = "this string is non-numeric"
+        self.assertRaises(TypeError, self.t.calc_motive, position)
+
     def test_calc_motive_num_below_interelectrode_space(self):
         """
         TECBase.calc_motive should raise ValueError for numerical input below the interelectrode space
