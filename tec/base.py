@@ -272,7 +272,7 @@ class TECBase(object):
         unit_area = units.Quantity(1., "cm2")
 
         forward = unit_area * self.calc_forward_current_density() * (self.calc_max_motive() + kT_E2) / constants.e.si
-        back = unit_area * self.calc_back_current_density * (self.calc_max_motive() + kT_C2) / constants.e.si
+        back = unit_area * self.calc_back_current_density() * (self.calc_max_motive() + kT_C2) / constants.e.si
 
         cooling_rate = (forward - back).to("W/cm2")
 
