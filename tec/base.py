@@ -292,8 +292,13 @@ class TECBase(object):
         :symbol: :math:`Q_{r}`
         """
         ideal_rad_rate = constants.sigma_sb * (self.emitter.temp**4 - self.collector.temp**4)
-        net_emissivity = (1./self.emitter.emissivity) + (1./self.collector.emissivity) - 1.
 
-        rad_rate = ideal_rad_rate / net_emissivity
+        emissivities = np.array([self.emitter.emissivity, self.collector.emissivity])
+        if any(emissivities == 0):
+            net_emissivity = 0
+        else:
+            net_emissivity = 1. / ((1./self.emitter.emissivity) + (1./self.collector.emissivity) - 1.)
+
+        rad_rate = ideal_rad_rate * net_emissivity
 
         return rad_rate
