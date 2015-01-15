@@ -128,18 +128,18 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{f}`
         """
-        sat_current_density = self.emitter.calc_thermoelectron_current_density()
+        diff_barrier = self.calc_max_motive() - self.emitter.calc_motive()
 
-        if self.emitter.calc_barrier_ht() >= self.get_max_motive_ht():
-            current_density = sat_current_density
-        else:
-            barrier = self.get_max_motive_ht() - self.emitter.calc_barrier_ht()
+        if diff_barrier > 0:
             kT = constants.k_B * self.emitter.temp
-            exponent = (barrier / kT).decompose()
+            exponent = (diff_barrier/kT).decompose()
+            scaling_factor = np.exp(-exponent)
+        else:
+            scaling_factor = 1.
+            
+        current = self.emitter.calc_thermoelectron_current_density() * scaling_factor
 
-            current_density = sat_current_density * np.exp(-exponent)
-
-        return current_density
+        return current
 
 
     def calc_back_current_density(self):
@@ -149,18 +149,18 @@ class TECBase(object):
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{b}`
         """
-        sat_current_density = self.collector.calc_thermoelectron_current_density()
+        diff_barrier = self.calc_max_motive() - self.collector.calc_motive()
 
-        if self.collector.calc_barrier_ht() >= self.get_max_motive_ht():
-            current_density = sat_current_density
+        if diff_barrier > 0:
+            kT = constants.k_B * self.collector.temp
+            exponent = (diff_barrier/kT).decompose()
+            scaling_factor = np.exp(-exponent)
         else:
-            barrier = self.get_max_motive_ht() - self.collector.calc_barrier_ht()
-            kT = constants.k_B * self.emitter.temp
-            exponent = (barrier/kT).decompose()
+            scaling_factor = 1.
+            
+        current = self.collector.calc_thermoelectron_current_density() * scaling_factor
 
-            current_density = sat_current_density * np.exp(-exponent)
-
-        return current_density
+        return current
 
 
     def calc_output_current_density(self):
