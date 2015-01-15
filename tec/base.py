@@ -269,10 +269,8 @@ class TECBase(object):
         kT_E2 = 2 * constants.k_B * self.emitter.temp
         kT_C2 = 2 * constants.k_B * self.collector.temp
 
-        unit_area = units.Quantity(1., "cm2")
-
-        forward = unit_area * self.calc_forward_current_density() * (self.calc_max_motive() + kT_E2) / constants.e.si
-        back = unit_area * self.calc_back_current_density() * (self.calc_max_motive() + kT_C2) / constants.e.si
+        forward = units.Unit("cm2") * self.calc_forward_current_density() * (self.calc_max_motive() + kT_E2) / constants.e.si
+        back = units.Unit("cm2") * self.calc_back_current_density() * (self.calc_max_motive() + kT_C2) / constants.e.si
 
         cooling_rate = (forward - back).to("W")
 
@@ -299,6 +297,6 @@ class TECBase(object):
         else:
             net_emissivity = 1. / ((1./self.emitter.emissivity) + (1./self.collector.emissivity) - 1.)
 
-        rad_rate = ideal_rad_rate * net_emissivity
+        rad_rate = ideal_rad_rate * net_emissivity * units.Unit("cm2")
 
-        return rad_rate
+        return rad_rate.to("W")
