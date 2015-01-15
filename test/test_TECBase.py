@@ -193,6 +193,8 @@ class CalculatorsReturnType(TestBaseWithTEC):
         calc_efficiency should return float
         """
         self.t.collector.voltage = 0.1
+        if self.t.calc_output_power_density() <= 0:
+            raise ValueError("Output power density is non-positive; this test will not work.")
         self.assertIsInstance(self.t.calc_efficiency(), float)
 
     def test_calc_heat_supply_rate(self):
