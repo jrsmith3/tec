@@ -48,11 +48,35 @@ class InstantiationInputWrongType(TestBaseWithTEC):
         self.assertRaises(TypeError, TECBase, self.em, non_electrode)
 
 
-class SetAttribsWrongType(unittest.TestCase):
+class SetAttribsWrongType(TestBaseWithTEC):
     """
     Tests setting attributes with non-`tec.electrode` data
     """
-    pass
+    def test_emitter_non_numeric(self):
+        """
+        set emitter nonelectrode raises TypeError
+        """
+        non_electrode = "this string is not an electrode"
+        try:
+            self.t.emitter = non_electrode
+        except TypeError:
+            # Setting `emitter` as a type that isn't a subclass of `tec.electrode.Metal` should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`emitter` attribute can be assigned a non-electrode value.")
+
+    def test_collector_non_numeric(self):
+        """
+        set collector nonelectrode raises TypeError
+        """
+        non_electrode = "this string is not an electrode"
+        try:
+            self.t.collector = non_electrode
+        except TypeError:
+            # Setting `collector` as a type that isn't a subclass of `tec.electrode.Metal` should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`collector` attribute can be assigned a non-electrode value.")
 
 
 class CalculatorsInput(TestBaseWithTEC):
