@@ -281,8 +281,30 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
         self.assertEqual(self.t.calc_output_power_density().unit, units.Unit("W/cm2"))
 
 
-class CalculatorsReturnValues(unittest.TestCase):
+class CalculatorsReturnValues(TestBaseWithTEC):
     """
     Tests values of calculator methods against known values
     """
-    pass
+    def test_calc_thermal_rad_rate_emitter_emissivity_0(self):
+        """
+        calc_thermal_rad_rate should return zero if the emitter emissivity is zero
+        """
+        self.t.emitter.emissivity = 0.
+        self.t.collector.emissivity = 0.5
+        self.assertEqual(self.t.calc_thermal_rad_rate(), 0)
+
+    def test_calc_thermal_rad_rate_collector_emissivity_0(self):
+        """
+        calc_thermal_rad_rate should return zero if the collector emissivity is zero
+        """
+        self.t.emitter.emissivity = 0.5
+        self.t.collector.emissivity = 0.
+        self.assertEqual(self.t.calc_thermal_rad_rate(), 0)
+
+    def test_calc_thermal_rad_rate_electrodes_emissivity_0(self):
+        """
+        calc_thermal_rad_rate should return zero if the both electrodes' emissivity is zero
+        """
+        self.t.emitter.emissivity = 0.
+        self.t.collector.emissivity = 0.
+        self.assertEqual(self.t.calc_thermal_rad_rate(), 0)
