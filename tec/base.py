@@ -1,8 +1,10 @@
+import inspect
 import numpy as np
 from scipy import interpolate, optimize
 import matplotlib.pyplot as plt
 import matplotlib
 from astropy import units, constants
+from tec.electrode import Metal
 
 class TECBase(object):
     """
@@ -25,6 +27,29 @@ class TECBase(object):
     >>> co = Metal(temp=300, barrier=0.8, richardson=10, emissivity=0.5, voltage=0, position=10,)
     >>> example_tec = TECBase(emitter = em, collector = co)
     """
+
+    @property
+    def emitter(self):
+        return self._emitter
+
+    @emitter.setter
+    def emitter(self, value):
+        if Metal not in inspect.getmro(value.__class__):
+            raise TypeError("Cannot set 'emitter' with non-electrode type.")
+        else:
+            self._emitter = value
+
+    @property
+    def collector(self):
+        return self._collector
+
+    @collector.setter
+    def collector(self, value):
+        if Metal not in inspect.getmro(value.__class__):
+            raise TypeError("Cannot set 'collector' with non-electrode type.")
+        else:
+            self._collector = value
+
 
     def __init__(self, emitter, collector):
         self.emitter = emitter
