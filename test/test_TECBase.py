@@ -190,8 +190,9 @@ class CalculatorsReturnType(TestBaseWithTEC):
 
     def test_calc_efficiency(self):
         """
-        calc_efficiency should return astropy.units.Quantity
+        calc_efficiency should return float
         """
+        self.t.collector.voltage = 0.1
         self.assertIsInstance(self.t.calc_efficiency(), float)
 
     def test_calc_heat_supply_rate(self):
