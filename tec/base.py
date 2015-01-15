@@ -227,6 +227,7 @@ class TECBase(object):
         """
         if self.calc_output_power_density() > 0:
             efficiency = self.calc_output_power_density() / self.calc_heat_supply_rate()
+            efficiency = efficiency.value
         else:
             efficiency = np.nan
 
