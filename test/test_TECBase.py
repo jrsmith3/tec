@@ -25,12 +25,27 @@ class TestBaseWithTEC(unittest.TestCase):
 
         self.t = TECBase(em, co)
 
+        self.em = em
+        self.co = co
 
-class InstantiationInputArgsWrongType(unittest.TestCase):
+
+class InstantiationInputWrongType(TestBaseWithTEC):
     """
     Test instantiation with non-`tec.electrode` args
     """
-    pass
+    def test_emitter_non_numeric(self):
+        """
+        emitter nonelectrode -> TECBase init raises TypeError
+        """
+        non_electrode = "this string is not an electrode"
+        self.assertRaises(TypeError, TECBase, non_electrode, self.co)
+
+    def test_collector_non_numeric(self):
+        """
+        collector nonelectrode -> TECBase init raises TypeError
+        """
+        non_electrode = "this string is not an electrode"
+        self.assertRaises(TypeError, TECBase, self.em, non_electrode)
 
 
 class SetAttribsWrongType(unittest.TestCase):
