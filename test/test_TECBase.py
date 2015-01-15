@@ -281,6 +281,24 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
         """
         self.assertEqual(self.t.calc_output_power_density().unit, units.Unit("W/cm2"))
 
+    def test_calc_heat_supply_rate(self):
+            """
+            calc_heat_supply_rate should return a value with unit W
+            """
+            self.assertEqual(self.t.calc_heat_supply_rate().unit, units.Unit("W"))
+
+    def test_calc_electron_cooling_rate(self):
+            """
+            calc_electron_cooling_rate should return a value with unit W
+            """
+            self.assertEqual(self.t.calc_electron_cooling_rate().unit, units.Unit("W"))
+
+    def test_calc_thermal_rad_rate(self):
+            """
+            calc_thermal_rad_rate should return a value with unit W
+            """
+            self.assertEqual(self.t.calc_thermal_rad_rate().unit, units.Unit("W"))
+
 
 class CalculatorsReturnValues(TestBaseWithTEC):
     """
