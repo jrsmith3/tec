@@ -198,7 +198,7 @@ class TECBase(object):
         else:
             efficiency = np.NaN
 
-        return efficiency
+        return efficiency.decompose().value
 
 
     def calc_efficiency(self):
