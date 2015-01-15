@@ -183,34 +183,34 @@ class CalculatorsReturnType(TestBaseWithTEC):
         self.assertIsInstance(self.t.calc_output_power_density(), units.Quantity)
 
     def test_calc_carnot_efficiency(self):
-            """
-            calc_carnot_efficiency should return float
-            """
-            self.assertIsInstance(self.t.calc_carnot_efficiency(), float)
+        """
+        calc_carnot_efficiency should return float
+        """
+        self.assertIsInstance(self.t.calc_carnot_efficiency(), float)
 
     def test_calc_efficiency(self):
-            """
-            calc_efficiency should return astropy.units.Quantity
-            """
-            self.assertIsInstance(self.t.calc_efficiency(), float)
+        """
+        calc_efficiency should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_efficiency(), float)
 
     def test_calc_heat_supply_rate(self):
-            """
-            calc_heat_supply_rate should return astropy.units.Quantity
-            """
-            self.assertIsInstance(self.t.calc_heat_supply_rate(), units.Quantity)
+        """
+        calc_heat_supply_rate should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_heat_supply_rate(), units.Quantity)
 
     def test_calc_electron_cooling_rate(self):
-            """
-            calc_electron_cooling_rate should return astropy.units.Quantity
-            """
-            self.assertIsInstance(self.t.calc_electron_cooling_rate(), units.Quantity)
+        """
+        calc_electron_cooling_rate should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_electron_cooling_rate(), units.Quantity)
 
     def test_calc_thermal_rad_rate(self):
-            """
-            calc_thermal_rad_rate should return astropy.units.Quantity
-            """
-            self.assertIsInstance(self.t.calc_thermal_rad_rate(), units.Quantity)
+        """
+        calc_thermal_rad_rate should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.calc_thermal_rad_rate(), units.Quantity)
 
 
 class CalculatorsReturnUnits(TestBaseWithTEC):
