@@ -2,8 +2,7 @@
 
 import numpy as np
 from scipy import optimize
-from astropy import units
-from astropy import constants
+from astropy import units, constants
 from metal import Metal
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
@@ -37,7 +36,7 @@ class SC(Metal):
     donor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
     bandgap = PhysicalProperty(unit="eV", lo_bnd=0)
 
-    def __init__(self, temp, barrier, richardson, electron_effective_mass, hole_effective_mass, acceptor_concentration, acceptor_ionization_energy, donor_concentration, donor_ionization_energy, bandgap, voltage=0, position=0, emissivity=0):
+    def __init__(self, temp, barrier, richardson, bandgap, electron_effective_mass=constants.m_e, hole_effective_mass=constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0):
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
