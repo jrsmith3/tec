@@ -33,9 +33,11 @@ class SC(Metal):
     hole_effective_mass = PhysicalProperty(unit="kg", lo_bnd=0)
     acceptor_concentration = PhysicalProperty(unit="1/cm3", lo_bnd=0)
     acceptor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
+    donor_concentration = PhysicalProperty(unit="1/cm3", lo_bnd=0)
+    donor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
     bandgap = PhysicalProperty(unit="eV", lo_bnd=0)
 
-    def __init__(self, temp, barrier, richardson, electron_effective_mass, hole_effective_mass, acceptor_concentration, acceptor_ionization_energy, bandgap, voltage=0, position=0, emissivity=0):
+    def __init__(self, temp, barrier, richardson, electron_effective_mass, hole_effective_mass, acceptor_concentration, acceptor_ionization_energy, donor_concentration, donor_ionization_energy, bandgap, voltage=0, position=0, emissivity=0):
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
@@ -43,6 +45,8 @@ class SC(Metal):
         self.hole_effective_mass = hole_effective_mass
         self.acceptor_concentration = acceptor_concentration
         self.acceptor_ionization_energy = acceptor_ionization_energy
+        self.donor_concentration = donor_concentration
+        self.donor_ionization_energy = donor_ionization_energy
         self.bandgap = bandgap
         self.voltage = voltage
         self.position = position
