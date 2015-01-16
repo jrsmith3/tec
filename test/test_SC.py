@@ -15,6 +15,8 @@ input_params = {"temp": 300.,
                 "hole_effective_mass": 7.38e-31,
                 "acceptor_concentration": 1e18,
                 "acceptor_ionization_energy": 45.,
+                "donor_concentration": 1e18,
+                "donor_ionization_energy": 45.,
                 "bandgap": 1.11}
 
 
@@ -108,6 +110,34 @@ class InstantiationInputArgsWrongType(TestBaseJustInputParams):
         else:
             self.fail("`acceptor_ionization_energy` field of instantiating dict must be numeric.")
 
+    def test_donor_concentration_non_numeric(self):
+        """
+        SC instantiation requires numeric `donor_concentration` value
+        """
+        self.input_params["donor_concentration"] = "this string is non-numeric."
+
+        try:
+            El = SC(**self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC` with a non-numeric `donor_concentration` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`donor_concentration` field of instantiating dict must be numeric.")
+
+    def test_donor_ionization_energy_non_numeric(self):
+        """
+        SC instantiation requires numeric `donor_ionization_energy` value
+        """
+        self.input_params["donor_ionization_energy"] = "this string is non-numeric."
+
+        try:
+            El = SC(**self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC` with a non-numeric `donor_ionization_energy` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`donor_ionization_energy` field of instantiating dict must be numeric.")
+
     def test_bandgap_non_numeric(self):
         """
         SC instantiation requires numeric `bandgap` value
@@ -156,6 +186,20 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
         SC instantiation requires `acceptor_ionization_energy` > 0.
         """
         self.input_params["acceptor_ionization_energy"] = -1.1
+        self.assertRaises(ValueError, SC, **self.input_params)
+
+    def test_donor_concentration_less_than_zero(self):
+        """
+        SC instantiation requires `donor_concentration` > 0.
+        """
+        self.input_params["donor_concentration"] = -1.1
+        self.assertRaises(ValueError, SC, **self.input_params)
+
+    def test_donor_ionization_energy_less_than_zero(self):
+        """
+        SC instantiation requires `donor_ionization_energy` > 0.
+        """
+        self.input_params["donor_ionization_energy"] = -1.1
         self.assertRaises(ValueError, SC, **self.input_params)
 
     def test_bandgap_less_than_zero(self):
@@ -221,6 +265,32 @@ class SetAttribsWrongType(TestBaseWithElectrode):
             pass
         else:
             self.fail("`acceptor_ionization_energy` attribute can be assigned a non-numeric value.")
+
+    def test_donor_concentration_non_numeric(self):
+        """
+        SC can only set `donor_concentration` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.El.donor_concentration = non_num
+        except TypeError:
+            # Setting `donor_concentration` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`donor_concentration` attribute can be assigned a non-numeric value.")
+
+    def test_donor_ionization_energy_non_numeric(self):
+        """
+        SC can only set `donor_ionization_energy` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.El.donor_ionization_energy = non_num
+        except TypeError:
+            # Setting `donor_ionization_energy` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`donor_ionization_energy` attribute can be assigned a non-numeric value.")
 
     def test_bandgap_non_numeric(self):
         """
@@ -290,6 +360,30 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
             pass
         else:
             self.fail("`acceptor_ionization_energy` attribute can be assigned a negative value.")
+
+    def test_donor_concentration_less_than_zero(self):
+        """
+        SC must set `donor_concentration` > 0.
+        """
+        try:
+            self.El.donor_concentration = -1.1
+        except ValueError:
+            # Attempting to set the `donor_concentration` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`donor_concentration` attribute can be assigned a negative value.")
+
+    def test_donor_ionization_energy_less_than_zero(self):
+        """
+        SC must set `donor_ionization_energy` > 0.
+        """
+        try:
+            self.El.donor_ionization_energy = -1.1
+        except ValueError:
+            # Attempting to set the `donor_ionization_energy` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`donor_ionization_energy` attribute can be assigned a negative value.")
 
     def test_bandgap_less_than_zero(self):
         """
