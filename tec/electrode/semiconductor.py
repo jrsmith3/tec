@@ -48,7 +48,7 @@ class SC(Metal):
         self.position = position
         self.emissivity = emissivity
 
-    def calc_cb_effective_dos(self):
+    def cb_effective_dos(self):
         """
         Conduction band effective density of states
 
@@ -64,7 +64,7 @@ class SC(Metal):
 
         return dos.to("1/cm3")
 
-    def calc_vb_effective_dos(self):
+    def vb_effective_dos(self):
         """
         Valence band effective density of states
 
@@ -80,7 +80,7 @@ class SC(Metal):
 
         return dos.to("1/cm3")
 
-    def calc_electron_concentration(self):
+    def electron_concentration(self):
         """
         Equlibrium conduction band electron concentration
 
@@ -92,11 +92,11 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`n_{0}`
         """
-        exponent = ((self.bandgap - self.calc_fermi_energy()) / (constants.k_B * self.temp)).decompose()
+        exponent = ((self.bandgap - self.fermi_energy()) / (constants.k_B * self.temp)).decompose()
 
-        return self.calc_cb_effective_dos() * np.exp(-exponent)
+        return self.cb_effective_dos() * np.exp(-exponent)
 
-    def calc_hole_concentration(self):
+    def hole_concentration(self):
         """
         Equlibrium valence band hole concentration
 
@@ -108,11 +108,11 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`p_{0}`
         """
-        exponent = (self.calc_fermi_energy() / (constants.k_B * self.temp)).decompose()
+        exponent = (self.fermi_energy() / (constants.k_B * self.temp)).decompose()
 
-        return self.calc_vb_effective_dos() * np.exp(-exponent)
+        return self.vb_effective_dos() * np.exp(-exponent)
 
-    def calc_fermi_energy(self):
+    def fermi_energy(self):
         """
         Value of Fermi energy relative to valence band maximum
 
@@ -152,8 +152,8 @@ class SC(Metal):
         exponent_2 = (fermi_energy / (constants.k_B * self.temp)).decompose()
         exponent_3 = ((self.acceptor_ionization_energy - fermi_energy) / (constants.k_B * self.temp)).decompose()
 
-        el_carrier_conc = self.calc_cb_effective_dos() * np.exp(-exponent_1)
-        ho_carrier_conc = self.calc_vb_effective_dos() * np.exp(-exponent_2)
+        el_carrier_conc = self.cb_effective_dos() * np.exp(-exponent_1)
+        ho_carrier_conc = self.vb_effective_dos() * np.exp(-exponent_2)
 
         ret_val = el_carrier_conc - ho_carrier_conc + self.acceptor_concentration / (1 + 4 * np.exp(exponent_3))
 

@@ -47,7 +47,7 @@ class Metal(object):
 
         return dict(zip(physical_prop_names, physical_prop_vals))
 
-    def calc_motive(self):
+    def motive(self):
         """
         Motive just outside electrode
 
@@ -59,7 +59,7 @@ class Metal(object):
         motive = self.barrier + constants.e.si * self.voltage
         return motive.to("eV")
 
-    def calc_thermoelectron_current_density(self):
+    def thermoelectron_current_density(self):
         """
         Thermoelectron emission current density
 

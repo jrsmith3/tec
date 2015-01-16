@@ -57,7 +57,7 @@ class TECBase(object):
 
 
     # Methods regarding motive ----------------------------------------
-    def calc_motive(self, position):
+    def motive(self, position):
         """
         Value of motive relative to electrical ground
 
@@ -68,7 +68,7 @@ class TECBase(object):
         """
         # Explictly set abscissae and ordinates in um and eV, respectively
         abscissae = units.Quantity([self.emitter.position, self.collector.position], "um")
-        ordinates = units.Quantity([self.emitter.calc_motive(), self.collector.calc_motive()], "eV")
+        ordinates = units.Quantity([self.emitter.motive(), self.collector.motive()], "eV")
 
         spl = interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext=2)
 
@@ -77,29 +77,29 @@ class TECBase(object):
         return motive
 
 
-    def calc_max_motive(self):
+    def max_motive(self):
         """
         Value of maximum motive relative to electrical ground
 
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi_{m}`
         """
-        if self.emitter.calc_motive() > self.collector.calc_motive():
-            max_motive = self.emitter.calc_motive()
+        if self.emitter.motive() > self.collector.motive():
+            max_motive = self.emitter.motive()
         else:
-            max_motive = self.collector.calc_motive()
+            max_motive = self.collector.motive()
 
         return max_motive
 
 
-    def calc_max_motive_position(self):
+    def max_motive_position(self):
         """
         Position at maximum motive
 
         :returns: `astropy.units.Quantity` in units of :math:`um`.
         :symbol: :math:`x_{m}`
         """
-        if self.emitter.calc_motive() > self.collector.calc_motive():
+        if self.emitter.motive() > self.collector.motive():
             max_motive_position = self.emitter.position
         else:
             max_motive_position = self.collector.position
@@ -108,7 +108,7 @@ class TECBase(object):
 
 
     # Methods returning basic data about the TEC ----------------------
-    def calc_interelectrode_spacing(self):
+    def interelectrode_spacing(self):
         """
         Distance between collector and emitter
 
@@ -118,7 +118,7 @@ class TECBase(object):
         return self.collector.position - self.emitter.position
 
 
-    def calc_output_voltage(self):
+    def output_voltage(self):
         """
         Voltage difference between collector and emitter
 
@@ -128,11 +128,11 @@ class TECBase(object):
         return self.collector.voltage - self.emitter.voltage
 
 
-    def calc_contact_potential(self):
+    def contact_potential(self):
         """
         Contact potential between collector and emitter
 
-        The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by :meth:`calc_output_voltage` which is the voltage difference between the collector and emitter.
+        The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by :meth:`output_voltage` which is the voltage difference between the collector and emitter.
 
         .. math::
             V_{contact} = \\frac{\psi_{E} - \psi_{C}}{e}
@@ -146,14 +146,14 @@ class TECBase(object):
 
 
     # Methods regarding current and power -----------------------------
-    def calc_forward_current_density(self):
+    def forward_current_density(self):
         """
         Net current moving from emitter to collector
 
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{f}`
         """
-        diff_barrier = self.calc_max_motive() - self.emitter.calc_motive()
+        diff_barrier = self.max_motive() - self.emitter.motive()
 
         if diff_barrier > 0:
             kT = constants.k_B * self.emitter.temp
@@ -162,19 +162,19 @@ class TECBase(object):
         else:
             scaling_factor = 1.
             
-        current = self.emitter.calc_thermoelectron_current_density() * scaling_factor
+        current = self.emitter.thermoelectron_current_density() * scaling_factor
 
         return current
 
 
-    def calc_back_current_density(self):
+    def back_current_density(self):
         """
         Net current moving from collector to emitter
 
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{b}`
         """
-        diff_barrier = self.calc_max_motive() - self.collector.calc_motive()
+        diff_barrier = self.max_motive() - self.collector.motive()
 
         if diff_barrier > 0:
             kT = constants.k_B * self.collector.temp
@@ -183,35 +183,35 @@ class TECBase(object):
         else:
             scaling_factor = 1.
             
-        current = self.collector.calc_thermoelectron_current_density() * scaling_factor
+        current = self.collector.thermoelectron_current_density() * scaling_factor
 
         return current
 
 
-    def calc_output_current_density(self):
+    def output_current_density(self):
         """
         Net current density flowing across device
 
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J`
         """
-        return self.calc_forward_current_density() - self.calc_back_current_density()
+        return self.forward_current_density() - self.back_current_density()
 
 
-    def calc_output_power_density(self):
+    def output_power_density(self):
         """
         Output power density of device
 
         :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
         :symbol: :math:`w`
         """
-        power_dens = self.calc_output_current_density() * self.calc_output_voltage()
+        power_dens = self.output_current_density() * self.output_voltage()
 
         return power_dens.to("W/cm2")
 
 
     # Methods regarding efficiency ------------------------------------
-    def calc_carnot_efficiency(self):
+    def carnot_efficiency(self):
         """
         Carnot efficiency
 
@@ -226,7 +226,7 @@ class TECBase(object):
         return efficiency.decompose().value
 
 
-    def calc_efficiency(self):
+    def efficiency(self):
         """
         Total thermal efficiency
 
@@ -240,18 +240,18 @@ class TECBase(object):
         .. math::
             Q_{in} = W_{T} + Q_{out}
 
-        The quantities :math:`Q_{in}` and :math:`Q_{out}` are determined by accounting for all the flows of energy into and out of the system. For the purposes of calculating the efficiency, :math:`Q_{in}` accounts for the heat transport via electrons (see :meth:`calc_electron_cooling_rate`, denoted by :math:`Q_{E}`) and photons (see :meth:`calc_thermal_rad_rate`, denoted by :math:`Q_{r}`). This efficiency calculation *does not* presently account for heat conducted via the leads. Therefore, :math:`Q_{in}` is given by
+        The quantities :math:`Q_{in}` and :math:`Q_{out}` are determined by accounting for all the flows of energy into and out of the system. For the purposes of calculating the efficiency, :math:`Q_{in}` accounts for the heat transport via electrons (see :meth:`electron_cooling_rate`, denoted by :math:`Q_{E}`) and photons (see :meth:`thermal_rad_rate`, denoted by :math:`Q_{r}`). This efficiency calculation *does not* presently account for heat conducted via the leads. Therefore, :math:`Q_{in}` is given by
 
         .. math::
             Q_{in} = Q_{E} + Q_{r}
 
-        See :meth:`calc_heat_supply_rate` for more information about :math:`Q_{in}`.
+        See :meth:`heat_supply_rate` for more information about :math:`Q_{in}`.
 
         :returns: float between 0 and 1 where unity is 100% efficiency. Returns NaN if the output power is less than zero.
         :symbol: :math:`\eta`
         """
-        if self.calc_output_power_density() > 0:
-            efficiency = self.calc_output_power_density() / self.calc_heat_supply_rate()
+        if self.output_power_density() > 0:
+            efficiency = self.output_power_density() / self.heat_supply_rate()
             efficiency = efficiency.value
         else:
             efficiency = np.nan
@@ -259,7 +259,7 @@ class TECBase(object):
         return efficiency
 
 
-    def calc_heat_supply_rate(self):
+    def heat_supply_rate(self):
         """
         Rate at which heat enters device
 
@@ -268,17 +268,17 @@ class TECBase(object):
         .. math::
             Q_{in} = Q_{E} + Q_{r}
 
-        where :math:`Q_{E}` and :math:`Q_{r}` are calculated using :meth:`calc_electron_cooling_rate` and :meth:`calc_thermal_rad_rate`, respectively.
+        where :math:`Q_{E}` and :math:`Q_{r}` are calculated using :meth:`electron_cooling_rate` and :meth:`thermal_rad_rate`, respectively.
 
         :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
         :symbol: :math:`Q_{in}`
         """
-        heat_supply_rate = self.calc_electron_cooling_rate() + self.calc_thermal_rad_rate()
+        heat_supply_rate = self.electron_cooling_rate() + self.thermal_rad_rate()
 
         return heat_supply_rate
 
 
-    def calc_electron_cooling_rate(self):
+    def electron_cooling_rate(self):
         """
         Electronic cooling rate of emitter
 
@@ -295,15 +295,15 @@ class TECBase(object):
         kT_E2 = 2 * constants.k_B * self.emitter.temp
         kT_C2 = 2 * constants.k_B * self.collector.temp
 
-        forward = units.Unit("cm2") * self.calc_forward_current_density() * (self.calc_max_motive() + kT_E2) / constants.e.si
-        back = units.Unit("cm2") * self.calc_back_current_density() * (self.calc_max_motive() + kT_C2) / constants.e.si
+        forward = units.Unit("cm2") * self.forward_current_density() * (self.max_motive() + kT_E2) / constants.e.si
+        back = units.Unit("cm2") * self.back_current_density() * (self.max_motive() + kT_C2) / constants.e.si
 
         cooling_rate = (forward - back).to("W")
 
         return cooling_rate
 
 
-    def calc_thermal_rad_rate(self):
+    def thermal_rad_rate(self):
         """
         Interelectrode thermal radiation rate
 
