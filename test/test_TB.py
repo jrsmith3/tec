@@ -68,7 +68,35 @@ class Set(Base):
 
     Tests include: setting attributes with non-numeric data, setting attributes outside their constraints, etc.
     """
-    pass
+
+    # Set attribute wrong type
+    # ========================
+    def test_thickness_non_numeric(self):
+        """
+        TB can only set `thickness` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.el.thickness = non_num
+        except TypeError:
+            # Setting `thickness` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`thickness` attribute can be assigned a non-numeric value.")
+
+    # Set attribute outside constraint
+    # ================================
+    def test_thickness_less_than_zero(self):
+        """
+        TB must set `thickness` > 0.
+        """
+        try:
+            self.el.thickness = -1.1
+        except ValueError:
+            # Attempting to set the `thickness` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`thickness` attribute can be assigned a negative value.")
 
 
 class MethodsInput(Base):
