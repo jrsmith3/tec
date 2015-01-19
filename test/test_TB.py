@@ -130,7 +130,12 @@ class MethodsReturnType(Base):
     """
     Tests methods' output types
     """
-    pass
+    def test_transmission_coeff_type(self):
+        """
+        transmission_coeff should return a float
+        """
+        electron_energy = 0.1
+        self.assertIsInstance(self.el.transmission_coeff(electron_energy), float)
 
 
 class MethodsReturnUnits(Base):
