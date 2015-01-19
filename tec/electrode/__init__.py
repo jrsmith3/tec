@@ -10,3 +10,4 @@ Base Library (:mod:`electrode`)
 
 from metal import *
 from semiconductor import *
+from tunnel_barrier import *
