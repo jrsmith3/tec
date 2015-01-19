@@ -34,6 +34,11 @@ class TB(Metal):
 
         :param electron_energy: Energy of electron incident on the tunnel barrier in units of eV.
         """
-        exponent = (2 * self.thickness)/(constants.hbar) * np.sqrt(2 * constants.m_e * (self.barrier - self.electron_energy))
+        electron_energy = units.Quantity(electron_energy, "eV")
+
+        if electron_energy < 0:
+            raise ValueError("electron energy must be > 0.")
+
+        exponent = (2 * self.thickness)/(constants.hbar) * np.sqrt(2 * constants.m_e * (self.barrier - electron_energy))
 
         return np.exp(- exponent.decompose())
