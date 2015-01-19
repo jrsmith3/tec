@@ -25,4 +25,14 @@ class TB(Metal):
     :param richardson: Richardson's constant (:math:`A`)
     :param thickness: Barrier thickness (:math:`t`)
     """
-    pass
+
+    thickness = PhysicalProperty(unit="nm", lo_bnd=0)
+
+    def __init__(self, temp, barrier, richardson, thickness, voltage=0, position=0, emissivity=0):
+        self.temp = temp
+        self.barrier = barrier
+        self.richardson = richardson
+        self.thickness = thickness
+        self.voltage = voltage
+        self.position = position
+        self.emissivity = emissivity
