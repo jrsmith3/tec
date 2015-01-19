@@ -41,4 +41,4 @@ class TB(Metal):
 
         exponent = (2 * self.thickness)/(constants.hbar) * np.sqrt(2 * constants.m_e * (self.barrier - electron_energy))
 
-        return np.exp(- exponent.decompose())
+        return np.exp(- exponent.decompose()).value
