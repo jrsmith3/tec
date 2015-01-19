@@ -15,4 +15,26 @@ class Simple_TB(TECBase):
 
     Since the thermoelectrons from the emitter are assumed to be monoenergetic, the output current density of the TEC will be zero when the Fermi energy of the collector is coincident with the vacuum energy of the emitter.
     """
-    pass
+
+    # Methods regarding current and power -----------------------------
+    def forward_current_density(self):
+        """
+        Net current absorbed by collector from emitter
+
+        This quantity is the current density absorbed through the tunnel barrier of the collector into the collector's bulk. It is obtained by multiplying the emitter thermoelectron current by the transmission coefficient of the collector.
+
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{f}`
+        """
+        pass
+
+    def back_current_density(self):
+        """
+        Net current moving from collector to emitter
+
+        In this model, the back current density is 0 by definition.
+
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{b}`
+        """
+        current_density = units.Quantity(0., "A/cm2")
