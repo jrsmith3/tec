@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from tec.electrode import Metal, TB
-from astropy.units import Quantity
-from astropy.units import Unit
+from astropy import units
 import unittest
 import copy
 
@@ -105,7 +104,26 @@ class MethodsInput(Base):
 
     Tests include: passing invalid input, etc.
     """
-    pass
+    def test_transmission_coeff_non_numeric_electron_energy(self):
+        """
+        electron_energy for transmission_coeff method must be numeric
+        """
+        non_num = "this string isn't numeric"
+        self.assertRaises(TypeError, self.el.transmission_coeff, non_num)
+
+    def test_transmission_coeff_negative_electron_energy(self):
+        """
+        electron_energy for transmission_coeff method must > 0
+        """
+        electron_energy = -0.1
+        self.assertRaises(ValueError, self.el.transmission_coeff, electron_energy)
+
+    def test_transmission_coeff_electron_energy_non_eV(self):
+        """
+        electron_energy for transmission_coeff method must have units compatible with eV
+        """
+        electron_energy = units.Quantity(0.1, "m")
+        self.assertRaises(units.UnitsError, self.el.transmission_coeff, electron_energy)
 
 
 class MethodsReturnType(Base):
