@@ -7,15 +7,6 @@ from metal import Metal
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
 
 
-def transmission_coeff(thickness, barrier_height, electron_energy):
-    """
-    Value of transmission coefficient for a square barrier
-    """
-    exponent = (2 * thickness)/(constants.hbar) * np.sqrt(2 * constants.m_e * (barrier_height - electron_energy))
-
-    return np.exp(- exponent.decompose())
-
-
 class TB(Metal):
     """
     Tunnel barrier collector electrode
@@ -36,3 +27,13 @@ class TB(Metal):
         self.voltage = voltage
         self.position = position
         self.emissivity = emissivity
+
+    def transmission_coeff(self, electron_energy):
+        """
+        Value of transmission coefficient for a square barrier
+
+        :param electron_energy: Energy of electron incident on the tunnel barrier in units of eV.
+        """
+        exponent = (2 * self.thickness)/(constants.hbar) * np.sqrt(2 * constants.m_e * (self.barrier - self.electron_energy))
+
+        return np.exp(- exponent.decompose())
