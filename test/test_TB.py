@@ -35,7 +35,31 @@ class Instantiation(Base):
 
     Tests include: instantiation with non-numeric args, instantiation with input values outside constraints, etc.
     """
-    pass
+
+    # Input arguments wrong type
+    # ==========================
+    def test_thickness_non_numeric(self):
+        """
+        TB instantiation requires numeric `thickness` value
+        """
+        self.input_params["thickness"] = "this string is non-numeric."
+
+        try:
+            El = TB(**self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.TB` with a non-numeric `thickness` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`thickness` field of instantiating dict must be numeric.")
+
+    # Input arguments outside constraints
+    # ===================================
+    def test_thickness_less_than_zero(self):
+        """
+        TB instantiation requires `thickness` > 0.
+        """
+        self.input_params["thickness"] = -1.1
+        self.assertRaises(ValueError, TB, **self.input_params)
 
 
 class Set(Base):
@@ -47,7 +71,7 @@ class Set(Base):
     pass
 
 
-class MethodsInput(Base)
+class MethodsInput(Base):
     """
     Tests methods which take input parameters
 
