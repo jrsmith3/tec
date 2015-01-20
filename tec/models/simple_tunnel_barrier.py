@@ -61,3 +61,4 @@ class Simple_TB(TECBase):
         :symbol: :math:`J_{b}`
         """
         current_density = units.Quantity(0., "A/cm2")
+        return current_density
