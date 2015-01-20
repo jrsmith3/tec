@@ -62,7 +62,6 @@ class Set(Base):
             self.fail("`collector` attribute can be assigned a non-TB value.")
 
 
-
 class MethodsInput(Base):
     """
     Tests methods which take input parameters
@@ -76,7 +75,17 @@ class MethodsReturnType(Base):
     """
     Tests methods' output types
     """
-    pass
+    def test_forward_current_density(self):
+        """
+        forward_current_density should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.forward_current_density(), units.Quantity)
+
+    def test_back_current_density(self):
+        """
+        back_current_density should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.back_current_density(), units.Quantity)
 
 
 class MethodsReturnUnits(Base):
