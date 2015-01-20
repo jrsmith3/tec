@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from tec.electrode import Metal
-from astropy.units import Quantity
-from astropy.units import Unit
+from astropy import units
 import unittest
 import copy
 
@@ -13,38 +12,30 @@ input_params = {"temp": 300.,
 
 # Base classes
 # ============
-class TestBaseJustInputParams(unittest.TestCase):
+class Base(unittest.TestCase):
     """
     Base class for tests
 
-    This class defines a common `setUp` method that features an attribute which can be used to instantiate `Metal` objects.
+    This class is intended to be subclassed so that the same `setUp` method does not have to be rewritten for each class containing tests.
     """
     def setUp(self):
         """
         Create dict attribute that can instantiate a `Metal` object
         """
         self.input_params = copy.copy(input_params)
-
-
-class TestBaseWithMetal(unittest.TestCase):
-    """
-    Base class for tests
-
-    This class defines a common setUp method that features an attribute which is a `Metal` object.
-    """
-    def setUp(self):
-        """
-        Set up a `Metal` object
-        """
-        self.El = Metal(**input_params)
+        self.el = Metal(**input_params)
 
 
 # Test classes
 # ============
-class InstantiationInputArgsWrongType(TestBaseJustInputParams):
+class Instantiation(Base):
     """
-    Test instantiation with non-numeric args
+    Tests all aspects of instantiation
+
+    Tests include: instantiation with args of wrong type, instantiation with input values outside constraints, etc.
     """
+    # Input arguments wrong type
+    # ==========================
     def test_temp_non_numeric(self):
         """
         Metal instantiation requires numeric `temp` value
@@ -124,14 +115,8 @@ class InstantiationInputArgsWrongType(TestBaseJustInputParams):
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `emissivity` argument.")
 
-
-class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
-    """
-    Tests instantiating when input dict values are outside their constraints
-
-    See the class docstring for information about the constraints on
-    the input data.
-    """
+    # Input arguments outside constraints
+    # ===================================
     def test_temp_less_than_zero(self):
         """
         Metal instantiation requires `temp` > 0
@@ -168,17 +153,21 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
         self.assertRaises(ValueError, Metal, **self.input_params)
 
 
-class SetAttribsWrongType(TestBaseWithMetal):
+class Set(Base):
     """
-    Tests setting attributes with non-numeric data
+    Tests all aspects of setting attributes
+
+    Tests include: setting attributes of wrong type, setting attributes outside their constraints, etc.
     """
+    # Set attribute wrong type
+    # ========================
     def test_temp_non_numeric(self):
         """
         Metal can only set `temp` with numeric value
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.temp = non_num
+            self.el.temp = non_num
         except TypeError:
             # Setting `temp` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -191,7 +180,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.barrier = non_num
+            self.el.barrier = non_num
         except TypeError:
             # Setting `barrier` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -204,7 +193,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.richardson = non_num
+            self.el.richardson = non_num
         except TypeError:
             # Setting `richardson` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -217,7 +206,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.voltage = non_num
+            self.el.voltage = non_num
         except TypeError:
             # Setting `voltage` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -230,7 +219,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.position = non_num
+            self.el.position = non_num
         except TypeError:
             # Setting `position` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -243,27 +232,21 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.emissivity = non_num
+            self.el.emissivity = non_num
         except TypeError:
             # Setting `emissivity` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
         else:
             self.fail("`emissivity` attribute can be assigned a non-numeric value.")
 
-
-class SetAttribsOutsideConstraints(TestBaseWithMetal):
-    """
-    Tests setting attributes when input values are outside their constraints
-
-    See the class docstring for information about the constraints on
-    the data.
-    """
+    # Set attribute outside constraint
+    # ================================
     def test_temp_less_than_zero(self):
         """
         Metal must set `temp` > 0
         """
         try:
-            self.El.temp = -1.1
+            self.el.temp = -1.1
         except ValueError:
             # Attempting to set the `temp` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -275,7 +258,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `barrier` > 0
         """
         try:
-            self.El.barrier = -1.1
+            self.el.barrier = -1.1
         except ValueError:
             # Attempting to set the `barrier` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -287,7 +270,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `richardson` > 0
         """
         try:
-            self.El.richardson = -1.1
+            self.el.richardson = -1.1
         except ValueError:
             # Attempting to set the `richardson` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -299,7 +282,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `emissivity` > 0
         """
         try:
-            self.El.emissivity = -1.1
+            self.el.emissivity = -1.1
         except ValueError:
             # Attempting to set the `emissivity` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -311,7 +294,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `emissivity` < 1
         """
         try:
-            self.El.emissivity = 1.1
+            self.el.emissivity = 1.1
         except ValueError:
             # Attempting to set the `emissivity` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -319,42 +302,42 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
             self.fail("`emissivity` attribute can be assigned a negative value.")
 
 
-class CalculatorsReturnType(TestBaseWithMetal):
+class MethodsReturnType(Base):
     """
-    Tests output types of the calculator methods
+    Tests methods' output types
     """
     def test_motive(self):
         """
         Metal.motive should return an astropy.units.Quantity
         """
-        self.assertIsInstance(self.El.motive(), Quantity)
+        self.assertIsInstance(self.el.motive(), units.Quantity)
 
     def test_thermoelectron_current_density(self):
         """
         Metal.thermoelectron_current_density should return an astropy.units.Quantity
         """
-        self.assertIsInstance(self.El.thermoelectron_current_density(), Quantity)
+        self.assertIsInstance(self.el.thermoelectron_current_density(), units.Quantity)
 
 
-class CalculatorsReturnUnits(TestBaseWithMetal):
+class MethodsReturnUnits(Base):
     """
-    Tests output units, where applicable, of the calculator methods
+    Tests methods' output units where applicable
     """
     def test_motive(self):
         """
         Metal.motive should return a value with unit eV
         """
-        self.assertEqual(self.El.motive().unit, Unit("eV"))
+        self.assertEqual(self.el.motive().unit, units.Unit("eV"))
 
     def test_thermoelectron_current_density(self):
         """
         Metal.thermoelectron_current_density should return a value with unit A/cm2
         """
-        self.assertEqual(self.El.thermoelectron_current_density().unit, Unit("A/cm2"))
+        self.assertEqual(self.el.thermoelectron_current_density().unit, units.Unit("A/cm2"))
 
 
-class CalculatorsReturnValues(TestBaseWithMetal):
+class MethodsReturnValues(Base):
     """
-    Tests values of calculator methods against known values
+    Tests values of methods against known values
     """
     pass

@@ -10,9 +10,9 @@ em = Metal(temp=1000., barrier=2., richardson=10.)
 co = Metal(temp=300., barrier=1., richardson=10., position=10.)
 
 
-class TestBaseWithTEC(unittest.TestCase):
+class Base(unittest.TestCase):
     """
-    Provide fresh TECBase object for testing
+    Base class for tests
 
     This class is intended to be subclassed so that I don't have to rewrite the same `setUp` method for each class containing tests.
     """
@@ -29,18 +29,20 @@ class TestBaseWithTEC(unittest.TestCase):
         self.co = co
 
 
-class InstantiationInputWrongType(TestBaseWithTEC):
+class Instantiation(Base):
     """
-    Test instantiation with non-`tec.electrode` args
+    Tests all aspects of instantiation
+
+    Tests include: instantiation with args of wrong type, etc.
     """
-    def test_emitter_non_numeric(self):
+    def test_emitter_non_electrode(self):
         """
         emitter nonelectrode -> TECBase init raises TypeError
         """
         non_electrode = "this string is not an electrode"
         self.assertRaises(TypeError, TECBase, non_electrode, self.co)
 
-    def test_collector_non_numeric(self):
+    def test_collector_non_electrode(self):
         """
         collector nonelectrode -> TECBase init raises TypeError
         """
@@ -48,11 +50,13 @@ class InstantiationInputWrongType(TestBaseWithTEC):
         self.assertRaises(TypeError, TECBase, self.em, non_electrode)
 
 
-class SetAttribsWrongType(TestBaseWithTEC):
+class Set(Base):
     """
-    Tests setting attributes with non-`tec.electrode` data
+    Tests all aspects of setting attributes
+
+    Tests include: setting attributes of wrong type, etc.
     """
-    def test_emitter_non_numeric(self):
+    def test_emitter_non_electrode(self):
         """
         set emitter nonelectrode raises TypeError
         """
@@ -65,7 +69,7 @@ class SetAttribsWrongType(TestBaseWithTEC):
         else:
             self.fail("`emitter` attribute can be assigned a non-electrode value.")
 
-    def test_collector_non_numeric(self):
+    def test_collector_non_electrode(self):
         """
         set collector nonelectrode raises TypeError
         """
@@ -79,9 +83,11 @@ class SetAttribsWrongType(TestBaseWithTEC):
             self.fail("`collector` attribute can be assigned a non-electrode value.")
 
 
-class CalculatorsInput(TestBaseWithTEC):
+class MethodsInput(Base):
     """
-    Tests calculator methods that take input
+    Tests methods which take input parameters
+
+    Tests include: passing invalid input, etc.
     """
     def test_i64(self):
         """
@@ -154,9 +160,9 @@ class CalculatorsInput(TestBaseWithTEC):
         self.assertRaises(ValueError, self.t.motive, position)
 
 
-class CalculatorsReturnType(TestBaseWithTEC):
+class MethodsReturnType(Base):
     """
-    Tests output types of the calculator methods
+    Tests methods' output types
     """
     def test_motive(self):
         """
@@ -255,9 +261,9 @@ class CalculatorsReturnType(TestBaseWithTEC):
         self.assertIsInstance(self.t.thermal_rad_rate(), units.Quantity)
 
 
-class CalculatorsReturnUnits(TestBaseWithTEC):
+class MethodsReturnUnits(Base):
     """
-    Tests output units, where applicable, of the calculator methods
+    Tests methods' output units where applicable
     """
     def test_motive(self):
         """
@@ -341,9 +347,9 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
             self.assertEqual(self.t.thermal_rad_rate().unit, units.Unit("W"))
 
 
-class CalculatorsReturnValues(TestBaseWithTEC):
+class MethodsReturnValues(Base):
     """
-    Tests values of calculator methods against known values
+    Tests values of methods against known values
     """
     def test_thermal_rad_rate_emitter_emissivity_0(self):
         """
