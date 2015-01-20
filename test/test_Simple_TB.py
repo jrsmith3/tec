@@ -49,7 +49,18 @@ class Set(Base):
 
     Tests include: setting attributes with non-numeric data, setting attributes outside their constraints, etc.
     """
-    pass
+    def test_collector_non_TB(self):
+        """
+        set collector non-TB raises TypeError
+        """
+        try:
+            self.t.collector = self.em
+        except TypeError:
+            # Setting `collector` as a type that isn't a subclass of `tec.electrode.Metal` should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`collector` attribute can be assigned a non-TB value.")
+
 
 
 class MethodsInput(Base):
