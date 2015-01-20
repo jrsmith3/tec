@@ -36,7 +36,7 @@ class TestBaseWithMetal(unittest.TestCase):
         """
         Set up a `Metal` object
         """
-        self.El = Metal(**input_params)
+        self.el = Metal(**input_params)
 
 
 # Test classes
@@ -178,7 +178,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.temp = non_num
+            self.el.temp = non_num
         except TypeError:
             # Setting `temp` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -191,7 +191,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.barrier = non_num
+            self.el.barrier = non_num
         except TypeError:
             # Setting `barrier` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -204,7 +204,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.richardson = non_num
+            self.el.richardson = non_num
         except TypeError:
             # Setting `richardson` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -217,7 +217,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.voltage = non_num
+            self.el.voltage = non_num
         except TypeError:
             # Setting `voltage` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -230,7 +230,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.position = non_num
+            self.el.position = non_num
         except TypeError:
             # Setting `position` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -243,7 +243,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.emissivity = non_num
+            self.el.emissivity = non_num
         except TypeError:
             # Setting `emissivity` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -263,7 +263,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `temp` > 0
         """
         try:
-            self.El.temp = -1.1
+            self.el.temp = -1.1
         except ValueError:
             # Attempting to set the `temp` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -275,7 +275,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `barrier` > 0
         """
         try:
-            self.El.barrier = -1.1
+            self.el.barrier = -1.1
         except ValueError:
             # Attempting to set the `barrier` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -287,7 +287,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `richardson` > 0
         """
         try:
-            self.El.richardson = -1.1
+            self.el.richardson = -1.1
         except ValueError:
             # Attempting to set the `richardson` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -299,7 +299,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `emissivity` > 0
         """
         try:
-            self.El.emissivity = -1.1
+            self.el.emissivity = -1.1
         except ValueError:
             # Attempting to set the `emissivity` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -311,7 +311,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
         Metal must set `emissivity` < 1
         """
         try:
-            self.El.emissivity = 1.1
+            self.el.emissivity = 1.1
         except ValueError:
             # Attempting to set the `emissivity` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -327,13 +327,13 @@ class CalculatorsReturnType(TestBaseWithMetal):
         """
         Metal.motive should return an astropy.units.Quantity
         """
-        self.assertIsInstance(self.El.motive(), Quantity)
+        self.assertIsInstance(self.el.motive(), Quantity)
 
     def test_thermoelectron_current_density(self):
         """
         Metal.thermoelectron_current_density should return an astropy.units.Quantity
         """
-        self.assertIsInstance(self.El.thermoelectron_current_density(), Quantity)
+        self.assertIsInstance(self.el.thermoelectron_current_density(), Quantity)
 
 
 class CalculatorsReturnUnits(TestBaseWithMetal):
@@ -344,13 +344,13 @@ class CalculatorsReturnUnits(TestBaseWithMetal):
         """
         Metal.motive should return a value with unit eV
         """
-        self.assertEqual(self.El.motive().unit, Unit("eV"))
+        self.assertEqual(self.el.motive().unit, Unit("eV"))
 
     def test_thermoelectron_current_density(self):
         """
         Metal.thermoelectron_current_density should return a value with unit A/cm2
         """
-        self.assertEqual(self.El.thermoelectron_current_density().unit, Unit("A/cm2"))
+        self.assertEqual(self.el.thermoelectron_current_density().unit, Unit("A/cm2"))
 
 
 class CalculatorsReturnValues(TestBaseWithMetal):

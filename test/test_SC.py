@@ -45,7 +45,7 @@ class TestBaseWithElectrode(unittest.TestCase):
         """
         Set up an `SC` object
         """
-        self.El = SC(**input_params)
+        self.el = SC(**input_params)
 
 
 # Test classes
@@ -220,7 +220,7 @@ class SetAttribsWrongType(TestBaseWithElectrode):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.electron_effective_mass = non_num
+            self.el.electron_effective_mass = non_num
         except TypeError:
             # Setting `electron_effective_mass` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -233,7 +233,7 @@ class SetAttribsWrongType(TestBaseWithElectrode):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.hole_effective_mass = non_num
+            self.el.hole_effective_mass = non_num
         except TypeError:
             # Setting `hole_effective_mass` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -246,7 +246,7 @@ class SetAttribsWrongType(TestBaseWithElectrode):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.acceptor_concentration = non_num
+            self.el.acceptor_concentration = non_num
         except TypeError:
             # Setting `acceptor_concentration` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -259,7 +259,7 @@ class SetAttribsWrongType(TestBaseWithElectrode):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.acceptor_ionization_energy = non_num
+            self.el.acceptor_ionization_energy = non_num
         except TypeError:
             # Setting `acceptor_ionization_energy` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -272,7 +272,7 @@ class SetAttribsWrongType(TestBaseWithElectrode):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.donor_concentration = non_num
+            self.el.donor_concentration = non_num
         except TypeError:
             # Setting `donor_concentration` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -285,7 +285,7 @@ class SetAttribsWrongType(TestBaseWithElectrode):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.donor_ionization_energy = non_num
+            self.el.donor_ionization_energy = non_num
         except TypeError:
             # Setting `donor_ionization_energy` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -298,7 +298,7 @@ class SetAttribsWrongType(TestBaseWithElectrode):
         """
         non_num = "this string is non-numeric."
         try:
-            self.El.bandgap = non_num
+            self.el.bandgap = non_num
         except TypeError:
             # Setting `bandgap` as a type that isn't numeric should raise a TypeError, so things are working.
             pass
@@ -318,7 +318,7 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
         SC must set `electron_effective_mass` > 0.
         """
         try:
-            self.El.electron_effective_mass = -1.1
+            self.el.electron_effective_mass = -1.1
         except ValueError:
             # Attempting to set the `electron_effective_mass` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -330,7 +330,7 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
         SC must set `hole_effective_mass` > 0.
         """
         try:
-            self.El.hole_effective_mass = -1.1
+            self.el.hole_effective_mass = -1.1
         except ValueError:
             # Attempting to set the `hole_effective_mass` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -342,7 +342,7 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
         SC must set `acceptor_concentration` > 0.
         """
         try:
-            self.El.acceptor_concentration = -1.1
+            self.el.acceptor_concentration = -1.1
         except ValueError:
             # Attempting to set the `acceptor_concentration` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -354,7 +354,7 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
         SC must set `acceptor_ionization_energy` > 0.
         """
         try:
-            self.El.acceptor_ionization_energy = -1.1
+            self.el.acceptor_ionization_energy = -1.1
         except ValueError:
             # Attempting to set the `acceptor_ionization_energy` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -366,7 +366,7 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
         SC must set `donor_concentration` > 0.
         """
         try:
-            self.El.donor_concentration = -1.1
+            self.el.donor_concentration = -1.1
         except ValueError:
             # Attempting to set the `donor_concentration` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -378,7 +378,7 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
         SC must set `donor_ionization_energy` > 0.
         """
         try:
-            self.El.donor_ionization_energy = -1.1
+            self.el.donor_ionization_energy = -1.1
         except ValueError:
             # Attempting to set the `donor_ionization_energy` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -390,7 +390,7 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
         SC must set `bandgap` > 0.
         """
         try:
-            self.El.bandgap = -1.1
+            self.el.bandgap = -1.1
         except ValueError:
             # Attempting to set the `bandgap` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
             pass
@@ -406,31 +406,31 @@ class CalculatorsReturnType(TestBaseWithElectrode):
         """
         cb_effective_dos should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.cb_effective_dos(), Quantity)
+        self.assertIsInstance(self.el.cb_effective_dos(), Quantity)
 
     def test_vb_effective_dos_type(self):
         """
         vb_effective_dos should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.vb_effective_dos(), Quantity)
+        self.assertIsInstance(self.el.vb_effective_dos(), Quantity)
 
     def test_electron_concentration_type(self):
         """
         electron_concentration should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.electron_concentration(), Quantity)
+        self.assertIsInstance(self.el.electron_concentration(), Quantity)
 
     def test_hole_concentration_type(self):
         """
         hole_concentration should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.hole_concentration(), Quantity)
+        self.assertIsInstance(self.el.hole_concentration(), Quantity)
 
     def test_fermi_energy_type(self):
         """
         fermi_energy should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.El.fermi_energy(), Quantity)
+        self.assertIsInstance(self.el.fermi_energy(), Quantity)
 
 
 class CalculatorsReturnUnits(TestBaseWithElectrode):
@@ -441,31 +441,31 @@ class CalculatorsReturnUnits(TestBaseWithElectrode):
         """
         cb_effective_dos should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.El.cb_effective_dos().unit, Unit("1/cm3"))
+        self.assertEqual(self.el.cb_effective_dos().unit, Unit("1/cm3"))
 
     def test_vb_effective_dos_unit(self):
         """
         vb_effective_dos should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.El.vb_effective_dos().unit, Unit("1/cm3"))
+        self.assertEqual(self.el.vb_effective_dos().unit, Unit("1/cm3"))
 
     def test_electron_concentration_unit(self):
         """
         electron_concentration should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.El.electron_concentration().unit, Unit("1/cm3"))
+        self.assertEqual(self.el.electron_concentration().unit, Unit("1/cm3"))
 
     def test_hole_concentration_unit(self):
         """
         hole_concentration should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.El.hole_concentration().unit, Unit("1/cm3"))
+        self.assertEqual(self.el.hole_concentration().unit, Unit("1/cm3"))
 
     def test_fermi_energy_unit(self):
         """
         fermi_energy should return a value with unit eV.
         """
-        self.assertEqual(self.El.fermi_energy().unit, Unit("eV"))
+        self.assertEqual(self.el.fermi_energy().unit, Unit("eV"))
 
 
 class CalculatorsReturnValues(TestBaseWithElectrode):
