@@ -109,4 +109,8 @@ class MethodsReturnValues(Base):
     """
     Tests values of methods against known values
     """
-    pass
+    def test_back_current_density(self):
+        """
+        back_current_density should return a value of 0
+        """
+        self.assertEqual(self.t.back_current_density(), 0)
