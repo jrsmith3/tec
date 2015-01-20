@@ -10,9 +10,9 @@ em = Metal(temp=1000., barrier=2., richardson=10.)
 co = Metal(temp=300., barrier=1., richardson=10., position=10.)
 
 
-class TestBaseWithTEC(unittest.TestCase):
+class Base(unittest.TestCase):
     """
-    Provide fresh TECBase object for testing
+    Base class for tests
 
     This class is intended to be subclassed so that I don't have to rewrite the same `setUp` method for each class containing tests.
     """
@@ -29,7 +29,7 @@ class TestBaseWithTEC(unittest.TestCase):
         self.co = co
 
 
-class InstantiationInputWrongType(TestBaseWithTEC):
+class InstantiationInputWrongType(Base):
     """
     Test instantiation with non-`tec.electrode` args
     """
@@ -48,7 +48,7 @@ class InstantiationInputWrongType(TestBaseWithTEC):
         self.assertRaises(TypeError, TECBase, self.em, non_electrode)
 
 
-class SetAttribsWrongType(TestBaseWithTEC):
+class SetAttribsWrongType(Base):
     """
     Tests setting attributes with non-`tec.electrode` data
     """
@@ -79,7 +79,7 @@ class SetAttribsWrongType(TestBaseWithTEC):
             self.fail("`collector` attribute can be assigned a non-electrode value.")
 
 
-class CalculatorsInput(TestBaseWithTEC):
+class CalculatorsInput(Base):
     """
     Tests calculator methods that take input
     """
@@ -154,7 +154,7 @@ class CalculatorsInput(TestBaseWithTEC):
         self.assertRaises(ValueError, self.t.motive, position)
 
 
-class CalculatorsReturnType(TestBaseWithTEC):
+class CalculatorsReturnType(Base):
     """
     Tests output types of the calculator methods
     """
@@ -255,7 +255,7 @@ class CalculatorsReturnType(TestBaseWithTEC):
         self.assertIsInstance(self.t.thermal_rad_rate(), units.Quantity)
 
 
-class CalculatorsReturnUnits(TestBaseWithTEC):
+class CalculatorsReturnUnits(Base):
     """
     Tests output units, where applicable, of the calculator methods
     """
@@ -341,7 +341,7 @@ class CalculatorsReturnUnits(TestBaseWithTEC):
             self.assertEqual(self.t.thermal_rad_rate().unit, units.Unit("W"))
 
 
-class CalculatorsReturnValues(TestBaseWithTEC):
+class CalculatorsReturnValues(Base):
     """
     Tests values of calculator methods against known values
     """

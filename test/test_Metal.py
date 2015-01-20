@@ -12,35 +12,23 @@ input_params = {"temp": 300.,
 
 # Base classes
 # ============
-class TestBaseJustInputParams(unittest.TestCase):
+class Base(unittest.TestCase):
     """
     Base class for tests
 
-    This class defines a common `setUp` method that features an attribute which can be used to instantiate `Metal` objects.
+    This class is intended to be subclassed so that the same `setUp` method does not have to be rewritten for each class containing tests.
     """
     def setUp(self):
         """
         Create dict attribute that can instantiate a `Metal` object
         """
         self.input_params = copy.copy(input_params)
-
-
-class TestBaseWithMetal(unittest.TestCase):
-    """
-    Base class for tests
-
-    This class defines a common setUp method that features an attribute which is a `Metal` object.
-    """
-    def setUp(self):
-        """
-        Set up a `Metal` object
-        """
         self.el = Metal(**input_params)
 
 
 # Test classes
 # ============
-class InstantiationInputArgsWrongType(TestBaseJustInputParams):
+class InstantiationInputArgsWrongType(Base):
     """
     Test instantiation with non-numeric args
     """
@@ -124,7 +112,7 @@ class InstantiationInputArgsWrongType(TestBaseJustInputParams):
             self.fail("Shouldn't be able to instantiate with non-numeric `emissivity` argument.")
 
 
-class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
+class InstantiationInputOutsideConstraints(Base):
     """
     Tests instantiating when input dict values are outside their constraints
 
@@ -167,7 +155,7 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
         self.assertRaises(ValueError, Metal, **self.input_params)
 
 
-class SetAttribsWrongType(TestBaseWithMetal):
+class SetAttribsWrongType(Base):
     """
     Tests setting attributes with non-numeric data
     """
@@ -250,7 +238,7 @@ class SetAttribsWrongType(TestBaseWithMetal):
             self.fail("`emissivity` attribute can be assigned a non-numeric value.")
 
 
-class SetAttribsOutsideConstraints(TestBaseWithMetal):
+class SetAttribsOutsideConstraints(Base):
     """
     Tests setting attributes when input values are outside their constraints
 
@@ -318,7 +306,7 @@ class SetAttribsOutsideConstraints(TestBaseWithMetal):
             self.fail("`emissivity` attribute can be assigned a negative value.")
 
 
-class CalculatorsReturnType(TestBaseWithMetal):
+class CalculatorsReturnType(Base):
     """
     Tests output types of the calculator methods
     """
@@ -335,7 +323,7 @@ class CalculatorsReturnType(TestBaseWithMetal):
         self.assertIsInstance(self.el.thermoelectron_current_density(), units.Quantity)
 
 
-class CalculatorsReturnUnits(TestBaseWithMetal):
+class CalculatorsReturnUnits(Base):
     """
     Tests output units, where applicable, of the calculator methods
     """
@@ -352,7 +340,7 @@ class CalculatorsReturnUnits(TestBaseWithMetal):
         self.assertEqual(self.el.thermoelectron_current_density().unit, units.Unit("A/cm2"))
 
 
-class CalculatorsReturnValues(TestBaseWithMetal):
+class CalculatorsReturnValues(Base):
     """
     Tests values of calculator methods against known values
     """

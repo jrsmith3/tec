@@ -21,35 +21,23 @@ input_params = {"temp": 300.,
 
 # Base classes
 # ============
-class TestBaseJustInputParams(unittest.TestCase):
+class Base(unittest.TestCase):
     """
     Base class for tests
 
-    This class defines a common setUp method that features an attribute which can be used to instantiate `SC` objects.
+    This class is intended to be subclassed so that the same `setUp` method does not have to be rewritten for each class containing tests.
     """
     def setUp(self):
         """
         Create dict attribute that can instantiate an `SC` object
         """
         self.input_params = copy.copy(input_params)
-
-
-class TestBaseWithElectrode(unittest.TestCase):
-    """
-    Base class for tests
-
-    This class defines a common setUp method that features an attribute which is an `SC` object.
-    """
-    def setUp(self):
-        """
-        Set up an `SC` object
-        """
         self.el = SC(**input_params)
 
 
 # Test classes
 # ============
-class InstantiationInputArgsWrongType(TestBaseJustInputParams):
+class InstantiationInputArgsWrongType(Base):
     """
     Test instantiation with non-numeric args
     """
@@ -152,7 +140,7 @@ class InstantiationInputArgsWrongType(TestBaseJustInputParams):
             self.fail("`bandgap` field of instantiating dict must be numeric.")
 
 
-class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
+class InstantiationInputOutsideConstraints(Base):
     """
     Tests instantiating when input dict values are outside their constraints.
 
@@ -209,7 +197,7 @@ class InstantiationInputOutsideConstraints(TestBaseJustInputParams):
         self.assertRaises(ValueError, SC, **self.input_params)
 
 
-class SetAttribsWrongType(TestBaseWithElectrode):
+class SetAttribsWrongType(Base):
     """
     Tests setting attributes when input data is non-numeric.
     """
@@ -305,7 +293,7 @@ class SetAttribsWrongType(TestBaseWithElectrode):
             self.fail("`bandgap` attribute can be assigned a non-numeric value.")
 
 
-class SetAttribsOutsideConstraints(TestBaseWithElectrode):
+class SetAttribsOutsideConstraints(Base):
     """
     Tests setting attributes when input values are outside their constraints.
 
@@ -397,7 +385,7 @@ class SetAttribsOutsideConstraints(TestBaseWithElectrode):
             self.fail("`bandgap` attribute can be assigned a negative value.")
 
 
-class CalculatorsReturnType(TestBaseWithElectrode):
+class CalculatorsReturnType(Base):
     """
     Tests output types of the calculator methods.
     """
@@ -432,7 +420,7 @@ class CalculatorsReturnType(TestBaseWithElectrode):
         self.assertIsInstance(self.el.fermi_energy(), units.Quantity)
 
 
-class CalculatorsReturnUnits(TestBaseWithElectrode):
+class CalculatorsReturnUnits(Base):
     """
     Tests output units, where applicable, of the calculator methods.
     """
@@ -467,7 +455,7 @@ class CalculatorsReturnUnits(TestBaseWithElectrode):
         self.assertEqual(self.el.fermi_energy().unit, units.Unit("eV"))
 
 
-class CalculatorsReturnValues(TestBaseWithElectrode):
+class CalculatorsReturnValues(Base):
     """
     Tests values of calculator methods against known values.
     """
