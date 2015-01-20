@@ -33,14 +33,14 @@ class InstantiationInputWrongType(TestBaseWithTEC):
     """
     Test instantiation with non-`tec.electrode` args
     """
-    def test_emitter_non_numeric(self):
+    def test_emitter_non_electrode(self):
         """
         emitter nonelectrode -> TECBase init raises TypeError
         """
         non_electrode = "this string is not an electrode"
         self.assertRaises(TypeError, TECBase, non_electrode, self.co)
 
-    def test_collector_non_numeric(self):
+    def test_collector_non_electrode(self):
         """
         collector nonelectrode -> TECBase init raises TypeError
         """
@@ -52,7 +52,7 @@ class SetAttribsWrongType(TestBaseWithTEC):
     """
     Tests setting attributes with non-`tec.electrode` data
     """
-    def test_emitter_non_numeric(self):
+    def test_emitter_non_electrode(self):
         """
         set emitter nonelectrode raises TypeError
         """
@@ -65,7 +65,7 @@ class SetAttribsWrongType(TestBaseWithTEC):
         else:
             self.fail("`emitter` attribute can be assigned a non-electrode value.")
 
-    def test_collector_non_numeric(self):
+    def test_collector_non_electrode(self):
         """
         set collector nonelectrode raises TypeError
         """
