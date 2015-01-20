@@ -45,3 +45,21 @@ class TB(Metal):
         exponent = (2 * self.thickness)/(constants.hbar) * np.sqrt(2 * constants.m_e * (self.barrier - electron_energy))
 
         return np.exp(- exponent.decompose()).value
+
+    def motive(self):
+        """
+        Motive just outside electrode
+
+        The motive just outside the electrode is the position of the vacuum energy relative to electrical ground. The motive in this case is expressed by
+
+        .. math::
+            \psi = \phi + e * V - \chi
+
+        where :math:`\psi` is the motive just outside the electrode, :math:`\phi` is the barrier of the electrode, :math:`e` is the charge of an electron, :math:`V` is the bias of the electrode measured relative to electrical ground, and :math:`\chi` is the negative electron afffinity of the material. Note that :math:`V` is the bias voltage (represented by this class's `voltage` attribute) *and not* the output voltage of a TEC in which this electrode is an attribute.
+
+        :returns: `astropy.units.Quantity` in units of :math:`eV`.
+        :symbol: :math:`\psi_{E}` (for the emitter, for example)
+        """
+        # I could call the parent class's `motive` method here and modify it by subtracting `self.nea`.
+        motive = self.barrier + constants.e.si * self.voltage - self.nea
+        return motive.to("eV")
