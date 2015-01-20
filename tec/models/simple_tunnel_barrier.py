@@ -26,7 +26,14 @@ class Simple_TB(TECBase):
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{f}`
         """
-        pass
+        electron_energy = self.emitter.motive() - self.collector.motive()
+
+        if electron_energy < 0:
+            current_density = units.Quantity(0, "A/cm2")
+        else:
+            current_density = self.emitter.thermoelectron_current_density() * self.collector.transmission_coeff(electron_energy)
+
+        return current_density
 
     def back_current_density(self):
         """
