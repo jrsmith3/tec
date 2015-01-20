@@ -36,7 +36,11 @@ class Instantiation(Base):
 
     Tests include: instantiation with non-numeric args, instantiation with input values outside constraints, etc.
     """
-    pass
+    def test_collector_non_TB(self):
+        """
+        collector not `tec.electrode.TB` -> Simple_TB init raises TypeError
+        """
+        self.assertRaises(TypeError, Simple_TB, self.em, self.em)
 
 
 class Set(Base):
