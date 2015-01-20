@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from tec.electrode import SC
-from astropy.units import Quantity
-from astropy.units import Unit
+from astropy import units
 import unittest
 import copy
 
@@ -406,31 +405,31 @@ class CalculatorsReturnType(TestBaseWithElectrode):
         """
         cb_effective_dos should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.el.cb_effective_dos(), Quantity)
+        self.assertIsInstance(self.el.cb_effective_dos(), units.Quantity)
 
     def test_vb_effective_dos_type(self):
         """
         vb_effective_dos should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.el.vb_effective_dos(), Quantity)
+        self.assertIsInstance(self.el.vb_effective_dos(), units.Quantity)
 
     def test_electron_concentration_type(self):
         """
         electron_concentration should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.el.electron_concentration(), Quantity)
+        self.assertIsInstance(self.el.electron_concentration(), units.Quantity)
 
     def test_hole_concentration_type(self):
         """
         hole_concentration should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.el.hole_concentration(), Quantity)
+        self.assertIsInstance(self.el.hole_concentration(), units.Quantity)
 
     def test_fermi_energy_type(self):
         """
         fermi_energy should return an astropy.units.Quantity.
         """
-        self.assertIsInstance(self.el.fermi_energy(), Quantity)
+        self.assertIsInstance(self.el.fermi_energy(), units.Quantity)
 
 
 class CalculatorsReturnUnits(TestBaseWithElectrode):
@@ -441,31 +440,31 @@ class CalculatorsReturnUnits(TestBaseWithElectrode):
         """
         cb_effective_dos should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.el.cb_effective_dos().unit, Unit("1/cm3"))
+        self.assertEqual(self.el.cb_effective_dos().unit, units.Unit("1/cm3"))
 
     def test_vb_effective_dos_unit(self):
         """
         vb_effective_dos should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.el.vb_effective_dos().unit, Unit("1/cm3"))
+        self.assertEqual(self.el.vb_effective_dos().unit, units.Unit("1/cm3"))
 
     def test_electron_concentration_unit(self):
         """
         electron_concentration should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.el.electron_concentration().unit, Unit("1/cm3"))
+        self.assertEqual(self.el.electron_concentration().unit, units.Unit("1/cm3"))
 
     def test_hole_concentration_unit(self):
         """
         hole_concentration should return a value with unit 1/cm3.
         """
-        self.assertEqual(self.el.hole_concentration().unit, Unit("1/cm3"))
+        self.assertEqual(self.el.hole_concentration().unit, units.Unit("1/cm3"))
 
     def test_fermi_energy_unit(self):
         """
         fermi_energy should return a value with unit eV.
         """
-        self.assertEqual(self.el.fermi_energy().unit, Unit("eV"))
+        self.assertEqual(self.el.fermi_energy().unit, units.Unit("eV"))
 
 
 class CalculatorsReturnValues(TestBaseWithElectrode):

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from tec.electrode import Metal
-from astropy.units import Quantity
-from astropy.units import Unit
+from astropy import units
 import unittest
 import copy
 
@@ -327,13 +326,13 @@ class CalculatorsReturnType(TestBaseWithMetal):
         """
         Metal.motive should return an astropy.units.Quantity
         """
-        self.assertIsInstance(self.el.motive(), Quantity)
+        self.assertIsInstance(self.el.motive(), units.Quantity)
 
     def test_thermoelectron_current_density(self):
         """
         Metal.thermoelectron_current_density should return an astropy.units.Quantity
         """
-        self.assertIsInstance(self.el.thermoelectron_current_density(), Quantity)
+        self.assertIsInstance(self.el.thermoelectron_current_density(), units.Quantity)
 
 
 class CalculatorsReturnUnits(TestBaseWithMetal):
@@ -344,13 +343,13 @@ class CalculatorsReturnUnits(TestBaseWithMetal):
         """
         Metal.motive should return a value with unit eV
         """
-        self.assertEqual(self.el.motive().unit, Unit("eV"))
+        self.assertEqual(self.el.motive().unit, units.Unit("eV"))
 
     def test_thermoelectron_current_density(self):
         """
         Metal.thermoelectron_current_density should return a value with unit A/cm2
         """
-        self.assertEqual(self.el.thermoelectron_current_density().unit, Unit("A/cm2"))
+        self.assertEqual(self.el.thermoelectron_current_density().unit, units.Unit("A/cm2"))
 
 
 class CalculatorsReturnValues(TestBaseWithMetal):
