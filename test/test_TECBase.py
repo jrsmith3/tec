@@ -29,9 +29,11 @@ class Base(unittest.TestCase):
         self.co = co
 
 
-class InstantiationInputWrongType(Base):
+class Instantiation(Base):
     """
-    Test instantiation with non-`tec.electrode` args
+    Tests all aspects of instantiation
+
+    Tests include: instantiation with args of wrong type, etc.
     """
     def test_emitter_non_electrode(self):
         """
@@ -48,9 +50,11 @@ class InstantiationInputWrongType(Base):
         self.assertRaises(TypeError, TECBase, self.em, non_electrode)
 
 
-class SetAttribsWrongType(Base):
+class Set(Base):
     """
-    Tests setting attributes with non-`tec.electrode` data
+    Tests all aspects of setting attributes
+
+    Tests include: setting attributes of wrong type, etc.
     """
     def test_emitter_non_electrode(self):
         """
@@ -79,9 +83,11 @@ class SetAttribsWrongType(Base):
             self.fail("`collector` attribute can be assigned a non-electrode value.")
 
 
-class CalculatorsInput(Base):
+class MethodsInput(Base):
     """
-    Tests calculator methods that take input
+    Tests methods which take input parameters
+
+    Tests include: passing invalid input, etc.
     """
     def test_i64(self):
         """
@@ -154,9 +160,9 @@ class CalculatorsInput(Base):
         self.assertRaises(ValueError, self.t.motive, position)
 
 
-class CalculatorsReturnType(Base):
+class MethodsReturnType(Base):
     """
-    Tests output types of the calculator methods
+    Tests methods' output types
     """
     def test_motive(self):
         """
@@ -255,9 +261,9 @@ class CalculatorsReturnType(Base):
         self.assertIsInstance(self.t.thermal_rad_rate(), units.Quantity)
 
 
-class CalculatorsReturnUnits(Base):
+class MethodsReturnUnits(Base):
     """
-    Tests output units, where applicable, of the calculator methods
+    Tests methods' output units where applicable
     """
     def test_motive(self):
         """
@@ -341,9 +347,9 @@ class CalculatorsReturnUnits(Base):
             self.assertEqual(self.t.thermal_rad_rate().unit, units.Unit("W"))
 
 
-class CalculatorsReturnValues(Base):
+class MethodsReturnValues(Base):
     """
-    Tests values of calculator methods against known values
+    Tests values of methods against known values
     """
     def test_thermal_rad_rate_emitter_emissivity_0(self):
         """

@@ -37,10 +37,14 @@ class Base(unittest.TestCase):
 
 # Test classes
 # ============
-class InstantiationInputArgsWrongType(Base):
+class Instantiation(Base):
     """
-    Test instantiation with non-numeric args
+    Tests all aspects of instantiation
+
+    Tests include: instantiation with args of wrong type, instantiation with input values outside constraints, etc.
     """
+    # Input arguments wrong type
+    # ==========================
     def test_electron_effective_mass_non_numeric(self):
         """
         SC instantiation requires numeric `electron_effective_mass` value
@@ -139,14 +143,8 @@ class InstantiationInputArgsWrongType(Base):
         else:
             self.fail("`bandgap` field of instantiating dict must be numeric.")
 
-
-class InstantiationInputOutsideConstraints(Base):
-    """
-    Tests instantiating when input dict values are outside their constraints.
-
-    See the Electrode class docstring for information about the constraints on
-    the input data.
-    """
+    # Input arguments outside constraints
+    # ===================================
     def test_electron_effective_mass_less_than_zero(self):
         """
         SC instantiation requires `electron_effective_mass` > 0.
@@ -197,10 +195,14 @@ class InstantiationInputOutsideConstraints(Base):
         self.assertRaises(ValueError, SC, **self.input_params)
 
 
-class SetAttribsWrongType(Base):
+class Set(Base):
     """
-    Tests setting attributes when input data is non-numeric.
+    Tests all aspects of setting attributes
+
+    Tests include: setting attributes of wrong type, setting attributes outside their constraints, etc.
     """
+    # Set attribute wrong type
+    # ========================
     def test_electron_effective_mass_non_numeric(self):
         """
         SC can only set `electron_effective_mass` with numeric value.
@@ -292,14 +294,8 @@ class SetAttribsWrongType(Base):
         else:
             self.fail("`bandgap` attribute can be assigned a non-numeric value.")
 
-
-class SetAttribsOutsideConstraints(Base):
-    """
-    Tests setting attributes when input values are outside their constraints.
-
-    See the Electrode class docstring for information about the constraints on
-    the data.
-    """
+    # Set attribute outside constraint
+    # ================================
     def test_electron_effective_mass_less_than_zero(self):
         """
         SC must set `electron_effective_mass` > 0.
@@ -385,9 +381,9 @@ class SetAttribsOutsideConstraints(Base):
             self.fail("`bandgap` attribute can be assigned a negative value.")
 
 
-class CalculatorsReturnType(Base):
+class MethodsReturnType(Base):
     """
-    Tests output types of the calculator methods.
+    Tests methods' output types
     """
     def test_cb_effective_dos_type(self):
         """
@@ -420,9 +416,9 @@ class CalculatorsReturnType(Base):
         self.assertIsInstance(self.el.fermi_energy(), units.Quantity)
 
 
-class CalculatorsReturnUnits(Base):
+class MethodsReturnUnits(Base):
     """
-    Tests output units, where applicable, of the calculator methods.
+    Tests methods' output units where applicable
     """
     def test_cb_effective_dos_unit(self):
         """
@@ -455,8 +451,8 @@ class CalculatorsReturnUnits(Base):
         self.assertEqual(self.el.fermi_energy().unit, units.Unit("eV"))
 
 
-class CalculatorsReturnValues(Base):
+class MethodsReturnValues(Base):
     """
-    Tests values of calculator methods against known values.
+    Tests values of methods against known values
     """
     pass

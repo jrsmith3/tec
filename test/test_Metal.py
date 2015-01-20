@@ -28,10 +28,14 @@ class Base(unittest.TestCase):
 
 # Test classes
 # ============
-class InstantiationInputArgsWrongType(Base):
+class Instantiation(Base):
     """
-    Test instantiation with non-numeric args
+    Tests all aspects of instantiation
+
+    Tests include: instantiation with args of wrong type, instantiation with input values outside constraints, etc.
     """
+    # Input arguments wrong type
+    # ==========================
     def test_temp_non_numeric(self):
         """
         Metal instantiation requires numeric `temp` value
@@ -111,14 +115,8 @@ class InstantiationInputArgsWrongType(Base):
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `emissivity` argument.")
 
-
-class InstantiationInputOutsideConstraints(Base):
-    """
-    Tests instantiating when input dict values are outside their constraints
-
-    See the class docstring for information about the constraints on
-    the input data.
-    """
+    # Input arguments outside constraints
+    # ===================================
     def test_temp_less_than_zero(self):
         """
         Metal instantiation requires `temp` > 0
@@ -155,10 +153,14 @@ class InstantiationInputOutsideConstraints(Base):
         self.assertRaises(ValueError, Metal, **self.input_params)
 
 
-class SetAttribsWrongType(Base):
+class Set(Base):
     """
-    Tests setting attributes with non-numeric data
+    Tests all aspects of setting attributes
+
+    Tests include: setting attributes of wrong type, setting attributes outside their constraints, etc.
     """
+    # Set attribute wrong type
+    # ========================
     def test_temp_non_numeric(self):
         """
         Metal can only set `temp` with numeric value
@@ -237,14 +239,8 @@ class SetAttribsWrongType(Base):
         else:
             self.fail("`emissivity` attribute can be assigned a non-numeric value.")
 
-
-class SetAttribsOutsideConstraints(Base):
-    """
-    Tests setting attributes when input values are outside their constraints
-
-    See the class docstring for information about the constraints on
-    the data.
-    """
+    # Set attribute outside constraint
+    # ================================
     def test_temp_less_than_zero(self):
         """
         Metal must set `temp` > 0
@@ -306,9 +302,9 @@ class SetAttribsOutsideConstraints(Base):
             self.fail("`emissivity` attribute can be assigned a negative value.")
 
 
-class CalculatorsReturnType(Base):
+class MethodsReturnType(Base):
     """
-    Tests output types of the calculator methods
+    Tests methods' output types
     """
     def test_motive(self):
         """
@@ -323,9 +319,9 @@ class CalculatorsReturnType(Base):
         self.assertIsInstance(self.el.thermoelectron_current_density(), units.Quantity)
 
 
-class CalculatorsReturnUnits(Base):
+class MethodsReturnUnits(Base):
     """
-    Tests output units, where applicable, of the calculator methods
+    Tests methods' output units where applicable
     """
     def test_motive(self):
         """
@@ -340,8 +336,8 @@ class CalculatorsReturnUnits(Base):
         self.assertEqual(self.el.thermoelectron_current_density().unit, units.Unit("A/cm2"))
 
 
-class CalculatorsReturnValues(Base):
+class MethodsReturnValues(Base):
     """
-    Tests values of calculator methods against known values
+    Tests values of methods against known values
     """
     pass
