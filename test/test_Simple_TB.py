@@ -92,7 +92,17 @@ class MethodsReturnUnits(Base):
     """
     Tests methods' output units where applicable
     """
-    pass
+    def test_forward_current_density(self):
+        """
+        forward_current_density should return a value with unit A/cm2
+        """
+        self.assertEqual(self.t.forward_current_density().unit, units.Unit("A/cm2"))
+
+    def test_back_current_density(self):
+        """
+        back_current_density should return a value with unit A/cm2
+        """
+        self.assertEqual(self.t.back_current_density().unit, units.Unit("A/cm2"))
     
 
 class MethodsReturnValues(Base):
