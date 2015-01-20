@@ -184,12 +184,23 @@ class MethodsReturnType(Base):
         electron_energy = 0.1
         self.assertIsInstance(self.el.transmission_coeff(electron_energy), float)
 
+    def test_motive_type(self):
+        """
+        motive should return a float
+        """
+        electron_energy = 0.1
+        self.assertIsInstance(self.el.motive(), units.Quantity)
+
 
 class MethodsReturnUnits(Base):
     """
     Tests methods' output units where applicable
     """
-    pass
+    def test_motive(self):
+        """
+        Metal.motive should return a value with unit eV
+        """
+        self.assertEqual(self.el.motive().unit, units.Unit("eV"))
 
 
 class MethodsReturnValues(Base):
