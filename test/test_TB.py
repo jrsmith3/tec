@@ -8,7 +8,8 @@ import copy
 input_params = {"temp": 300.,
                 "barrier": 2.0,
                 "richardson": 10., 
-                "thickness": 1., }
+                "thickness": 1., 
+                "nea": 0.1, }
 
 # Base classes
 # ============
@@ -51,6 +52,20 @@ class Instantiation(Base):
         else:
             self.fail("`thickness` field of instantiating dict must be numeric.")
 
+    def test_nea_non_numeric(self):
+        """
+        TB instantiation requires numeric `nea` value
+        """
+        self.input_params["nea"] = "this string is non-numeric."
+
+        try:
+            El = TB(**self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.TB` with a non-numeric `nea` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`nea` field of instantiating dict must be numeric.")
+
     # Input arguments outside constraints
     # ===================================
     def test_thickness_less_than_zero(self):
@@ -58,6 +73,13 @@ class Instantiation(Base):
         TB instantiation requires `thickness` > 0.
         """
         self.input_params["thickness"] = -1.1
+        self.assertRaises(ValueError, TB, **self.input_params)
+
+    def test_nea_less_than_zero(self):
+        """
+        TB instantiation requires `nea` > 0.
+        """
+        self.input_params["nea"] = -1.1
         self.assertRaises(ValueError, TB, **self.input_params)
 
 
@@ -83,6 +105,19 @@ class Set(Base):
         else:
             self.fail("`thickness` attribute can be assigned a non-numeric value.")
 
+    def test_nea_non_numeric(self):
+        """
+        TB can only set `nea` with numeric value.
+        """
+        non_num = "this string is non-numeric."
+        try:
+            self.el.nea = non_num
+        except TypeError:
+            # Setting `nea` as a type that isn't numeric should raise a TypeError, so things are working.
+            pass
+        else:
+            self.fail("`nea` attribute can be assigned a non-numeric value.")
+
     # Set attribute outside constraint
     # ================================
     def test_thickness_less_than_zero(self):
@@ -96,6 +131,18 @@ class Set(Base):
             pass
         else:
             self.fail("`thickness` attribute can be assigned a negative value.")
+
+    def test_nea_less_than_zero(self):
+        """
+        TB must set `nea` > 0.
+        """
+        try:
+            self.el.nea = -1.1
+        except ValueError:
+            # Attempting to set the `nea` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`nea` attribute can be assigned a negative value.")
 
 
 class MethodsInput(Base):
