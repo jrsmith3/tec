@@ -294,9 +294,10 @@ class TECBase(object):
         """
         kT_E2 = 2 * constants.k_B * self.emitter.temp
         kT_C2 = 2 * constants.k_B * self.collector.temp
+        max_motive = self.max_motive() - (constants.e.si * self.emitter.voltage)
 
-        forward = units.Unit("cm2") * self.forward_current_density() * (self.max_motive() + kT_E2) / constants.e.si
-        back = units.Unit("cm2") * self.back_current_density() * (self.max_motive() + kT_C2) / constants.e.si
+        forward = units.Unit("cm2") * self.forward_current_density() * (max_motive + kT_E2) / constants.e.si
+        back = units.Unit("cm2") * self.back_current_density() * (max_motive + kT_C2) / constants.e.si
 
         cooling_rate = (forward - back).to("W")
 
