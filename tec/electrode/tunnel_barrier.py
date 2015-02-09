@@ -11,10 +11,12 @@ class TB(Metal):
     """
     Tunnel barrier collector electrode
 
+    A `TB` electrode consists of a thin tunnel barrier layer deposited on a metallic substrate. The tunnel barrier layer features negative electron affinity (NEA) such that the vacuum level of the surface of the tunnel barrier layer exists at a lower energy state than the conduction band minimum. Thus, an electron arriving at the electrode from a point outside the electrode can tunnel through the barrier into the bulk even if the electron's energy is below the conduction band minimum.
+
     :param temp: Temperature (:math:`T`).
-    :param barrier: Emission barrier (a.k.a. work function). The barrier is the difference between the vacuum energy of the surface and the Fermi energy. (:math:`\phi`)
+    :param barrier: Offset from the conduction band minimum of the tunnel barrier layer to the Fermi level of the bulk. NOTE: this quantity *is not* the work function of the material.
     :param richardson: Richardson's constant. (:math:`A`)
-    :param thickness: Barrier thickness. (:math:`t`)
+    :param thickness: Tunnel barrier layer thickness. (:math:`t`)
     :param nea: Negative electron affinity. Note this quantity is measured from the vacuum energy to the conduction band minimum; therefore its sign is opposite of other band or motive quantities. A positive value of `nea` determines the amount by which the vacuum level is *below* the conduction band minimum. (:math:`t`)
     """
 
