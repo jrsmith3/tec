@@ -137,7 +137,7 @@ class MethodsInput(Base):
 
     def test_motive_num_above_interelectrode_space(self):
         """
-        motive should raise ValueError for numerical input below the interelectrode space
+        motive should raise ValueError for numerical input above the interelectrode space
         """
         offset = units.Quantity(1., "um")
         position = np.abs(co.position.value) + offset.value
@@ -153,7 +153,7 @@ class MethodsInput(Base):
 
     def test_motive_quantity_above_interelectrode_space(self):
         """
-        motive should raise ValueError for numerical input below the interelectrode space
+        motive should raise ValueError for numerical input above the interelectrode space
         """
         offset = units.Quantity(1., "um")
         position = np.abs(co.position) + offset
