@@ -270,7 +270,7 @@ class TECBase(object):
 
         where :math:`Q_{E}` and :math:`Q_{r}` are calculated using :meth:`electron_cooling_rate` and :meth:`thermal_rad_rate`, respectively.
 
-        :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+        :returns: `astropy.units.Quantity` in units of :math:`W`.
         :symbol: :math:`Q_{in}`
         """
         heat_supply_rate = self.electron_cooling_rate() + self.thermal_rad_rate()
@@ -289,14 +289,15 @@ class TECBase(object):
 
         The quantity :math:`S` is the area of the electrode, and taken to be unit area (1 cm^2) here.
 
-        :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+        :returns: `astropy.units.Quantity` in units of :math:`W`.
         :symbol: :math:`Q_{E}`
         """
         kT_E2 = 2 * constants.k_B * self.emitter.temp
         kT_C2 = 2 * constants.k_B * self.collector.temp
+        max_motive = self.max_motive() - (constants.e.si * self.emitter.voltage)
 
-        forward = units.Unit("cm2") * self.forward_current_density() * (self.max_motive() + kT_E2) / constants.e.si
-        back = units.Unit("cm2") * self.back_current_density() * (self.max_motive() + kT_C2) / constants.e.si
+        forward = units.Unit("cm2") * self.forward_current_density() * (max_motive + kT_E2) / constants.e.si
+        back = units.Unit("cm2") * self.back_current_density() * (max_motive + kT_C2) / constants.e.si
 
         cooling_rate = (forward - back).to("W")
 
@@ -312,7 +313,7 @@ class TECBase(object):
         .. math::
             Q_{r} = \\frac{\sigma (T_{E}^{4} - T_{C}^{4})}{\\frac{1}{\epsilon_{E}} + \\frac{1}{\epsilon_{C}} - 1}
 
-        :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+        :returns: `astropy.units.Quantity` in units of :math:`W`.
         :symbol: :math:`Q_{r}`
         """
         ideal_rad_rate = constants.sigma_sb * (self.emitter.temp**4 - self.collector.temp**4)

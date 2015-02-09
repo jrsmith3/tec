@@ -137,7 +137,7 @@ class MethodsInput(Base):
 
     def test_motive_num_above_interelectrode_space(self):
         """
-        motive should raise ValueError for numerical input below the interelectrode space
+        motive should raise ValueError for numerical input above the interelectrode space
         """
         offset = units.Quantity(1., "um")
         position = np.abs(co.position.value) + offset.value
@@ -153,7 +153,7 @@ class MethodsInput(Base):
 
     def test_motive_quantity_above_interelectrode_space(self):
         """
-        motive should raise ValueError for numerical input below the interelectrode space
+        motive should raise ValueError for numerical input above the interelectrode space
         """
         offset = units.Quantity(1., "um")
         position = np.abs(co.position) + offset
@@ -329,22 +329,22 @@ class MethodsReturnUnits(Base):
         self.assertEqual(self.t.output_power_density().unit, units.Unit("W/cm2"))
 
     def test_heat_supply_rate(self):
-            """
-            heat_supply_rate should return a value with unit W
-            """
-            self.assertEqual(self.t.heat_supply_rate().unit, units.Unit("W"))
+        """
+        heat_supply_rate should return a value with unit W
+        """
+        self.assertEqual(self.t.heat_supply_rate().unit, units.Unit("W"))
 
     def test_electron_cooling_rate(self):
-            """
-            electron_cooling_rate should return a value with unit W
-            """
-            self.assertEqual(self.t.electron_cooling_rate().unit, units.Unit("W"))
+        """
+        electron_cooling_rate should return a value with unit W
+        """
+        self.assertEqual(self.t.electron_cooling_rate().unit, units.Unit("W"))
 
     def test_thermal_rad_rate(self):
-            """
-            thermal_rad_rate should return a value with unit W
-            """
-            self.assertEqual(self.t.thermal_rad_rate().unit, units.Unit("W"))
+        """
+        thermal_rad_rate should return a value with unit W
+        """
+        self.assertEqual(self.t.thermal_rad_rate().unit, units.Unit("W"))
 
 
 class MethodsReturnValues(Base):
