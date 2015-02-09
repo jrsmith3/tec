@@ -44,9 +44,13 @@ class TB(Metal):
         if electron_energy < 0:
             raise ValueError("electron energy must be > 0.")
 
-        exponent = (2 * self.thickness)/(constants.hbar) * np.sqrt(2 * constants.m_e * (self.barrier - electron_energy))
+        if electron_energy > self.barrier:
+            trans_coeff = 1.
+        else:
+            exponent = (2 * self.thickness)/(constants.hbar) * np.sqrt(2 * constants.m_e * (self.barrier - electron_energy))
+            trans_coeff = np.exp(- exponent.decompose()).value
 
-        return np.exp(- exponent.decompose()).value
+        return trans_coeff
 
     def motive(self):
         """
