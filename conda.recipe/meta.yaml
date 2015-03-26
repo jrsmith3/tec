@@ -15,7 +15,7 @@ requirements:
     build:
         - python
         - numpy
-        - scipy
+        - scipy >=0.15.0
         - matplotlib
         - astropy
         - physicalproperty
@@ -23,7 +23,7 @@ requirements:
     run:
         - python
         - numpy
-        - scipy
+        - scipy >=0.15.0
         - matplotlib
         - astropy
         - physicalproperty
