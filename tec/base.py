@@ -161,7 +161,7 @@ class TECBase(object):
             scaling_factor = np.exp(-exponent)
         else:
             scaling_factor = 1.
-            
+
         current = self.emitter.thermoelectron_current_density() * scaling_factor
 
         return current
@@ -182,7 +182,7 @@ class TECBase(object):
             scaling_factor = np.exp(-exponent)
         else:
             scaling_factor = 1.
-            
+
         current = self.collector.thermoelectron_current_density() * scaling_factor
 
         return current
