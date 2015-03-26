@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup
-import tec
+execfile("tec/version.py")
 
 setup(name = "tec",
-      version = tec.__version__,
+      version = __version__,
       author = "Joshua Ryan Smith",
       author_email = "joshua.r.smith@gmail.com",
       packages = ["tec",
