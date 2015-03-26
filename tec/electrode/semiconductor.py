@@ -5,6 +5,7 @@ from scipy import optimize
 from astropy import units, constants
 from metal import Metal
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
+from ibei import uibei
 
 
 class SC(Metal):
@@ -161,3 +162,27 @@ class SC(Metal):
         ret_val = el_carrier_conc - ho_carrier_conc + self.acceptor_concentration / (1 + 4 * np.exp(exponent_3))
 
         return ret_val.value
+
+    def photon_flux(self):
+        """
+        Number of photons per unit time per unit area
+
+        :returns: `astropy.units.Quantity` in units of :math:`s^{-1} cm^{-2}`.
+        """
+        photon_flux = self.emissivity * uibei(2, self.bandgap, self.temp, 0)
+        return photon_flux.to("1/(s*cm2)")
+
+    def photon_energy_flux(self):
+        """
+        Energy flux emitted by Stefan-Boltzmann radiation
+
+        The energy flux (or power density) of Stefan-Boltzmann photons is given by
+
+        .. math::
+
+            j = \\frac{2 \pi^{5} k^{4}}{15 c^{2} h^{3}} T^{4}
+
+        :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+        """
+        energy_flux = self.emissivity * uibei(3, self.bandgap, self.temp, 0)
+        return energy_flux.to("W/cm2")
