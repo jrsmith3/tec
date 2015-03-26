@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-from astropy import units
-from astropy import constants
+from astropy import units, constants
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
+from ibei import uibei
 
 
 class Metal(object):
@@ -82,3 +82,27 @@ class Metal(object):
             current_density = coefficient * np.exp(-exponent)
 
         return current_density.to("A/cm2")
+
+    def photon_flux(self):
+        """
+        Number of photons per unit time per unit area
+
+        :returns: `astropy.units.Quantity` in units of :math:`s^{-1} cm^{-2}`.
+        """
+        photon_flux = self.emissivity * uibei(2, 0, self.temp, 0)
+        return photon_flux.to("1/(s*cm2)")
+
+    def photon_energy_flux(self):
+        """
+        Energy flux emitted by Stefan-Boltzmann radiation
+
+        The energy flux (or power density) of Stefan-Boltzmann photons is given by
+
+        .. math::
+
+            j = \\frac{2 \pi^{5} k^{4}}{15 c^{2} h^{3}} T^{4}
+
+        :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+        """
+        energy_flux = self.emissivity * uibei(3, 0, self.temp, 0)
+        return energy_flux.to("W/cm2")
