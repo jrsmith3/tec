@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from distutils.core import setup
+from setuptools import setup
 import tec
 
 setup(name = "tec",
@@ -20,5 +20,7 @@ setup(name = "tec",
       install_requires = ["numpy",
                        	  "scipy",
                      	  "matplotlib",
-                          "physicalproperty",],
+                          "astropy",
+                          "physicalproperty",
+                          "ibei"],
       license = "MIT",)
