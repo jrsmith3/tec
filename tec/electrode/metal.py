@@ -27,7 +27,7 @@ class Metal(object):
     position = PhysicalProperty(unit="um")
     emissivity = PhysicalProperty(lo_bnd=0, up_bnd=1)
 
-    def __init__(self, temp, barrier, richardson, voltage=0, position=0, emissivity=0):
+    def __init__(self, temp, barrier, richardson=120, voltage=0, position=0, emissivity=0):
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
