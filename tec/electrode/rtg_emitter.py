@@ -21,6 +21,11 @@ def sphere_volume(radius):
     vol = (4./3) * np.pi * radius**3
     return vol
 
+# Define unit of radioactivity, Becquerel
+Bq = units.def_unit("becquerel",
+    1/units.s,
+    doc="SI derived unit of radioactivity",
+    prefixes=True, )
 
 class Radiosiotope_Emitter(Metal):
     """
