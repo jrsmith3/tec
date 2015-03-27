@@ -385,31 +385,31 @@ class MethodsReturnType(Base):
     """
     Tests methods' output types
     """
-    def test_cb_effective_dos_type(self):
+    def test_cb_effective_dos(self):
         """
         cb_effective_dos should return an astropy.units.Quantity.
         """
         self.assertIsInstance(self.el.cb_effective_dos(), units.Quantity)
 
-    def test_vb_effective_dos_type(self):
+    def test_vb_effective_dos(self):
         """
         vb_effective_dos should return an astropy.units.Quantity.
         """
         self.assertIsInstance(self.el.vb_effective_dos(), units.Quantity)
 
-    def test_electron_concentration_type(self):
+    def test_electron_concentration(self):
         """
         electron_concentration should return an astropy.units.Quantity.
         """
         self.assertIsInstance(self.el.electron_concentration(), units.Quantity)
 
-    def test_hole_concentration_type(self):
+    def test_hole_concentration(self):
         """
         hole_concentration should return an astropy.units.Quantity.
         """
         self.assertIsInstance(self.el.hole_concentration(), units.Quantity)
 
-    def test_fermi_energy_type(self):
+    def test_fermi_energy(self):
         """
         fermi_energy should return an astropy.units.Quantity.
         """
@@ -432,31 +432,31 @@ class MethodsReturnUnits(Base):
     """
     Tests methods' output units where applicable
     """
-    def test_cb_effective_dos_unit(self):
+    def test_cb_effective_dos(self):
         """
         cb_effective_dos should return a value with unit 1/cm3.
         """
         self.assertEqual(self.el.cb_effective_dos().unit, units.Unit("1/cm3"))
 
-    def test_vb_effective_dos_unit(self):
+    def test_vb_effective_dos(self):
         """
         vb_effective_dos should return a value with unit 1/cm3.
         """
         self.assertEqual(self.el.vb_effective_dos().unit, units.Unit("1/cm3"))
 
-    def test_electron_concentration_unit(self):
+    def test_electron_concentration(self):
         """
         electron_concentration should return a value with unit 1/cm3.
         """
         self.assertEqual(self.el.electron_concentration().unit, units.Unit("1/cm3"))
 
-    def test_hole_concentration_unit(self):
+    def test_hole_concentration(self):
         """
         hole_concentration should return a value with unit 1/cm3.
         """
         self.assertEqual(self.el.hole_concentration().unit, units.Unit("1/cm3"))
 
-    def test_fermi_energy_unit(self):
+    def test_fermi_energy(self):
         """
         fermi_energy should return a value with unit eV.
         """
