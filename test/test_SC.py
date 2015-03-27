@@ -415,6 +415,18 @@ class MethodsReturnType(Base):
         """
         self.assertIsInstance(self.el.fermi_energy(), units.Quantity)
 
+    def test_photon_flux(self):
+        """
+        Metal.photon_flux should return an astropy.units.Quantity
+        """
+        self.assertIsInstance(self.el.photon_flux(), units.Quantity)
+
+    def test_photon_energy_flux(self):
+        """
+        Metal.photon_energy_flux should return an astropy.units.Quantity
+        """
+        self.assertIsInstance(self.el.photon_energy_flux(), units.Quantity)
+
 
 class MethodsReturnUnits(Base):
     """
@@ -449,6 +461,18 @@ class MethodsReturnUnits(Base):
         fermi_energy should return a value with unit eV.
         """
         self.assertEqual(self.el.fermi_energy().unit, units.Unit("eV"))
+
+    def test_photon_flux(self):
+        """
+        SC.photon_flux should return a value with unit W/cm2
+        """
+        self.assertEqual(self.el.photon_flux().unit, units.Unit("1/(s*cm2)"))
+
+    def test_photon_energy_flux(self):
+        """
+        SC.photon_energy_flux should return a value with unit 1/(s*cm2)
+        """
+        self.assertEqual(self.el.photon_energy_flux().unit, units.Unit("W/cm2"))
 
 
 class MethodsReturnValues(Base):
