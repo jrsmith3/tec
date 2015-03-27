@@ -27,6 +27,12 @@ Bq = units.def_unit("becquerel",
     doc="SI derived unit of radioactivity",
     prefixes=True, )
 
+# Define unit of radioactivity, Curie
+Ci = units.def_unit("curie",
+    3.7e10 * Bq,
+    "Common, non-SI unit of radioiactivity",
+    prefixes=True, )
+
 class Radiosiotope_Emitter(Metal):
     """
     Spherical radioisotope emitter
