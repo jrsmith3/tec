@@ -8,3 +8,4 @@ Utility classes and methods (:mod:`utils`)
 
 import geometry
 import units
+import isotopes
