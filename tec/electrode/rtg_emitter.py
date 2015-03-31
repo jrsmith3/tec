@@ -7,33 +7,7 @@ from physicalproperty import PhysicalProperty, find_PhysicalProperty
 from ibei import uibei
 
 
-def sphere_surface_area(radius):
-    """
-    Surface area of sphere
-    """
-    area = 4 * np.pi * radius**2
-    return area
-
-def sphere_volume(radius):
-    """
-    Volume of sphere
-    """
-    vol = (4./3) * np.pi * radius**3
-    return vol
-
-# Define unit of radioactivity, Becquerel
-Bq = units.def_unit("becquerel",
-    1/units.s,
-    doc="SI derived unit of radioactivity",
-    prefixes=True, )
-
-# Define unit of radioactivity, Curie
-Ci = units.def_unit("curie",
-    3.7e10 * Bq,
-    "Common, non-SI unit of radioiactivity",
-    prefixes=True, )
-
-class Radiosiotope_Emitter(Metal):
+class Radiosiotope_Emitter(SC):
     """
     Spherical radioisotope emitter
 
@@ -46,7 +20,8 @@ class Radiosiotope_Emitter(Metal):
     radioisotope_density = PhysicalProperty(unit="g/cm3", lo_bnd=0)
     beta_energy = PhysicalProperty(unit="keV", lo_bnd=0)
 
-    def __init__(self, temp, barrier, bandgap, inner_radius, shell_thickness, specific_activity, radioisotope_density, beta_energy, richardson=120, electron_effective_mass=constants.m_e, hole_effective_mass=constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0): self.temp = temp
+    def __init__(self, temp, barrier, bandgap, inner_radius, shell_thickness, specific_activity, radioisotope_density, beta_energy, richardson=120, electron_effective_mass=constants.m_e, hole_effective_mass=constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0): 
+        self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
         self.electron_effective_mass = electron_effective_mass
