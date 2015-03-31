@@ -10,4 +10,4 @@ Base Library (:mod:`electrode`)
 
 from metal import *
 from semiconductor import *
-from rtg_emitter import Radiosiotope_Emitter
+from rtg_emitter import Radioisotope_Emitter

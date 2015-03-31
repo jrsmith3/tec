@@ -7,7 +7,7 @@ from physicalproperty import PhysicalProperty, find_PhysicalProperty
 from ibei import uibei
 
 
-class Radiosiotope_Emitter(SC):
+class Radioisotope_Emitter(SC):
     """
     Spherical radioisotope emitter
 
