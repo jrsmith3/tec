@@ -3,6 +3,7 @@
 import numpy as np
 from astropy import units, constants
 from semiconductor import SC
+from tec.utils import units, geometry
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
 from ibei import uibei
 
@@ -49,22 +50,22 @@ class Radioisotope_Emitter(SC):
         """
         Volume of radioisotope
         """
-        vol = sphere_volume(self.inner_radius)
+        vol = geometry.sphere_volume(self.inner_radius)
         return vol.to("um3")
 
     def radioisotope_surface_area(self):
         """
         Surface area of radioisotope
         """
-        area = sphere_surface_area(self.inner_radius)
+        area = geometry.sphere_surface_area(self.inner_radius)
         return area.to("um2")
 
     def shell_surface_area(self):
         """
         Surface area of shell
         """
-        radius = self.inner_radius + shelf.shell_thickness
-        area = sphere_surface_area(radius)
+        radius = self.inner_radius + self.shell_thickness
+        area = geometry.sphere_surface_area(radius)
         return area.to("um2")
 
     def beta_power(self):
@@ -113,7 +114,8 @@ class Radioisotope_Emitter(SC):
         """
         kt2 = 2 * constants.k_B * self.temp
         thermal_potential = (self.barrier + kt2)/constants.e.to("C")
-        power = thermal_potential * self.thermoelectron_current_density()
+        power_density = thermal_potential * self.thermoelectron_current_density()
+        power = power_density * self.shell_surface_area()
 
         return power.to("W")
 
