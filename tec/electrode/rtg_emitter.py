@@ -21,9 +21,15 @@ class Radiosiotope_Emitter(SC):
     beta_energy = PhysicalProperty(unit="keV", lo_bnd=0)
 
     def __init__(self, temp, barrier, bandgap, inner_radius, shell_thickness, specific_activity, radioisotope_density, beta_energy, richardson=120, electron_effective_mass=constants.m_e, hole_effective_mass=constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0): 
+        # `Metal` attributes
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
+        self.voltage = voltage
+        self.position = position
+        self.emissivity = emissivity    
+
+        # `SC` attributes
         self.electron_effective_mass = electron_effective_mass
         self.hole_effective_mass = hole_effective_mass
         self.acceptor_concentration = acceptor_concentration
@@ -31,9 +37,8 @@ class Radiosiotope_Emitter(SC):
         self.donor_concentration = donor_concentration
         self.donor_ionization_energy = donor_ionization_energy
         self.bandgap = bandgap
-        self.voltage = voltage
-        self.position = position
-        self.emissivity = emissivity    
+
+        # `Radioisotope_Emitter` attributes
         self.inner_radius = inner_radius
         self.shell_thickness = shell_thickness
         self.specific_activity = specific_activity
