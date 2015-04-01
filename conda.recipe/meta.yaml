@@ -6,10 +6,11 @@ package:
     # string in the built package.
 
 source:
-    path: ..
+    git_url: ..
 
 build:
     # noarch_python: True
+    string: {{ environ.get('GIT_BUILD_STR', '') }}
 
 requirements:
     build:
