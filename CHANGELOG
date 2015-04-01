@@ -1,0 +1,7 @@
+1.0.0.dev1
+==========
+Switch to PEP 440 for versioning
+
+This project was using [Semantic Versioning](http://semver.org) as its
+versioning scheme. PEP 440 is more appropriate since the code is
+written in python.
