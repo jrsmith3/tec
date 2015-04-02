@@ -1,0 +1,45 @@
+package:
+    name: tec
+    # version: x.y.z
+    # The version string is stored in `tec/version.py`.
+    # `build.sh` includes code to properly incorporate the version
+    # string in the built package.
+
+about:
+    home: https://github.com/jrsmith3/tec
+    license: MIT
+    summary: Descriptor class for physical property attributes
+
+source:
+    git_url: ..
+
+build:
+    # noarch_python: True
+    string: {{ environ.get('GIT_BUILD_STR', '') }}
+
+requirements:
+    build:
+        - python
+        - numpy
+        - scipy >=0.15.0
+        - matplotlib
+        - astropy
+        - physicalproperty
+        - ibei
+    run:
+        - python
+        - numpy
+        - scipy >=0.15.0
+        - matplotlib
+        - astropy
+        - physicalproperty
+        - ibei
+
+test:
+    files:
+        - ../test/test_Metal.py
+        - ../test/test_SC.py
+        - ../test/test_TECBase.py
+
+    requires:
+        - nose
