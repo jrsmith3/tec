@@ -5,6 +5,11 @@ package:
     # `build.sh` includes code to properly incorporate the version
     # string in the built package.
 
+about:
+    home: https://github.com/jrsmith3/tec
+    license: MIT
+    summary: Descriptor class for physical property attributes
+
 source:
     git_url: ..
 
@@ -38,8 +43,3 @@ test:
 
     requires:
         - nose
-
-about:
-    home: https://github.com/jrsmith3/tec
-    license: MIT
-    summary: Descriptor class for physical property attributes
