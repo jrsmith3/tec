@@ -83,6 +83,24 @@ class Metal(object):
 
         return current_density.to("A/cm2")
 
+    def thermoelectron_energy_flux(self):
+        """
+        Energy flux emitted via thermoelectrons
+
+        The energy flux (power density) of thermoelectrons is given by 
+
+        .. math::
+            J_{RD} \\frac{\phi + 2kT}{e}
+
+        :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
+        :symbol: None
+        """
+        kt2 = 2 * constants.k_B * self.temp
+        thermal_potential = (self.barrier + kt2)/constants.e.to("C")
+        energy_flux = thermal_potential * self.thermoelectron_current_density()
+
+        return energy_flux.to("W/cm2")        
+
     def photon_flux(self):
         """
         Number of photons per unit time per unit area
