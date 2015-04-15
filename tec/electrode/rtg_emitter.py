@@ -112,10 +112,7 @@ class Radioisotope_Emitter(SC):
         """
         Power emitted from the emitter via thermoelectrons
         """
-        kt2 = 2 * constants.k_B * self.temp
-        thermal_potential = (self.barrier + kt2)/constants.e.to("C")
-        power_density = thermal_potential * self.thermoelectron_current_density()
-        power = power_density * self.shell_surface_area()
+        power = self.thermoelectron_energy_flux() * self.shell_surface_area()
 
         return power.to("W")
 
