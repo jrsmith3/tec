@@ -39,6 +39,7 @@ test:
     files:
         - ../test/test_Metal.py
         - ../test/test_SC.py
+        - ../test/test_Radioisotope_Emitter.py
         - ../test/test_TECBase.py
 
     requires:
