@@ -22,7 +22,6 @@ requirements:
         - python
         - numpy
         - scipy >=0.15.0
-        - matplotlib
         - astropy
         - physicalproperty
         - ibei
@@ -30,7 +29,6 @@ requirements:
         - python
         - numpy
         - scipy >=0.15.0
-        - matplotlib
         - astropy
         - physicalproperty
         - ibei
