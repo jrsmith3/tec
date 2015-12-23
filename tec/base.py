@@ -9,7 +9,7 @@ try:
     import matplotlib.pyplot as plt
     import matplotlib
 except ImportError, e:
-    if e.message != 'No module named matplotlib':
+    if not e.args[0].startswith('No module named matplotlib'):
         raise
 
 class TECBase(object):
