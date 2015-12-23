@@ -1,3 +1,8 @@
+1.0.0.dev2
+==========
+Host on anaconda.org for easy installation via conda
+
+
 1.0.0.dev1
 ==========
 Switch to PEP 440 for versioning
