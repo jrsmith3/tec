@@ -20,7 +20,6 @@ setup(name="tec",
                  "Natural Language :: English", ],
     install_requires=["numpy",
         "scipy>0.15",
-        "matplotlib",
         "astropy",
         "physicalproperty",
         "ibei"], )
