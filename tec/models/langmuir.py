@@ -178,41 +178,6 @@ class Langmuir(TECBase):
     
 
   # Methods regarding motive ----------------------------------------
-  def calc_motive(self):
-    """
-    Calculates the motive (meta)data and populates the 'motive_data' attribute.
-    """
-    # Throw out any nea attributes if they exist.
-    # I feel like this code needs some explanation. The model this class implements assumes that neither electrode has NEA. Therefore, it doesn't make sense to allow anyone to set an "nea" attribute for either electrode. However, it is possible to instantiate a TEC_Langmuir object without either electrode having an "nea" attribute, then later set an "nea" attribute for one of the electrodes. It would be easy to check for "nea" during instantiation, but I would have to write a lot of ugly, hacky code to prevent either of the electrodes from acquiring an "nea" attribute later on. Since the calc_motive() method is presumably called whenever the TEC_Langmuir attributes (or sub-attributes) are called, the following block of code will notice if "nea" has been added to the electrodes, and will remove it.
-    for electrode in ["Emitter","Collector"]:
-      if "nea" in self[electrode]:
-        del self[electrode]["nea"]
-    
-    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    
-    self["motive_data"] = {}
-    self["motive_data"]["dps"] = DimensionlessLangmuirPoissonSoln()
-    
-    self["motive_data"]["saturation_pt"] = self.calc_saturation_pt()
-    self["motive_data"]["critical_pt"] = self.calc_critical_pt()
-    
-    if self.calc_output_voltage() < self["motive_data"]["saturation_pt"]["output_voltage"]:
-      # Accelerating mode.
-      self["motive_data"]["max_motive_ht"] = self["Emitter"].calc_motive_bc()
-    elif self.calc_output_voltage() > self["motive_data"]["critical_pt"]["output_voltage"]:
-      # Retarding mode.
-      self["motive_data"]["max_motive_ht"] = self["Collector"].calc_motive_bc()
-    else:
-      # Space charge limited mode.
-      output_current_density = optimize.brentq(self.output_voltage_target_function,\
-        self["motive_data"]["saturation_pt"]["output_current_density"],\
-        self["motive_data"]["critical_pt"]["output_current_density"])
-        
-      barrier = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
-        np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
-      self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
-    
-
   def get_motive(self,pos):
     """
     Value of motive relative to ground for given value(s) of position in J.
@@ -266,6 +231,41 @@ class Langmuir(TECBase):
     else:
       return self["motive_data"]["max_motive_ht"]
   
+
+  def calc_motive(self):
+    """
+    Calculates the motive (meta)data and populates the 'motive_data' attribute.
+    """
+    # Throw out any nea attributes if they exist.
+    # I feel like this code needs some explanation. The model this class implements assumes that neither electrode has NEA. Therefore, it doesn't make sense to allow anyone to set an "nea" attribute for either electrode. However, it is possible to instantiate a TEC_Langmuir object without either electrode having an "nea" attribute, then later set an "nea" attribute for one of the electrodes. It would be easy to check for "nea" during instantiation, but I would have to write a lot of ugly, hacky code to prevent either of the electrodes from acquiring an "nea" attribute later on. Since the calc_motive() method is presumably called whenever the TEC_Langmuir attributes (or sub-attributes) are called, the following block of code will notice if "nea" has been added to the electrodes, and will remove it.
+    for electrode in ["Emitter","Collector"]:
+      if "nea" in self[electrode]:
+        del self[electrode]["nea"]
+    
+    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    
+    self["motive_data"] = {}
+    self["motive_data"]["dps"] = DimensionlessLangmuirPoissonSoln()
+    
+    self["motive_data"]["saturation_pt"] = self.calc_saturation_pt()
+    self["motive_data"]["critical_pt"] = self.calc_critical_pt()
+    
+    if self.calc_output_voltage() < self["motive_data"]["saturation_pt"]["output_voltage"]:
+      # Accelerating mode.
+      self["motive_data"]["max_motive_ht"] = self["Emitter"].calc_motive_bc()
+    elif self.calc_output_voltage() > self["motive_data"]["critical_pt"]["output_voltage"]:
+      # Retarding mode.
+      self["motive_data"]["max_motive_ht"] = self["Collector"].calc_motive_bc()
+    else:
+      # Space charge limited mode.
+      output_current_density = optimize.brentq(self.output_voltage_target_function,\
+        self["motive_data"]["saturation_pt"]["output_current_density"],\
+        self["motive_data"]["critical_pt"]["output_current_density"])
+        
+      barrier = physical_constants["boltzmann"] * self["Emitter"]["temp"] * \
+        np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
+      self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
+    
 
   def calc_saturation_pt(self):
     """
