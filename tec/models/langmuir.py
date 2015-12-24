@@ -169,7 +169,7 @@ class Langmuir(TECBase):
   <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
   """
   
-  def calc_back_current_density(self):
+  def back_current_density(self):
     """
     Always 0 since back emission is ignored.
     """
