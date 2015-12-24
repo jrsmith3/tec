@@ -168,6 +168,7 @@ class Langmuir(TECBase):
   >>> type(example_tec["motive_data"]["dps"])
   <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
   """
+
   
   def back_current_density(self):
     """
@@ -175,6 +176,8 @@ class Langmuir(TECBase):
     """
     return 0.0
     
+
+  # Methods regarding motive ----------------------------------------
   def calc_motive(self):
     """
     Calculates the motive (meta)data and populates the 'motive_data' attribute.
@@ -209,6 +212,7 @@ class Langmuir(TECBase):
         np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
       self["motive_data"]["max_motive_ht"] = barrier + self["Emitter"].calc_motive_bc()
     
+
   def get_motive(self,pos):
     """
     Value of motive relative to ground for given value(s) of position in J.
@@ -242,6 +246,7 @@ class Langmuir(TECBase):
       
     return mot
   
+
   def get_max_motive_ht(self, with_position=False):
     """
     Value of the maximum motive relative to ground in J.
@@ -261,6 +266,7 @@ class Langmuir(TECBase):
     else:
       return self["motive_data"]["max_motive_ht"]
   
+
   def calc_saturation_pt(self):
     """
     Determine saturation point condition.
@@ -285,6 +291,7 @@ class Langmuir(TECBase):
     return {"output_voltage":output_voltage,
       	    "output_current_density":output_current_density}
   
+
   def calc_critical_pt(self):
     """
     Determine critical point condition.
@@ -328,6 +335,7 @@ class Langmuir(TECBase):
       motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
     
     return position - self["motive_data"]["dps"].get_position(motive)
+
 
   def output_voltage_target_function(self,output_current_density):
     """
