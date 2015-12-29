@@ -355,6 +355,9 @@ class Langmuir(TECBase):
         else:
             motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
 
+        if motive < 0:
+            raise ValueError("current_density greater than tec's emitter saturation current density")
+
         position2 = self._dps.position(motive)
 
         difference = position1 - position2
