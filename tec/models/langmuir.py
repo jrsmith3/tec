@@ -270,6 +270,24 @@ class Langmuir(TECBase):
 
         return difference
 
+    def max_motive(self):
+        """
+        Value of maximum motive relative to electrical ground
+
+        :returns: `astropy.units.Quantity` in units of :math:`eV`.
+        :symbol: :math:`\psi_{m}`
+        """
+        if self.output_voltage() < self.saturation_point_voltage():
+            # Accelerating mode.
+            motive = self.emitter.motive()
+        elif self.output_voltage() > self.critical_point_voltage():
+            # Retarding mode.
+            motive = self.collector.motive()
+        else:
+            # Space charge limited mode.
+            # See code in `calc_motive` for hints on algorithm.
+            pass
+        return motive
 
     # vvv old vvv
     def calc_motive(self):
