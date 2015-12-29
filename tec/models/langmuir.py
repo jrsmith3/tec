@@ -216,7 +216,7 @@ class Langmuir(TECBase):
 
         position = self.interelectrode_spacing() / self.normalization_length(current_density)
 
-        motive = self.dps.motive(position)
+        motive = self._dps.motive(position)
 
         voltage = (self.emitter.barrier - self.collector.barrier - (motive * constants.k_B * self.emitter.temp))/constants.e.si
 
