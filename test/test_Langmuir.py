@@ -79,6 +79,13 @@ class MethodsReturnType(Base):
         """
         self.assertIsInstance(self.t.saturation_point_voltage(), units.Quantity)
 
+    def test_critical_point_target_function(self):
+        """
+        critical_point_target_function should return float
+        """
+        current_density = units.Quantity(1, "A cm-2")
+        self.assertIsInstance(self.t.critical_point_target_function(current_density), float)
+
 
 class MethodsReturnUnits(Base):
     """
