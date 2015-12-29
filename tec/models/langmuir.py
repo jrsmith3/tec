@@ -188,6 +188,8 @@ class Langmuir(TECBase):
 
         if current_density < 0:
             raise ValueError("current_density cannot be negative")
+        elif current_density == 0.:
+            raise ValueError("current_density cannot be zero")
 
         prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
 
