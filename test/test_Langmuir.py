@@ -46,7 +46,14 @@ class MethodsReturnType(Base):
         back_current_density should return astropy.units.Quantity
         """
         self.assertIsInstance(self.t.back_current_density(), units.Quantity)
-    
+
+    def test_normalization_length(self):
+        """
+        normalization_length should return astropy.units.Quantity
+        """
+        current_density = units.Quantity(1, "A cm-2")
+        self.assertIsInstance(self.t.normalization_length(current_density), units.Quantity)
+
 
 class MethodsReturnUnits(Base):
     """
