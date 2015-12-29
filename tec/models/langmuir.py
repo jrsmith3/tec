@@ -165,6 +165,11 @@ class Langmuir(TECBase):
     <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
     """
 
+    def __init__(self, emitter, collector):
+        self.emitter = emitter
+        self.collector = collector
+        self._dps = DimensionlessLangmuirPoissonSoln()
+
     def back_current_density(self):
         """
         Net current moving from collector to emitter
