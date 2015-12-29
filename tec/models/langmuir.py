@@ -343,10 +343,12 @@ class Langmuir(TECBase):
 
         :returns: `float`.
         """
+        current_density = units.Quantity(current_density, "A cm-2")
+
         # The prefix "dimensionless" is implied in the following 
         # calculations.
-
         position1 = -self.interelectrode_spacing() / self.normalization_length(current_density)
+        position1 = position1.value
 
         if current_density == 0:
             motive = np.inf
