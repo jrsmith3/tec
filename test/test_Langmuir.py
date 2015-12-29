@@ -97,6 +97,12 @@ class MethodsReturnUnits(Base):
         current_density = units.Quantity(1, "A cm-2")
         self.assertEqual(self.t.normalization_length(current_density).unit, units.Unit("um"))
 
+    def test_saturation_point_voltage(self):
+        """
+        saturation_point_voltage should return a value with unit V
+        """
+        self.assertEqual(self.t.saturation_point_voltage().unit, units.Unit("V"))
+
 
 class MethodsReturnValues(Base):
     """
