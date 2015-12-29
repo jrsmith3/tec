@@ -171,6 +171,17 @@ class Langmuir(TECBase):
         """
         return 0.0
 
+    # Methods dealing with critical and saturation points
+    def saturation_point_voltage(self):
+        """
+        Saturation point voltage
+
+        :returns: `astropy.units.Quantity` in units of :math:`V`.
+        :symbol: :math:`V_{S}`
+        """
+        pass
+
+
     def calc_motive(self):
         """
         Calculates the motive (meta)data and populates the 'motive_data' attribute.
