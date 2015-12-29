@@ -192,8 +192,6 @@ class Langmuir(TECBase):
 
         return result.to("um")
 
-
-    # Methods dealing with critical and saturation points
     def saturation_point_voltage(self):
         """
         Saturation point voltage
@@ -201,9 +199,21 @@ class Langmuir(TECBase):
         :returns: `astropy.units.Quantity` in units of :math:`V`.
         :symbol: :math:`V_{S}`
         """
-        pass
+        # The prefix "dimensionless" is implied in the following 
+        # calculations as is the fact that they are taking place
+        # at the saturation point.
+        current_density = self.emitter.thermoelectron_current_density()
+
+        position = self.interelectrode_spacing() / self.normalization_length(current_density)
+
+        motive = self.dps.motive(position)
+
+        voltage = (self.emitter.barrier - self.collector.barrier - (motive * constants.k_B * self.emitter.temp))/constants.e.si
+
+        return voltage.to("V")
 
 
+    # vvv old vvv
     def calc_motive(self):
         """
         Calculates the motive (meta)data and populates the 'motive_data' attribute.
