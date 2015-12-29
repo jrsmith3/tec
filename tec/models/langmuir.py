@@ -174,6 +174,25 @@ class Langmuir(TECBase):
         """
         return units.Quantity(0, "A/cm2")
 
+    # Methods dealing with critical and saturation points
+    def normalization_length(self, current_density):
+        """
+        Normalization length for Langmuir solution
+
+        :param current_density: Current density in units of :math:`A cm^{-2}`.
+        :returns: `astropy.units.Quantity` in units of :math:`\mu m`.
+        :symbol: :math:`x_{0}`
+        """
+        # Coerce `current_density` to `astropy.units.Quantity`
+        current_density = units.Quantity(current_density, "A cm-2")
+
+        prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
+
+        result = prefactor * self.emitter.temp**(3./4.) / current_density**(1./2.)
+
+        return result.to("um")
+
+
     def calc_motive(self):
         """
         Calculates the motive (meta)data and populates the 'motive_data' attribute.
