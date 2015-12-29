@@ -65,6 +65,13 @@ class MethodsReturnUnits(Base):
         """
         self.assertEqual(self.t.back_current_density().unit, units.Unit("A/cm2"))
 
+    def test_normalization_length(self):
+        """
+        normalization_length should return a value with unit um
+        """
+        current_density = units.Quantity(1, "A cm-2")
+        self.assertEqual(self.t.normalization_length(current_density).unit, units.Unit("um"))
+
 
 class MethodsReturnValues(Base):
     """
