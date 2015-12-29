@@ -83,9 +83,7 @@ class MethodsReturnType(Base):
         """
         critical_point_target_function should return float
         """
-        # Use a float as an argument as opposed to an 
-        # astropy.units.Quantity
-        current_density = 1.
+        current_density = 0.5 * self.t.emitter.thermoelectron_current_density()
         self.assertIsInstance(self.t.critical_point_target_function(current_density), float)
 
 
