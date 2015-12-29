@@ -167,7 +167,10 @@ class Langmuir(TECBase):
 
     def back_current_density(self):
         """
-        Always 0 since back emission is ignored.
+        Net current moving from collector to emitter
+
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{b}`
         """
         return 0.0
 
