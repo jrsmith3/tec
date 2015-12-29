@@ -73,6 +73,12 @@ class MethodsReturnType(Base):
         current_density = units.Quantity(1, "A cm-2")
         self.assertIsInstance(self.t.normalization_length(current_density), units.Quantity)
 
+    def test_saturation_point_voltage(self):
+        """
+        saturation_point_voltage should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.saturation_point_voltage(), units.Quantity)
+
 
 class MethodsReturnUnits(Base):
     """
