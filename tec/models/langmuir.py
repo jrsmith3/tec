@@ -233,7 +233,8 @@ class Langmuir(TECBase):
         # calculations.
 
         # Rootfinder to get critical point output current density.
-        output_current_density = optimize.brentq(self.critical_point_target_function, self.emitter.thermoelectron_current_density(), 0)
+        current_density_hi_limit = self.emitter.thermoelectron_current_density()
+        output_current_density = optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
 
         position = -self.interelectrode_spacing() / self.normalization_length(output_current_density)
 
