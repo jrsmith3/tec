@@ -337,18 +337,27 @@ class Langmuir(TECBase):
         return {"output_voltage": output_voltage, "output_current_density": output_current_density}
 
 
-    def critical_point_target_function(self, output_current_density):
+    def critical_point_target_function(self, current_density):
         """
-        Target function for critical point rootfinder.
-        """
-        position = -self.calc_interelectrode_spacing() * ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * (output_current_density**(1.0/2))/(self["Emitter"]["temp"]**(3.0/4))
+        Difference between two methods of calculating dimensionless distance
 
-        if output_current_density == 0:
+        :returns: `float`.
+        """
+        # The prefix "dimensionless" is implied in the following 
+        # calculations.
+
+        position1 = -self.interelectrode_spacing() / self.normalization_length(current_density)
+
+        if current_density == 0:
             motive = np.inf
         else:
-            motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
+            motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
 
-        return position - self["motive_data"]["dps"].get_position(motive)
+        position2 = self._dps.position(motive)
+
+        difference = position1 - position2
+
+        return difference
 
     def output_voltage_target_function(self, output_current_density):
         """
