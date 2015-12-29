@@ -2,8 +2,8 @@
 
 import numpy as np
 from scipy import interpolate, optimize, integrate, special
+from astropy import units, constants
 from tec import TECBase
-from tec import physical_constants
 
 
 class DimensionlessLangmuirPoissonSoln(dict):
@@ -172,7 +172,7 @@ class Langmuir(TECBase):
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{b}`
         """
-        return 0.0
+        return units.Quantity(0, "A/cm2")
 
     def calc_motive(self):
         """
