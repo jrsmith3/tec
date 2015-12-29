@@ -34,7 +34,13 @@ class MethodsInput(Base):
 
     Tests include: passing invalid input, etc.
     """
-    pass
+    def test_normalization_length_non_numeric(self):
+        """
+        normalization_length should raise TypeError with non-numeric, non astropy.units.Quantity input        
+        """
+        current_density = "this string is non-numeric"
+        self.assertRaises(TypeError, self.t.normalization_length, current_density)
+
 
 
 class MethodsReturnType(Base):
