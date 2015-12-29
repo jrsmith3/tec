@@ -186,6 +186,9 @@ class Langmuir(TECBase):
         # Coerce `current_density` to `astropy.units.Quantity`
         current_density = units.Quantity(current_density, "A cm-2")
 
+        if current_density < 0:
+            raise ValueError("current_density cannot be negative")
+
         prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
 
         result = prefactor * self.emitter.temp**(3./4.) / current_density**(1./2.)
