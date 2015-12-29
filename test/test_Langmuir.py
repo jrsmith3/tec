@@ -41,7 +41,11 @@ class MethodsReturnType(Base):
     """
     Tests methods' output types
     """
-    pass
+    def test_back_current_density(self):
+        """
+        back_current_density should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.back_current_density(), units.Quantity)
     
 
 class MethodsReturnUnits(Base):
