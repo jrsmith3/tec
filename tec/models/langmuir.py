@@ -222,6 +222,27 @@ class Langmuir(TECBase):
 
         return voltage.to("V")
 
+    def critical_point_voltage(self):
+        """
+        Critical point voltage
+
+        :returns: `astropy.units.Quantity` in units of :math:`V`.
+        :symbol: :math:`V_{R}`
+        """
+        # The prefix "dimensionless" is implied in the following 
+        # calculations.
+
+        # Rootfinder to get critical point output current density.
+        output_current_density = optimize.brentq(self.critical_point_target_function, self.emitter.thermoelectron_current_density(), 0)
+
+        position = -self.interelectrode_spacing() / self.normalization_length(output_current_density)
+
+        motive = np.log(self.emitter.thermoelectron_current_density() / output_current_density)
+
+        voltage = (self.emitter.barrier - self.collector.barrier + (motive * constants.k_B * self.emitter.temp))/constants.e.si
+
+        return output_voltage.to("V")
+
     def critical_point_target_function(self, current_density):
         """
         Difference between two methods of calculating dimensionless distance
