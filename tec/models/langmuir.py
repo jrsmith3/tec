@@ -222,6 +222,33 @@ class Langmuir(TECBase):
 
         return voltage.to("V")
 
+    def critical_point_target_function(self, current_density):
+        """
+        Difference between two methods of calculating dimensionless distance
+
+        :returns: `float`.
+        """
+        current_density = units.Quantity(current_density, "A cm-2")
+
+        # The prefix "dimensionless" is implied in the following 
+        # calculations.
+        position1 = -self.interelectrode_spacing() / self.normalization_length(current_density)
+        position1 = position1.value
+
+        if current_density == 0:
+            motive = np.inf
+        else:
+            motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
+
+        if motive < 0:
+            raise ValueError("current_density greater than tec's emitter saturation current density")
+
+        position2 = self._dps.position(motive)
+
+        difference = position1 - position2
+
+        return difference
+
 
     # vvv old vvv
     def calc_motive(self):
@@ -336,33 +363,6 @@ class Langmuir(TECBase):
 
         return {"output_voltage": output_voltage, "output_current_density": output_current_density}
 
-
-    def critical_point_target_function(self, current_density):
-        """
-        Difference between two methods of calculating dimensionless distance
-
-        :returns: `float`.
-        """
-        current_density = units.Quantity(current_density, "A cm-2")
-
-        # The prefix "dimensionless" is implied in the following 
-        # calculations.
-        position1 = -self.interelectrode_spacing() / self.normalization_length(current_density)
-        position1 = position1.value
-
-        if current_density == 0:
-            motive = np.inf
-        else:
-            motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
-
-        if motive < 0:
-            raise ValueError("current_density greater than tec's emitter saturation current density")
-
-        position2 = self._dps.position(motive)
-
-        difference = position1 - position2
-
-        return difference
 
     def output_voltage_target_function(self, output_current_density):
         """
