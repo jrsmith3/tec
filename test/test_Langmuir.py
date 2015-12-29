@@ -36,11 +36,17 @@ class MethodsInput(Base):
     """
     def test_normalization_length_non_numeric(self):
         """
-        normalization_length should raise TypeError with non-numeric, non astropy.units.Quantity input        
+        normalization_length should raise TypeError with non-numeric, non astropy.units.Quantity input
         """
         current_density = "this string is non-numeric"
         self.assertRaises(TypeError, self.t.normalization_length, current_density)
 
+    def test_normalization_length_negative_current_density(self):
+        """
+        normalization_length should raise ValueError with negative value of input
+        """
+        current_density = -1.
+        self.assertRaises(ValueError, self.t.normalization_length, current_density)
 
 
 class MethodsReturnType(Base):
