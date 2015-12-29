@@ -48,6 +48,13 @@ class MethodsInput(Base):
         current_density = -1.
         self.assertRaises(ValueError, self.t.normalization_length, current_density)
 
+    def test_normalization_length_zero_current_density(self):
+        """
+        normalization_length should raise ValueError with zero value of input
+        """
+        current_density = 0.
+        self.assertRaises(ValueError, self.t.normalization_length, current_density)
+
 
 class MethodsReturnType(Base):
     """
