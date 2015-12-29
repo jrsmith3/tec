@@ -67,7 +67,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
 
         return {"motive_v_position": motive_v_position, "position_v_motive": position_v_motive}
 
-    def get_position(self, motive, branch="lhs"):
+    def position(self, motive, branch="lhs"):
         """
         Interpolation of dimensionless position at arbitrary dimensionless motive.
 
@@ -94,7 +94,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
         else:
             return self[branch]["position_v_motive"](motive)
 
-    def get_motive(self, position):
+    def motive(self, position):
         """
         Value of motive relative to ground for given value(s) of position in J.
 
