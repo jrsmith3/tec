@@ -193,8 +193,6 @@ class Langmuir(TECBase):
 
         if current_density < 0:
             raise ValueError("current_density cannot be negative")
-        elif current_density == 0.:
-            raise ValueError("current_density cannot be zero")
 
         prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
 
@@ -235,6 +233,7 @@ class Langmuir(TECBase):
         # Rootfinder to get critical point output current density.
         current_density_hi_limit = self.emitter.thermoelectron_current_density()
         output_current_density = optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
+        output_current_density = units.Quantity(output_current_density, "A cm-2")
 
         position = -self.interelectrode_spacing() / self.normalization_length(output_current_density)
 
@@ -242,7 +241,7 @@ class Langmuir(TECBase):
 
         voltage = (self.emitter.barrier - self.collector.barrier + (motive * constants.k_B * self.emitter.temp))/constants.e.si
 
-        return output_voltage.to("V")
+        return voltage.to("V")
 
     def critical_point_target_function(self, current_density):
         """
