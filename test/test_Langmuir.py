@@ -55,6 +55,20 @@ class MethodsInput(Base):
         current_density = 0.
         self.assertRaises(ValueError, self.t.normalization_length, current_density)
 
+    def test_critical_point_target_function_above_bound(self):
+        """
+        critical_point_target_function should raise ValueError if input is greater than the upper bound
+        """
+        current_density = 2 * self.t.emitter.thermoelectron_current_density()
+        self.assertRaises(ValueError, self.t.critical_point_target_function(current_density))
+
+    def test_critical_point_target_function_below_bound(self):
+        """
+        critical_point_target_function should raise ValueError if input is greater than the upper bound
+        """
+        current_density = -1.
+        self.assertRaises(ValueError, self.t.critical_point_target_function(current_density))
+
 
 class MethodsReturnType(Base):
     """
