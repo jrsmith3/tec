@@ -122,6 +122,12 @@ class MethodsReturnUnits(Base):
         """
         self.assertEqual(self.t.saturation_point_voltage().unit, units.Unit("V"))
 
+    def test_critical_point_voltage(self):
+        """
+        critical_point_voltage should return a value with unit V
+        """
+        self.assertEqual(self.t.critical_point_voltage().unit, units.Unit("V"))
+
 
 class MethodsReturnValues(Base):
     """
