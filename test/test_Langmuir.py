@@ -100,6 +100,11 @@ class MethodsReturnType(Base):
         current_density = 0.5 * self.t.emitter.thermoelectron_current_density()
         self.assertIsInstance(self.t.critical_point_target_function(current_density), float)
 
+    def test_critical_point_voltage(self):
+        """
+        critical_point_voltage should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.critical_point_voltage(), units.Quantity)
 
 class MethodsReturnUnits(Base):
     """
