@@ -83,7 +83,9 @@ class MethodsReturnType(Base):
         """
         critical_point_target_function should return float
         """
-        current_density = units.Quantity(1, "A cm-2")
+        # Use a float as an argument as opposed to an 
+        # astropy.units.Quantity
+        current_density = 1.
         self.assertIsInstance(self.t.critical_point_target_function(current_density), float)
 
 
