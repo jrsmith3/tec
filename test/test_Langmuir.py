@@ -86,6 +86,12 @@ class MethodsReturnType(Base):
         """
         self.assertIsInstance(self.t.saturation_point_voltage(), units.Quantity)
 
+    def test_saturation_point_current_density(self):
+        """
+        saturation_point_current_density should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.saturation_point_current_density(), units.Quantity)
+
     def test_critical_point_target_function(self):
         """
         critical_point_target_function should return float
@@ -98,6 +104,7 @@ class MethodsReturnType(Base):
         critical_point_voltage should return astropy.units.Quantity
         """
         self.assertIsInstance(self.t.critical_point_voltage(), units.Quantity)
+
 
 class MethodsReturnUnits(Base):
     """
