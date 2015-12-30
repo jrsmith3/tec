@@ -238,11 +238,7 @@ class Langmuir(TECBase):
         """
         # The prefix "dimensionless" is implied in the following 
         # calculations.
-
-        # Rootfinder to get critical point output current density.
-        current_density_hi_limit = self.emitter.thermoelectron_current_density()
-        output_current_density = optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
-        output_current_density = units.Quantity(output_current_density, "A cm-2")
+        output_current_density = self.critical_point_current_density()
 
         position = -self.interelectrode_spacing() / self.normalization_length(output_current_density)
 
@@ -251,6 +247,21 @@ class Langmuir(TECBase):
         voltage = (self.emitter.barrier - self.collector.barrier + (motive * constants.k_B * self.emitter.temp))/constants.e.si
 
         return voltage.to("V")
+
+    def critical_point_current_density(self):
+        """
+        Critical point current density
+
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{R}`
+        """
+        # Rootfinder to get critical point output current density.
+        current_density_hi_limit = self.emitter.thermoelectron_current_density()
+        output_current_density = optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
+        output_current_density = units.Quantity(output_current_density, "A cm-2")
+
+        return output_current_density
+
 
     def critical_point_target_function(self, current_density):
         """
