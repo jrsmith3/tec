@@ -275,6 +275,8 @@ class Langmuir(TECBase):
         Target function for the output voltage rootfinder.
         """
         # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+        current_density = units.Quantity(current_density, "A cm-2")
+
 
         # The `em_motive` calculation below could be broken into
         # its own method because its used several places.
@@ -286,7 +288,9 @@ class Langmuir(TECBase):
         co_position = self.interelectrode_spacing() / normalization_length + em_position
         co_motive = self._dps.motive(co_position)
 
-        difference = self.output_voltage() - ((self.emitter.barrier + em_motive * constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * constants.k_B * self.emitter.temp)) / constants.e.si
+        target_voltage = ((self.emitter.barrier + em_motive * constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * constants.k_B * self.emitter.temp)) / constants.e.si
+
+        difference = self.output_voltage() - target_voltage
 
         return difference.to("V").value
 
