@@ -310,11 +310,10 @@ class Langmuir(TECBase):
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi_{m}`
         """
-        if self.output_voltage() < self.saturation_point_voltage():
-            # Accelerating mode.
+        regime = self.operating_regime()
+        if regime == "accelerating":
             motive = self.emitter.motive()
-        elif self.output_voltage() > self.critical_point_voltage():
-            # Retarding mode.
+        elif regime == "retarding":
             motive = self.collector.motive()
         else:
             # Space charge limited mode.
