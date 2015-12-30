@@ -207,7 +207,7 @@ class Langmuir(TECBase):
         :returns: `astropy.units.Quantity` in units of :math:`V`.
         :symbol: :math:`V_{S}`
         """
-        # The prefix "dimensionless" is implied in the following 
+        # The prefix "dimensionless" is implied in the following
         # calculations as is the fact that they are taking place
         # at the saturation point.
         current_density = self.emitter.thermoelectron_current_density()
@@ -236,7 +236,7 @@ class Langmuir(TECBase):
         :returns: `astropy.units.Quantity` in units of :math:`V`.
         :symbol: :math:`V_{R}`
         """
-        # The prefix "dimensionless" is implied in the following 
+        # The prefix "dimensionless" is implied in the following
         # calculations.
         output_current_density = self.critical_point_current_density()
 
@@ -270,7 +270,7 @@ class Langmuir(TECBase):
         """
         current_density = units.Quantity(current_density, "A cm-2")
 
-        # The prefix "dimensionless" is implied in the following 
+        # The prefix "dimensionless" is implied in the following
         # calculations.
         position1 = -self.interelectrode_spacing() / self.normalization_length(current_density)
         position1 = position1.value
