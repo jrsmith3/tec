@@ -317,7 +317,7 @@ class Langmuir(TECBase):
 
             motive = barrier + self.emitter.motive()
 
-        return motive
+        return motive.to("eV")
 
     def output_voltage_target_function(self, current_density):
         """
