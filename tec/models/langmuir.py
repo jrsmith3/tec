@@ -284,6 +284,23 @@ class Langmuir(TECBase):
 
         return difference
 
+    def operating_regime(self):
+        """
+        String describing regime of electron transport
+
+        This method evaluates the TEC and returns either "accelerating", "space charge limited", or "retarding" to indicate the regime in which the TEC is operating.
+
+        :returns: `string`.
+        """
+        if self.output_voltage() < self.saturation_point_voltage():
+            regime = "accelerating"
+        elif self.output_voltage() > self.critical_point_voltage():
+            regime = "retarding"
+        else:
+            regime = "space charge limited"
+
+        return regime
+
 
     # Methods regarding motive ---------------------------------------
     def max_motive(self):
