@@ -150,34 +150,19 @@ class MethodsReturnType(Base):
         """
         max_motive should return astropy.units.Quantity in the accelerating regime
         """
-        # Set TEC output voltage to less than the saturation point
-        # voltage.
-        saturation_point_voltage = self.t.saturation_point_voltage()
-        voltage = saturation_point_voltage - units.Quantity(1., "V")
-        self.t.collector.voltage = voltage
-
-        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+        self.assertIsInstance(self.t_accel.max_motive(), units.Quantity)
 
     def test_max_motive_space_charge_regime(self):
         """
         max_motive should return astropy.units.Quantity in the space charge limited regime
         """
-        saturation_point_voltage = self.t.saturation_point_voltage()
-        critical_point_voltage = self.t.critical_point_voltage()
-        voltage = (saturation_point_voltage + critical_point_voltage)/2
-        self.t.collector.voltage = voltage
-
-        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+        self.assertIsInstance(self.t_scl.max_motive(), units.Quantity)
 
     def test_max_motive_retarding_regime(self):
         """
         max_motive should return astropy.units.Quantity in the retarding regime
         """
-        critical_point_voltage = self.t.critical_point_voltage()
-        voltage = critical_point_voltage + units.Quantity(1., "V")
-        self.t.collector.voltage = voltage
-
-        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+        self.assertIsInstance(self.t_ret.max_motive(), units.Quantity)
 
     def test_output_voltage_target_function_Quantity_argument(self):
         """
@@ -243,32 +228,19 @@ class MethodsReturnUnits(Base):
         """
         max_motive should return a value with unit eV in the accelerating regime
         """
-        saturation_point_voltage = self.t.saturation_point_voltage()
-        voltage = saturation_point_voltage - units.Quantity(1., "V")
-        self.t.collector.voltage = voltage
-
-        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+        self.assertEqual(self.t_accel.max_motive().unit, units.Unit("eV"))
 
     def test_max_motive_space_charge_regime(self):
         """
         max_motive should return a value with unit eV in the space charge limited regime
         """
-        saturation_point_voltage = self.t.saturation_point_voltage()
-        critical_point_voltage = self.t.critical_point_voltage()
-        voltage = (saturation_point_voltage + critical_point_voltage)/2
-        self.t.collector.voltage = voltage
-
-        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+        self.assertEqual(self.t_scl.max_motive().unit, units.Unit("eV"))
 
     def test_max_motive_retarding_regime(self):
         """
         max_motive should return a value with unit eV in the retarding regime
         """
-        critical_point_voltage = self.t.critical_point_voltage()
-        voltage = critical_point_voltage + units.Quantity(1., "V")
-        self.t.collector.voltage = voltage
-
-        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+        self.assertEqual(self.t_ret.max_motive().unit, units.Unit("eV"))
 
 
 class MethodsReturnValues(Base):
