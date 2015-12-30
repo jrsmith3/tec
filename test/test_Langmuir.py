@@ -147,6 +147,12 @@ class MethodsReturnUnits(Base):
         """
         self.assertEqual(self.t.critical_point_voltage().unit, units.Unit("V"))
 
+    def test_critical_point_current_density(self):
+        """
+        critical_point_current_density should return a value with unit A cm^{-2}
+        """
+        self.assertEqual(self.t.critical_point_current_density().unit, units.Unit("A cm-2"))
+
 
 class MethodsReturnValues(Base):
     """
