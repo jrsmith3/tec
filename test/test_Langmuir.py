@@ -192,6 +192,37 @@ class MethodsReturnUnits(Base):
         """
         self.assertEqual(self.t.critical_point_voltage().unit, units.Unit("V"))
 
+    def test_max_motive_accelerating_regime(self):
+        """
+        max_motive should return a value with unit eV in the accelerating regime
+        """
+        saturation_point_voltage = self.t.saturation_point_voltage()
+        voltage = saturation_point_voltage - units.Quantity(1., "V")
+        self.t.collector.voltage = voltage
+        
+        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+
+    def test_max_motive_space_charge_regime(self):
+        """
+        max_motive should return a value with unit eV in the space charge limited regime
+        """
+        saturation_point_voltage = self.t.saturation_point_voltage()
+        critical_point_voltage = self.t.critical_point_voltage()
+        voltage = (saturation_point_voltage + critical_point_voltage)/2
+        self.t.collector.voltage = voltage
+
+        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+
+    def test_max_motive_retarding_regime(self):
+        """
+        max_motive should return a value with unit eV in the retarding regime
+        """
+        critical_point_voltage = self.t.critical_point_voltage()
+        voltage = critical_point_voltage + units.Quantity(1., "V")
+        self.t.collector.voltage = voltage
+
+        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+
 
 class MethodsReturnValues(Base):
     """
