@@ -5,8 +5,17 @@ import unittest
 from tec.electrode import Metal
 from tec.models import Langmuir
 
-em = Metal(temp=1000., barrier=2., richardson=10.)
-co = Metal(temp=300., barrier=1., richardson=10., position=10.)
+em_params = {"temp": 1000.,
+            "barrier": 2.,
+            "richardson": 10.,}
+
+co_params = {"temp": 300.,
+            "barrier": 1.,
+            "richardson": 10.,
+            "position": 10.,}
+
+em = Metal(**em_params)
+co = Metal(**co_params)
 
 
 class Base(unittest.TestCase):
