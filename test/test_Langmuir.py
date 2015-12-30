@@ -111,6 +111,12 @@ class MethodsReturnType(Base):
         current_density = 0.5 * self.t.emitter.thermoelectron_current_density()
         self.assertIsInstance(self.t.critical_point_target_function(current_density), float)
 
+    def test_max_motive(self):
+        """
+        max_motive should return astropy.units.Quantity
+        """
+        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+
     def test_output_voltage_target_function_Quantity_argument(self):
         """
         output_voltage_target_function should return float when called with `astropy.units.Quantity` argument
