@@ -182,6 +182,24 @@ class MethodsReturnType(Base):
         current_density = self.t.emitter.thermoelectron_current_density()
         self.assertIsInstance(self.t.output_voltage_target_function(current_density.value), float)
 
+    def test_operating_regime_accelerating_regime(self):
+        """
+        operating_regime should return str in the accelerating regime
+        """
+        self.assertIsInstance(self.t_accel.operating_regime(), str)
+
+    def test_operating_regime_space_charge_regime(self):
+        """
+        operating_regime should return str in the space charge limited regime
+        """
+        self.assertIsInstance(self.t_scl.operating_regime(), str)
+
+    def test_operating_regime_retarding_regime(self):
+        """
+        operating_regime should return str in the retarding regime
+        """
+        self.assertIsInstance(self.t_ret.operating_regime(), str)
+
 
 class MethodsReturnUnits(Base):
     """
