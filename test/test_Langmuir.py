@@ -111,10 +111,37 @@ class MethodsReturnType(Base):
         current_density = 0.5 * self.t.emitter.thermoelectron_current_density()
         self.assertIsInstance(self.t.critical_point_target_function(current_density), float)
 
-    def test_max_motive(self):
+    def test_max_motive_accelerating_regime(self):
         """
-        max_motive should return astropy.units.Quantity
+        max_motive should return astropy.units.Quantity in the accelerating regime
         """
+        # Set TEC output voltage to less than the saturation point
+        # voltage.
+        saturation_point_voltage = self.t.saturation_point_voltage()
+        voltage = saturation_point_voltage - units.Quantity(1., "V")
+        self.t.collector.voltage = voltage
+
+        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+
+    def test_max_motive_space_charge_regime(self):
+        """
+        max_motive should return astropy.units.Quantity in the space charge limited regime
+        """
+        saturation_point_voltage = self.t.saturation_point_voltage()
+        critical_point_voltage = self.t.critical_point_voltage()
+        voltage = (saturation_point_voltage + critical_point_voltage)/2
+        self.t.collector.voltage = voltage
+
+        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+
+    def test_max_motive_retarding_regime(self):
+        """
+        max_motive should return astropy.units.Quantity in the retarding regime
+        """
+        critical_point_voltage = self.t.critical_point_voltage()
+        voltage = critical_point_voltage + units.Quantity(1., "V")
+        self.t.collector.voltage = voltage
+
         self.assertIsInstance(self.t.max_motive(), units.Quantity)
 
     def test_output_voltage_target_function_Quantity_argument(self):
