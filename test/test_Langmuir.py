@@ -99,6 +99,14 @@ class MethodsReturnType(Base):
         """
         self.assertIsInstance(self.t.critical_point_voltage(), units.Quantity)
 
+    def test_output_voltage_target_function(self):
+        """
+        output_voltage_target_function should return float
+        """
+        current_density = self.t.emitter.thermoelectron_current_density()
+        self.assertIsInstance(self.t.output_voltage_target_function(current_density), float)
+
+
 class MethodsReturnUnits(Base):
     """
     Tests methods' output units where applicable
