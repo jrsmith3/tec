@@ -340,6 +340,15 @@ class Langmuir(TECBase):
 
         return difference.to("V").value
 
+    def max_motive_position(self):
+        """
+        Position at maximum motive
+
+        :returns: `astropy.units.Quantity` in units of :math:`um`.
+        :symbol: :math:`x_{m}`
+        """
+        pass
+
 
     # Methods regarding current and power -----------------------------
     def back_current_density(self):
