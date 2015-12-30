@@ -36,6 +36,32 @@ class Base(unittest.TestCase):
         self.em = em
         self.co = co
 
+        # Create `Langmuir` objects for each regime: accelerating, 
+        # space charge limited, and retarding.
+        saturation_point_voltage = self.t.saturation_point_voltage()
+        critical_point_voltage = self.t.critical_point_voltage()
+
+        # accelerating mode:
+        accelerating_voltage = saturation_point_voltage - units.Quantity(1., "V")
+        co_accelerating = Metal(**co_params)
+        co_accelerating.voltage = accelerating_voltage
+
+        self.t_accel = Langmuir(em, co_accelerating)
+
+        # space charge limited mode:
+        scl_voltage = (saturation_point_voltage + critical_point_voltage)/2
+        co_scl = Metal(**co_params)
+        co_scl.voltage = scl_voltage
+
+        self.t_scl = Langmuir(em, co_scl)
+
+        # retarding mode:
+        retarding_voltage = critical_point_voltage + units.Quantity(1., "V")
+        co_retarding = Metal(**co_params)
+        co_retarding.voltage = retarding_voltage
+
+        self.t_ret = Langmuir(em, co_retarding)
+
 
 class MethodsInput(Base):
     """
