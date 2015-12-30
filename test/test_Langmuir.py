@@ -211,7 +211,7 @@ class MethodsReturnUnits(Base):
         saturation_point_voltage = self.t.saturation_point_voltage()
         voltage = saturation_point_voltage - units.Quantity(1., "V")
         self.t.collector.voltage = voltage
-        
+
         self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
 
     def test_max_motive_space_charge_regime(self):
