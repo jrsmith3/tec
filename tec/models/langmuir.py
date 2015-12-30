@@ -220,6 +220,15 @@ class Langmuir(TECBase):
 
         return voltage.to("V")
 
+    def saturation_point_current_density(self):
+        """
+        Saturation point current density
+
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{S}`
+        """
+        return self.emitter.thermoelectron_current_density()
+
     def critical_point_voltage(self):
         """
         Critical point voltage
