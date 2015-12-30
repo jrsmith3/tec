@@ -304,8 +304,19 @@ class Langmuir(TECBase):
             motive = self.collector.motive()
         else:
             # Space charge limited mode.
-            # See code in `calc_motive` for hints on algorithm.
-            pass
+            spcd = self.saturation_point_current_density()
+            spcd = spcd.value
+
+            cpcd = self.critical_point_current_density()
+            cpcd = cpcd.value
+
+            output_current_density = optimize.brentq(self.output_voltage_target_function, spcd, cpcd)
+            output_current_density = units.Quantity(output_current_density, "A cm-2")
+
+            barrier = constants.k_B * self.emitter.temp * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
+
+            motive = barrier + self.emitter.motive()
+
         return motive
 
     def output_voltage_target_function(self, current_density):
@@ -327,6 +338,7 @@ class Langmuir(TECBase):
         difference = self.output_voltage() - ((self.emitter.barrier + em_motive * constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * constants.k_B * self.emitter.temp)) / constants.e.si
 
         return difference.to("V").value
+
 
 
     # vvv old vvv
