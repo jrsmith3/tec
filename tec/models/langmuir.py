@@ -270,20 +270,25 @@ class Langmuir(TECBase):
 
         return difference
 
-    def output_voltage_target_function(self, output_current_density):
+    def output_voltage_target_function(self, current_density):
         """
         Target function for the output voltage rootfinder.
         """
         # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-        em_motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
-        em_position = self["motive_data"]["dps"].get_position(em_motive)
 
-        x0 = ((physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3) / (2*np.pi*physical_constants["electron_mass"]*physical_constants["electron_charge"]**2))**(1./4) * self["Emitter"]["temp"]**(3./4) / output_current_density**(1./2)
+        # The `em_motive` calculation below could be broken into
+        # its own method because its used several places.
+        em_motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
+        em_position = self._dps.position(em_motive)
 
-        co_position = self.calc_interelectrode_spacing()/x0 + em_position
-        co_motive = self["motive_data"]["dps"].get_motive(co_position)
+        normalization_length = self.normalization_length(current_density)
 
-        return self.calc_output_voltage() - ((self["Emitter"]["barrier"] + em_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"]) - (self["Collector"]["barrier"] + co_motive * physical_constants["boltzmann"] * self["Emitter"]["temp"])) / physical_constants["electron_charge"]
+        co_position = self.interelectrode_spacing() / normalization_length + em_position
+        co_motive = self._dps.motive(co_position)
+
+        difference = self.output_voltage() - ((self.emitter.barrier + em_motive * constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * constants.k_B * self.emitter.temp)) / constants.e.si
+
+        return difference.to("V").value
 
 
     # vvv old vvv
