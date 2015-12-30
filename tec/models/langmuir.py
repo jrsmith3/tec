@@ -262,7 +262,6 @@ class Langmuir(TECBase):
 
         return output_current_density
 
-
     def critical_point_target_function(self, current_density):
         """
         Difference between two methods of calculating dimensionless distance
