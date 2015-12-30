@@ -196,7 +196,10 @@ class Langmuir(TECBase):
 
         prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
 
-        result = prefactor * self.emitter.temp**(3./4.) / current_density**(1./2.)
+        if current_density == 0:
+            result = units.Quantity(np.inf, "um")
+        else:
+            result = prefactor * self.emitter.temp**(3./4.) / current_density**(1./2.)
 
         return result.to("um")
 
