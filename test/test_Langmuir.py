@@ -5,8 +5,17 @@ import unittest
 from tec.electrode import Metal
 from tec.models import Langmuir
 
-em = Metal(temp=1000., barrier=2., richardson=10.)
-co = Metal(temp=300., barrier=1., richardson=10., position=10.)
+em_params = {"temp": 1000.,
+            "barrier": 2.,
+            "richardson": 10.,}
+
+co_params = {"temp": 300.,
+            "barrier": 1.,
+            "richardson": 10.,
+            "position": 10.,}
+
+em = Metal(**em_params)
+co = Metal(**co_params)
 
 
 class Base(unittest.TestCase):
@@ -26,6 +35,32 @@ class Base(unittest.TestCase):
 
         self.em = em
         self.co = co
+
+        # Create `Langmuir` objects for each regime: accelerating, 
+        # space charge limited, and retarding.
+        saturation_point_voltage = self.t.saturation_point_voltage()
+        critical_point_voltage = self.t.critical_point_voltage()
+
+        # accelerating mode:
+        accelerating_voltage = saturation_point_voltage - units.Quantity(1., "V")
+        co_accelerating = Metal(**co_params)
+        co_accelerating.voltage = accelerating_voltage
+
+        self.t_accel = Langmuir(em, co_accelerating)
+
+        # space charge limited mode:
+        scl_voltage = (saturation_point_voltage + critical_point_voltage)/2
+        co_scl = Metal(**co_params)
+        co_scl.voltage = scl_voltage
+
+        self.t_scl = Langmuir(em, co_scl)
+
+        # retarding mode:
+        retarding_voltage = critical_point_voltage + units.Quantity(1., "V")
+        co_retarding = Metal(**co_params)
+        co_retarding.voltage = retarding_voltage
+
+        self.t_ret = Langmuir(em, co_retarding)
 
 
 class MethodsInput(Base):
@@ -115,34 +150,19 @@ class MethodsReturnType(Base):
         """
         max_motive should return astropy.units.Quantity in the accelerating regime
         """
-        # Set TEC output voltage to less than the saturation point
-        # voltage.
-        saturation_point_voltage = self.t.saturation_point_voltage()
-        voltage = saturation_point_voltage - units.Quantity(1., "V")
-        self.t.collector.voltage = voltage
-
-        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+        self.assertIsInstance(self.t_accel.max_motive(), units.Quantity)
 
     def test_max_motive_space_charge_regime(self):
         """
         max_motive should return astropy.units.Quantity in the space charge limited regime
         """
-        saturation_point_voltage = self.t.saturation_point_voltage()
-        critical_point_voltage = self.t.critical_point_voltage()
-        voltage = (saturation_point_voltage + critical_point_voltage)/2
-        self.t.collector.voltage = voltage
-
-        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+        self.assertIsInstance(self.t_scl.max_motive(), units.Quantity)
 
     def test_max_motive_retarding_regime(self):
         """
         max_motive should return astropy.units.Quantity in the retarding regime
         """
-        critical_point_voltage = self.t.critical_point_voltage()
-        voltage = critical_point_voltage + units.Quantity(1., "V")
-        self.t.collector.voltage = voltage
-
-        self.assertIsInstance(self.t.max_motive(), units.Quantity)
+        self.assertIsInstance(self.t_ret.max_motive(), units.Quantity)
 
     def test_output_voltage_target_function_Quantity_argument(self):
         """
@@ -161,6 +181,24 @@ class MethodsReturnType(Base):
         """
         current_density = self.t.emitter.thermoelectron_current_density()
         self.assertIsInstance(self.t.output_voltage_target_function(current_density.value), float)
+
+    def test_operating_regime_accelerating_regime(self):
+        """
+        operating_regime should return str in the accelerating regime
+        """
+        self.assertIsInstance(self.t_accel.operating_regime(), str)
+
+    def test_operating_regime_space_charge_regime(self):
+        """
+        operating_regime should return str in the space charge limited regime
+        """
+        self.assertIsInstance(self.t_scl.operating_regime(), str)
+
+    def test_operating_regime_retarding_regime(self):
+        """
+        operating_regime should return str in the retarding regime
+        """
+        self.assertIsInstance(self.t_ret.operating_regime(), str)
 
 
 class MethodsReturnUnits(Base):
@@ -208,32 +246,19 @@ class MethodsReturnUnits(Base):
         """
         max_motive should return a value with unit eV in the accelerating regime
         """
-        saturation_point_voltage = self.t.saturation_point_voltage()
-        voltage = saturation_point_voltage - units.Quantity(1., "V")
-        self.t.collector.voltage = voltage
-
-        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+        self.assertEqual(self.t_accel.max_motive().unit, units.Unit("eV"))
 
     def test_max_motive_space_charge_regime(self):
         """
         max_motive should return a value with unit eV in the space charge limited regime
         """
-        saturation_point_voltage = self.t.saturation_point_voltage()
-        critical_point_voltage = self.t.critical_point_voltage()
-        voltage = (saturation_point_voltage + critical_point_voltage)/2
-        self.t.collector.voltage = voltage
-
-        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+        self.assertEqual(self.t_scl.max_motive().unit, units.Unit("eV"))
 
     def test_max_motive_retarding_regime(self):
         """
         max_motive should return a value with unit eV in the retarding regime
         """
-        critical_point_voltage = self.t.critical_point_voltage()
-        voltage = critical_point_voltage + units.Quantity(1., "V")
-        self.t.collector.voltage = voltage
-
-        self.assertEqual(self.t.max_motive().unit, units.Unit("eV"))
+        self.assertEqual(self.t_ret.max_motive().unit, units.Unit("eV"))
 
 
 class MethodsReturnValues(Base):
