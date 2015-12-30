@@ -99,12 +99,23 @@ class MethodsReturnType(Base):
         """
         self.assertIsInstance(self.t.critical_point_voltage(), units.Quantity)
 
-    def test_output_voltage_target_function(self):
+    def test_output_voltage_target_function_Quantity_argument(self):
         """
-        output_voltage_target_function should return float
+        output_voltage_target_function should return float when called with `astropy.units.Quantity` argument
+
+        This test could also be located in the `MethodsInput` test class.
         """
         current_density = self.t.emitter.thermoelectron_current_density()
         self.assertIsInstance(self.t.output_voltage_target_function(current_density), float)
+
+    def test_output_voltage_target_function_float_argument(self):
+        """
+        output_voltage_target_function should return float when called with `astropy.units.float` argument
+
+        This test could also be located in the `MethodsInput` test class.
+        """
+        current_density = self.t.emitter.thermoelectron_current_density()
+        self.assertIsInstance(self.t.output_voltage_target_function(current_density.value), float)
 
 
 class MethodsReturnUnits(Base):
