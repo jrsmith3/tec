@@ -363,7 +363,17 @@ class Langmuir(TECBase):
         :returns: `astropy.units.Quantity` in units of :math:`um`.
         :symbol: :math:`x_{m}`
         """
-        pass
+        regime = self.operating_regime()
+
+        if regime == "accelerating":
+            position = self.emitter.position
+        elif regime == "retarding":
+            position = self.collector.position
+        else:
+            # space charge limited mode
+            pass
+
+        return position
 
 
     # Methods regarding current and power -----------------------------
