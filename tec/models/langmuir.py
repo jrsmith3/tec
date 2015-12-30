@@ -170,16 +170,8 @@ class Langmuir(TECBase):
         self.collector = collector
         self._dps = DimensionlessLangmuirPoissonSoln()
 
-    def back_current_density(self):
-        """
-        Net current moving from collector to emitter
 
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J_{b}`
-        """
-        return units.Quantity(0, "A/cm2")
-
-    # Methods dealing with critical and saturation points
+    # Methods regarding critical and saturation points ---------------
     def normalization_length(self, current_density):
         """
         Normalization length for Langmuir solution
@@ -292,6 +284,8 @@ class Langmuir(TECBase):
 
         return difference
 
+
+    # Methods regarding motive ---------------------------------------
     def max_motive(self):
         """
         Value of maximum motive relative to electrical ground
@@ -347,8 +341,18 @@ class Langmuir(TECBase):
         return difference.to("V").value
 
 
+    # Methods regarding current and power -----------------------------
+    def back_current_density(self):
+        """
+        Net current moving from collector to emitter
 
-    # vvv old vvv
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{b}`
+        """
+        return units.Quantity(0, "A/cm2")
+
+
+    # Old methods ----------------------------------------------------
     def calc_motive(self):
         """
         Calculates the motive (meta)data and populates the 'motive_data' attribute.
