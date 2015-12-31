@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import itertools
 import numpy as np
 from astropy import units, constants
 from physicalproperty import PhysicalProperty, find_PhysicalProperty
 from ibei import uibei
+import tec
 
 
 class Metal(object):
@@ -44,19 +46,20 @@ class Metal(object):
         * `__class__`: The object's class returned by `type(self)`.
         * `__version__`: The __version__ of the `tec` module that was used.
         """
-        return self
-
-    def __repr__(self):
-        return str(self._to_dict())
-
-    def _to_dict(self):
-        """
-        Return a dictionary representation of the current object.
-        """
+        # Crappy implmentation -- should use iterators/iterables.
+        # Construct a list of tuples to return.
         physical_prop_names = find_PhysicalProperty(self)
         physical_prop_vals = [getattr(self, prop) for prop in physical_prop_names]
 
-        return dict(zip(physical_prop_names, physical_prop_vals))
+        attribs = zip(physical_prop_names, physical_prop_vals)
+
+        ext_attribs = [("__class__", type(self),),
+            ("__version__", tec.__version__)]
+
+        return itertools.chain(ext_attribs, attribs)
+
+    def __repr__(self):
+        return str(self._to_dict())
 
     def motive(self):
         """
