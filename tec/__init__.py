@@ -9,3 +9,4 @@ Base Library (:mod:`tec`)
 from base import *
 import models
 import electrode
+from version import __version__
