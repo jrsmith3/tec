@@ -35,6 +35,17 @@ class Metal(object):
         self.position = position
         self.emissivity = emissivity
 
+    def __iter__(self):
+        """
+        Implement iterator functionality
+
+        This iterator functionality returns tuples such that the data contained in the object can be converted into a dictionary. All `PhysicalProperty` attributes appear once and only once during the iteration. The order of these atttibutes are not guaranteed. Additionally, this iteration returns the following two attributes:
+
+        * `__class__`: The object's class returned by `type(self)`.
+        * `__version__`: The __version__ of the `tec` module that was used.
+        """
+        return self
+
     def __repr__(self):
         return str(self._to_dict())
 
