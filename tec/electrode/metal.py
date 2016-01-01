@@ -41,7 +41,9 @@ class Metal(object):
         """
         Implement iterator functionality
 
-        This iterator functionality returns tuples such that the data contained in the object can be converted into a dictionary. All `PhysicalProperty` attributes appear once and only once during the iteration. The order of these atttibutes are not guaranteed. Additionally, this iteration returns the following two attributes:
+        This iterator functionality returns tuples such that the data contained in the object can be converted into a dictionary. All `PhysicalProperty` attributes appear once and only once during the iteration. The order of these atttibutes are not guaranteed. The values corresponding to an attribute are returned as floats; their unit is defined by the default unit of the corresponding `PhysicalProperty`.
+
+        Additionally, this iteration returns the following two attributes:
 
         * `__class__`: The object's class returned by `type(self)`.
         * `__version__`: The __version__ of the `tec` module that was used.
