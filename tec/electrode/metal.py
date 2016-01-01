@@ -61,7 +61,7 @@ class Metal(object):
         return itertools.chain(ext_attribs, attribs)
 
     def __repr__(self):
-        return str(self._to_dict())
+        return str(dict(self))
 
     def motive(self):
         """
