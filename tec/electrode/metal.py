@@ -51,7 +51,7 @@ class Metal(object):
         # Crappy implmentation -- should use iterators/iterables.
         # Construct a list of tuples to return.
         physical_prop_names = find_PhysicalProperty(self)
-        physical_prop_vals = [getattr(self, prop) for prop in physical_prop_names]
+        physical_prop_vals = [getattr(self, prop).value for prop in physical_prop_names]
 
         attribs = zip(physical_prop_names, physical_prop_vals)
 
