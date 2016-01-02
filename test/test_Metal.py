@@ -6,6 +6,7 @@ from tec.electrode import Metal
 from astropy import units
 import unittest
 import copy
+from physicalproperty import find_PhysicalProperty
 
 input_params = {"temp": 300.,
                 "barrier": 2.0,
@@ -325,6 +326,16 @@ class Iteration(Base):
         Zeroth 2-tuple element from iteration should be a str
         """
         all(isinstance(itm[0], str) for itm in iter(self.el))
+
+    def test_iteration_returns_all_physicalproperties(self):
+        """
+        All PhysicalProperty attributes should appear once and only once during the iteration
+        """
+        # Use sets to compare results
+        physical_properties = set(find_PhysicalProperty(self.el))
+        iteration_keys = set([itm[0] for itm in iter(self.el)])
+
+        self.assertTrue(physical_properties.issubset(iteration_keys))
 
 
 class MethodsReturnType(Base):
