@@ -14,6 +14,8 @@ class SC(Metal):
 
     A `SC` electrode is instantiated with values to populate its public data attributes. Each argument's value must satisfy the constraints noted with the corresponding public data attribute. Arguments can be some kind of numeric type or of type `astropy.units.Quantity` so long as the units are compatible with what's listed.
 
+    Arguments in addition to the ones listed will be ignored.
+
     :param temp: Temperature (:math:`T`).
     :param barrier: Emission barrier (a.k.a. work function). The barrier is the difference between the vacuum energy of the surface and the Fermi energy. (:math:`\phi`)
     :param richardson: Richardson's constant (:math:`A`)
@@ -37,7 +39,7 @@ class SC(Metal):
     donor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
     bandgap = PhysicalProperty(unit="eV", lo_bnd=0)
 
-    def __init__(self, temp, barrier, richardson, bandgap, electron_effective_mass=constants.m_e, hole_effective_mass=constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0):
+    def __init__(self, temp, barrier, richardson, bandgap, electron_effective_mass=constants.m_e, hole_effective_mass=constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0, **kwargs):
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
