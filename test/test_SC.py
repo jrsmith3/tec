@@ -43,8 +43,10 @@ class Instantiation(Base):
 
     Tests include: instantiation with args of wrong type, instantiation with input values outside constraints, etc.
     """
+    # Instantiation via `__init__`
+    # ============================
     # Input arguments wrong type
-    # ==========================
+    # --------------------------
     def test_electron_effective_mass_non_numeric(self):
         """
         SC instantiation requires numeric `electron_effective_mass` value
@@ -144,7 +146,7 @@ class Instantiation(Base):
             self.fail("`bandgap` field of instantiating dict must be numeric.")
 
     # Input arguments outside constraints
-    # ===================================
+    # -----------------------------------
     def test_electron_effective_mass_less_than_zero(self):
         """
         SC instantiation requires `electron_effective_mass` > 0.
@@ -195,7 +197,7 @@ class Instantiation(Base):
         self.assertRaises(ValueError, SC, **self.input_params)
 
     # Other instantiation conditions
-    # ===============================    
+    # ------------------------------    
     def test_additional_arbitrary_args(self):
         """
         SC can be instantiated with additional arbitrary args
@@ -203,6 +205,171 @@ class Instantiation(Base):
         self.input_params["not_an_argument"] = "not_an_argument"
         try:
             el = SC(**self.input_params)
+        except TypeError:
+            self.fail("Instantiation failed with additional arbitrary args")
+
+    # Instantiation via `from_dict`
+    # ============================
+    # Input arguments wrong type
+    # --------------------------
+    def test_from_dict_electron_effective_mass_non_numeric(self):
+        """
+        SC.from_dict instantiation requires numeric `electron_effective_mass` value
+        """
+        self.input_params["electron_effective_mass"] = "this string is non-numeric."
+
+        try:
+            El = SC.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC.from_dict` with a non-numeric `electron_effective_mass` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`electron_effective_mass` field of instantiating dict must be numeric.")
+
+    def test_from_dict_hole_effective_mass_non_numeric(self):
+        """
+        SC.from_dict instantiation requires numeric `hole_effective_mass` value
+        """
+        self.input_params["hole_effective_mass"] = "this string is non-numeric."
+
+        try:
+            El = SC.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC.from_dict` with a non-numeric `hole_effective_mass` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`hole_effective_mass` field of instantiating dict must be numeric.")
+
+    def test_from_dict_acceptor_concentration_non_numeric(self):
+        """
+        SC.from_dict instantiation requires numeric `acceptor_concentration` value
+        """
+        self.input_params["acceptor_concentration"] = "this string is non-numeric."
+
+        try:
+            El = SC.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC.from_dict` with a non-numeric `acceptor_concentration` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`acceptor_concentration` field of instantiating dict must be numeric.")
+
+    def test_from_dict_acceptor_ionization_energy_non_numeric(self):
+        """
+        SC.from_dict instantiation requires numeric `acceptor_ionization_energy` value
+        """
+        self.input_params["acceptor_ionization_energy"] = "this string is non-numeric."
+
+        try:
+            El = SC.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC.from_dict` with a non-numeric `acceptor_ionization_energy` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`acceptor_ionization_energy` field of instantiating dict must be numeric.")
+
+    def test_from_dict_donor_concentration_non_numeric(self):
+        """
+        SC.from_dict instantiation requires numeric `donor_concentration` value
+        """
+        self.input_params["donor_concentration"] = "this string is non-numeric."
+
+        try:
+            El = SC.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC.from_dict` with a non-numeric `donor_concentration` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`donor_concentration` field of instantiating dict must be numeric.")
+
+    def test_from_dict_donor_ionization_energy_non_numeric(self):
+        """
+        SC.from_dict instantiation requires numeric `donor_ionization_energy` value
+        """
+        self.input_params["donor_ionization_energy"] = "this string is non-numeric."
+
+        try:
+            El = SC.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC.from_dict` with a non-numeric `donor_ionization_energy` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`donor_ionization_energy` field of instantiating dict must be numeric.")
+
+    def test_from_dict_bandgap_non_numeric(self):
+        """
+        SC.from_dict instantiation requires numeric `bandgap` value
+        """
+        self.input_params["bandgap"] = "this string is non-numeric."
+
+        try:
+            El = SC.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.SC.from_dict` with a non-numeric `bandgap` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("`bandgap` field of instantiating dict must be numeric.")
+
+    # Input arguments outside constraints
+    # -----------------------------------
+    def test_from_dict_electron_effective_mass_less_than_zero(self):
+        """
+        SC.from_dict instantiation requires `electron_effective_mass` > 0.
+        """
+        self.input_params["electron_effective_mass"] = -1.1
+        self.assertRaises(ValueError, SC.from_dict, self.input_params)
+
+    def test_from_dict_hole_effective_mass_less_than_zero(self):
+        """
+        SC.from_dict instantiation requires `hole_effective_mass` > 0.
+        """
+        self.input_params["hole_effective_mass"] = -1.1
+        self.assertRaises(ValueError, SC.from_dict, self.input_params)
+
+    def test_from_dict_acceptor_concentration_less_than_zero(self):
+        """
+        SC.from_dict instantiation requires `acceptor_concentration` > 0.
+        """
+        self.input_params["acceptor_concentration"] = -1.1
+        self.assertRaises(ValueError, SC.from_dict, self.input_params)
+
+    def test_from_dict_acceptor_ionization_energy_less_than_zero(self):
+        """
+        SC.from_dict instantiation requires `acceptor_ionization_energy` > 0.
+        """
+        self.input_params["acceptor_ionization_energy"] = -1.1
+        self.assertRaises(ValueError, SC.from_dict, self.input_params)
+
+    def test_from_dict_donor_concentration_less_than_zero(self):
+        """
+        SC.from_dict instantiation requires `donor_concentration` > 0.
+        """
+        self.input_params["donor_concentration"] = -1.1
+        self.assertRaises(ValueError, SC.from_dict, self.input_params)
+
+    def test_from_dict_donor_ionization_energy_less_than_zero(self):
+        """
+        SC.from_dict instantiation requires `donor_ionization_energy` > 0.
+        """
+        self.input_params["donor_ionization_energy"] = -1.1
+        self.assertRaises(ValueError, SC.from_dict, self.input_params)
+
+    def test_from_dict_bandgap_less_than_zero(self):
+        """
+        SC.from_dict instantiation requires `bandgap` > 0.
+        """
+        self.input_params["bandgap"] = -1.1
+        self.assertRaises(ValueError, SC.from_dict, self.input_params)
+
+    # Other instantiation conditions
+    # ------------------------------    
+    def test_from_dict_additional_arbitrary_args(self):
+        """
+        SC.from_dict can be instantiated with additional arbitrary args
+        """
+        self.input_params["not_an_argument"] = "not_an_argument"
+        try:
+            el = SC.from_dict(self.input_params)
         except TypeError:
             self.fail("Instantiation failed with additional arbitrary args")
 
