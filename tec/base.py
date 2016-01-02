@@ -66,6 +66,17 @@ class TECBase(object):
         self.emitter = emitter
         self.collector = collector
 
+    @classmethod
+    def from_dict(cls, kwargs):
+        """
+        Construct object from dictionary
+
+        :param kwargs: Dictionary containing keys with names identical to the arguments of the `__init__` method. The values corresponding to each key can be any combination of `tec.electrode.Metal` type objects (or its children), or dictionaries which can instantiate a `tec.electrode.Metal` type object (or its children).
+
+        Additional key/value pairs will be silently ignored.
+        """
+        return cls(**kwargs)
+
     def __iter__(self):
         """
         Returns iterator from iterelectrodesdicts method
