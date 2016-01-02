@@ -320,6 +320,12 @@ class Iteration(Base):
         """
         all(isinstance(itm, tuple) for itm in iter(self.el))
 
+    def test_iteration_zeroth_element_str(self):
+        """
+        Zeroth 2-tuple element from iteration should be a str
+        """
+        all(isinstance(itm[0], str) for itm in iter(self.el))
+
 
 class MethodsReturnType(Base):
     """
