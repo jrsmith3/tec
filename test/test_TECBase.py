@@ -100,12 +100,12 @@ class Instantiation(Base):
         """
         TECBase can be instantiated with additional arbitrary args
         """
-        params = {"emitter": "not an electrode",
+        params = {"emitter": self.em,
             "collector": self.co,
             "not_an_arg": "nope sure not"}
 
         try:
-            el = TECBase.from_dict(params)
+            t = TECBase.from_dict(params)
         except TypeError:
             self.fail("Instantiation failed with additional arbitrary args")
 
