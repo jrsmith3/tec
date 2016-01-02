@@ -51,6 +51,14 @@ class Instantiation(Base):
         non_electrode = "this string is not an electrode"
         self.assertRaises(TypeError, TECBase, self.em, non_electrode)
 
+    def test_additional_arbitrary_args(self):
+        """
+        TECBase can be instantiated with additional arbitrary args
+        """
+        try:
+            el = TECBase(em, co, not_an_arg="nope sure not")
+        except TypeError:
+            self.fail("Instantiation failed with additional arbitrary args")
 
 class Set(Base):
     """
