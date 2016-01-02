@@ -7,6 +7,11 @@ def to_json(obj):
         encoded_obj["__class__"] = str(encoded_obj["__class__"])
         return encoded_obj
 
+    if isinstance(obj, tec.TECBase):
+        encoded_obj = dict(obj.iterelectrodes())
+        encoded_obj["__class__"] = str(encoded_obj["__class__"])
+        return encoded_obj
+
 def from_json(obj):
     if "__class__" in obj:
         if obj["__class__"] == "<class 'tec.electrode.metal.Metal'>":
