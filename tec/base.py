@@ -24,6 +24,8 @@ class TECBase(object):
     :param emitter: Object from `tec.electrode` which initializes emitter.
     :param collector: Object from `tec.electrode` which initializes collector.
 
+    Arguments in addition to the ones listed will be ignored.
+
     Attributes
     ==========
     `TECBase` objects have two attributes: `emitter` and `collector`, both of which are objects from `tec.electrode`.
@@ -60,7 +62,7 @@ class TECBase(object):
             self._collector = value
 
 
-    def __init__(self, emitter, collector):
+    def __init__(self, emitter, collector, **kwargs):
         self.emitter = emitter
         self.collector = collector
 
