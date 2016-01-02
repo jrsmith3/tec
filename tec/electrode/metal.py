@@ -39,6 +39,18 @@ class Metal(object):
         self.position = position
         self.emissivity = emissivity
 
+    @classmethod
+    def from_dict(cls, kwargs):
+        """
+        Construct object from dictionary
+
+
+        :param kwargs: Dictionary containing keys with names identical to the arguments of the `__init__` method and values which are legal corresponding to the arguments of `__init__`.
+
+        Additional key/value pairs will be silently ignored.
+        """
+        return cls(**kwargs)
+
     def __iter__(self):
         """
         Implement iterator functionality
