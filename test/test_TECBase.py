@@ -103,6 +103,13 @@ class Iteration(Base):
         """
         self.assertIsInstance(self.t.iterelectrodesdicts(), collections.Iterable)
 
+    # TECBase.__iter__
+    def test_is_iterable(self):
+        """
+        TECBase must be iterable
+        """
+        self.assertIsInstance(self.t, collections.Iterable)
+
 
 class MethodsInput(Base):
     """
