@@ -122,6 +122,18 @@ class Instantiation(Base):
         except TypeError:
             self.fail("Instantiation failed with additional arbitrary args")
 
+    def test_from_dict_electrodes_dicts(self):
+        """
+        TECBase.from_dict works with both electrode keys of type dict
+        """
+        params = {"emitter": self.em_params,
+            "collector": self.co_params}
+
+        try:
+            t = TECBase.from_dict(params)
+        except TypeError:
+            self.fail("Instantiation failed with additional arbitrary args")
+
     def test_from_dict_additional_arbitrary_args(self):
         """
         TECBase can be instantiated with additional arbitrary args
