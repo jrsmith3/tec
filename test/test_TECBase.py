@@ -110,6 +110,18 @@ class Instantiation(Base):
 
     # Valid input
     # -----------
+    def test_from_dict_electrodes_electrodes(self):
+        """
+        TECBase.from_dict works with both electrode keys of type electrode
+        """
+        params = {"emitter": self.em,
+            "collector": self.co}
+
+        try:
+            t = TECBase.from_dict(params)
+        except TypeError:
+            self.fail("Instantiation failed with additional arbitrary args")
+
     def test_from_dict_additional_arbitrary_args(self):
         """
         TECBase can be instantiated with additional arbitrary args
