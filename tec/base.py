@@ -75,7 +75,20 @@ class TECBase(object):
 
         Additional key/value pairs will be silently ignored.
         """
-        return cls(**kwargs)
+        try:
+            return cls(**kwargs)
+        except TypeError:
+            try:
+                em = kwargs["emitter"]["__class__"].from_dict(kwargs["emitter"])
+            except:
+                em = kwargs["emitter"]
+
+            try:
+                co = kwargs["collector"]["__class__"].from_dict(kwargs["collector"])
+            except:
+                co = kwargs["collector"]
+
+            return cls(em, co)
 
     def __iter__(self):
         """
