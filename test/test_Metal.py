@@ -155,6 +155,18 @@ class Instantiation(Base):
         self.input_params["emissivity"] = 1.1
         self.assertRaises(ValueError, Metal, **self.input_params)
 
+    # Other instantiation conditions
+    # ===============================    
+    def test_additional_arbitrary_args(self):
+        """
+        Metal can be instantiated with additional arbitrary args
+        """
+        self.input_params["not_an_argument"] = "not_an_argument"
+        try:
+            el = Metal(**self.input_params)
+        except TypeError:
+            self.fail("Instantiation failed with additional arbitrary args")
+
 
 class Set(Base):
     """
