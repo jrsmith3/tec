@@ -114,7 +114,7 @@ class Metal(object):
         """
         Energy flux emitted via thermoelectrons
 
-        The energy flux (power density) of thermoelectrons is given by 
+        The energy flux (power density) of thermoelectrons is given by
 
         .. math::
             J_{RD} \\frac{\phi + 2kT}{e}
@@ -123,10 +123,10 @@ class Metal(object):
         :symbol: None
         """
         kt2 = 2 * constants.k_B * self.temp
-        thermal_potential = (self.barrier + kt2)/constants.e.to("C")
+        thermal_potential = (self.barrier + kt2) / constants.e.to("C")
         energy_flux = thermal_potential * self.thermoelectron_current_density()
 
-        return energy_flux.to("W/cm2")        
+        return energy_flux.to("W/cm2")
 
     def photon_flux(self):
         """

@@ -66,7 +66,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`N_{C}`
         """
-        dos = 2 * ((2 * np.pi * self.electron_effective_mass * constants.k_B * self.temp) / (constants.h ** 2))**(3./2)
+        dos = 2 * ((2 * np.pi * self.electron_effective_mass * constants.k_B * self.temp) / (constants.h ** 2))**(3. / 2)
 
         return dos.to("1/cm3")
 
@@ -82,7 +82,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`N_{V}`
         """
-        dos = 2 * ((2 * np.pi * self.hole_effective_mass * constants.k_B * self.temp) / (constants.h ** 2))**(3./2)
+        dos = 2 * ((2 * np.pi * self.hole_effective_mass * constants.k_B * self.temp) / (constants.h ** 2))**(3. / 2)
 
         return dos.to("1/cm3")
 
