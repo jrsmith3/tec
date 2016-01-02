@@ -66,7 +66,7 @@ class TECBase(object):
 
     def iterelectrodes(self):
         """
-        Iterator over object's electrodes
+        Iterator over object's data
 
         This iterator yields 2-tuples. The zeroth element of the 2-tuple will be a str.
 
