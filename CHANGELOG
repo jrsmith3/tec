@@ -1,3 +1,23 @@
+1.0.0.dev3
+==========
+Refactor Langmuir model, improve I/O
+
+This release features a complete refactor of the
+`tec.models.langmuir.Langmiur` class. The class has been refactored to
+be more pythonic and to echo the API of the
+`tec.electrode.metal.Metal` class.
+
+Additionally, the I/O of the main classes have begun to be improved.
+It is now possible to coerce objects of type
+`tec.electrode.metal.Metal` (and its children) to dicts as well as
+coercing objects of type `tec.TECBase` (and its children) to dicts.
+Both of these main classes (and their children) can be serialized to
+JSON.
+
+Since this is a prerelease, some of the functionality is not robust --
+the serialization functionality in particular.
+
+
 1.0.0.dev2
 ==========
 Host on anaconda.org for easy installation via conda
