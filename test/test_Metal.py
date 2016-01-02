@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+import collections
 import numpy as np
 from tec.electrode import Metal
 from astropy import units
@@ -306,7 +308,11 @@ class Iteration(Base):
     """
     Tests class's iteration API
     """
-    pass
+    def test_is_iterable(self):
+        """
+        Metal must be iterable
+        """
+        self.assertIsInstance(self.el, collections.Iterable)
 
 
 class MethodsReturnType(Base):
