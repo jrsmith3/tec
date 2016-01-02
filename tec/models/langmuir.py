@@ -165,7 +165,7 @@ class Langmuir(TECBase):
     <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
     """
 
-    def __init__(self, emitter, collector):
+    def __init__(self, emitter, collector, **kwargs):
         self.emitter = emitter
         self.collector = collector
         self._dps = DimensionlessLangmuirPoissonSoln()
