@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+import collections
 import numpy as np
 from tec.electrode import Metal
 from tec import TECBase
@@ -81,6 +83,18 @@ class Set(Base):
             pass
         else:
             self.fail("`collector` attribute can be assigned a non-electrode value.")
+
+
+class Iteration(Base):
+    """
+    Tests class's iteration API
+    """
+    # TECBase.iterelectrodes
+    def test_iterelectrodes_is_iterable(self):
+        """
+        TECBase.iterelectrodes must be iterable
+        """
+        self.assertIsInstance(self.t.iterelectrodes(), collections.Iterable)
 
 
 class MethodsInput(Base):
