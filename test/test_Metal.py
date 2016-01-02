@@ -37,8 +37,10 @@ class Instantiation(Base):
 
     Tests include: instantiation with args of wrong type, instantiation with input values outside constraints, etc.
     """
+    # Instantiation via `__init__`
+    # ============================
     # Input arguments wrong type
-    # ==========================
+    # --------------------------
     def test_temp_non_numeric(self):
         """
         Metal instantiation requires numeric `temp` value
@@ -119,7 +121,7 @@ class Instantiation(Base):
             self.fail("Shouldn't be able to instantiate with non-numeric `emissivity` argument.")
 
     # Input arguments outside constraints
-    # ===================================
+    # -----------------------------------
     def test_temp_less_than_zero(self):
         """
         Metal instantiation requires `temp` > 0
