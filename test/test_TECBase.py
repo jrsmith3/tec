@@ -8,8 +8,17 @@ from astropy import units
 import unittest
 import copy
 
-em = Metal(temp=1000., barrier=2., richardson=10.)
-co = Metal(temp=300., barrier=1., richardson=10., position=10.)
+em_params = {"temp": 1000.,
+            "barrier": 2.,
+            "richardson": 10.,}
+
+co_params = {"temp": 300.,
+            "barrier": 1.,
+            "richardson": 10.,
+            "position": 10.,}
+
+em = Metal(**em_params)
+co = Metal(**co_params)
 
 
 class Base(unittest.TestCase):
@@ -30,6 +39,9 @@ class Base(unittest.TestCase):
         self.em = em
         self.co = co
 
+        self.em_params = em_params
+        self.co_params = co_params
+
 
 class Instantiation(Base):
     """
@@ -37,6 +49,8 @@ class Instantiation(Base):
 
     Tests include: instantiation with args of wrong type, etc.
     """
+    # Instantiation via `__init__`
+    # ============================
     def test_emitter_non_electrode(self):
         """
         emitter nonelectrode -> TECBase init raises TypeError
