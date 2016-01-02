@@ -15,6 +15,7 @@ except ImportError, e:
     if not e.args[0].startswith('No module named matplotlib'):
         raise
 
+
 class TECBase(object):
     """
     Base thermoelectron engine class
@@ -87,18 +88,18 @@ class TECBase(object):
 
         Finally, at some point during the iteration, the iterator will return a 2-tuple whose zeroth element is the str '__class__' and whose value is the type object returned by the object calling type(self).
 
-        The order of the items listed above is not guaranteed.        
+        The order of the items listed above is not guaranteed.
         """
         electrodes = [("emitter", self.emitter),
-            ("collector", self.collector)]
+                      ("collector", self.collector)]
         max_motive_tuple = [("max_motive", self.max_motive().value)]
         class_tuple = [("__class__", type(self))]
-        
+
         return itertools.chain(electrodes, max_motive_tuple, class_tuple)
 
     def iterelectrodesdicts(self):
         """
-        Iterator over object's data with dicts for electrodes 
+        Iterator over object's data with dicts for electrodes
 
         This method will return an iterator. This iterator will yield 2-tuples. The zeroth element of the 2-tuple will be a `str`.
 
@@ -111,10 +112,10 @@ class TECBase(object):
         The order of the items listed above is not guaranteed.
         """
         electrodes = [("emitter", dict(self.emitter)),
-            ("collector", dict(self.collector))]
+                      ("collector", dict(self.collector))]
         max_motive_tuple = [("max_motive", self.max_motive().value)]
         class_tuple = [("__class__", type(self))]
-        
+
         return itertools.chain(electrodes, max_motive_tuple, class_tuple)
 
 
@@ -219,7 +220,7 @@ class TECBase(object):
 
         if diff_barrier > 0:
             kT = constants.k_B * self.emitter.temp
-            exponent = (diff_barrier/kT).decompose()
+            exponent = (diff_barrier / kT).decompose()
             scaling_factor = np.exp(-exponent)
         else:
             scaling_factor = 1.
@@ -240,7 +241,7 @@ class TECBase(object):
 
         if diff_barrier > 0:
             kT = constants.k_B * self.collector.temp
-            exponent = (diff_barrier/kT).decompose()
+            exponent = (diff_barrier / kT).decompose()
             scaling_factor = np.exp(-exponent)
         else:
             scaling_factor = 1.
@@ -384,7 +385,7 @@ class TECBase(object):
         if any(emissivities == 0):
             net_emissivity = 0
         else:
-            net_emissivity = 1. / ((1./self.emitter.emissivity) + (1./self.collector.emissivity) - 1.)
+            net_emissivity = 1. / ((1. / self.emitter.emissivity) + (1. / self.collector.emissivity) - 1.)
 
         rad_rate = ideal_rad_rate * net_emissivity * units.Unit("cm2")
 

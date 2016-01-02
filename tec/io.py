@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import tec
 
+
 def to_json(obj):
     if isinstance(obj, tec.electrode.metal.Metal):
         encoded_obj = dict(obj)
@@ -11,6 +12,7 @@ def to_json(obj):
         encoded_obj = dict(obj.iterelectrodes())
         encoded_obj["__class__"] = str(encoded_obj["__class__"])
         return encoded_obj
+
 
 def from_json(obj):
     if "__class__" in obj:
