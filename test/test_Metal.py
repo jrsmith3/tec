@@ -314,6 +314,12 @@ class Iteration(Base):
         """
         self.assertIsInstance(self.el, collections.Iterable)
 
+    def test_iteration_returns_2_tuple(self):
+        """
+        Iterating a Metal should return a 2-tuple
+        """
+        all(isinstance(itm, tuple) for itm in iter(self.el))
+
 
 class MethodsReturnType(Base):
     """
