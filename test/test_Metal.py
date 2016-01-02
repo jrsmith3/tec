@@ -302,6 +302,13 @@ class Set(Base):
             self.fail("`emissivity` attribute can be assigned a negative value.")
 
 
+class Iteration(Base):
+    """
+    Tests class's iteration API
+    """
+    pass
+
+
 class MethodsReturnType(Base):
     """
     Tests methods' output types
