@@ -14,6 +14,8 @@ class Metal(object):
 
     A `Metal` electrode is instantiated with values to populate its public data attributes. Each argument's value must satisfy the constraints noted with the corresponding public data attribute. Arguments can be some kind of numeric type or of type `astropy.units.Quantity` so long as the units are compatible with what's listed.
 
+    Arguments in addition to the ones listed will be ignored.
+
     :param temp: Temperature (:math:`T`).
     :param barrier: Emission barrier (a.k.a. work function). The barrier is the difference between the vacuum energy of the surface and the Fermi energy. (:math:`\phi`)
     :param richardson: Richardson's constant (:math:`A`)
@@ -29,7 +31,7 @@ class Metal(object):
     position = PhysicalProperty(unit="um")
     emissivity = PhysicalProperty(lo_bnd=0, up_bnd=1)
 
-    def __init__(self, temp, barrier, richardson=120, voltage=0, position=0, emissivity=0):
+    def __init__(self, temp, barrier, richardson=120, voltage=0, position=0, emissivity=0, **kwargs):
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
