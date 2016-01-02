@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import inspect
+import itertools
 import numpy as np
 from scipy import interpolate, optimize
 from astropy import units, constants
@@ -60,6 +63,27 @@ class TECBase(object):
     def __init__(self, emitter, collector):
         self.emitter = emitter
         self.collector = collector
+
+    def iterelectrodes(self):
+        """
+        Iterator over object's electrodes
+
+        This iterator yields 2-tuples. The zeroth element of the 2-tuple will be a str.
+
+        All of the TECBase's electrodes will appear once and only once during the iteration (i.e. the emitter and collector attributes). Specifically, the iterator will return a 2-tuple whose zeroth element is a string with the attribute name and whose first element is the electrode object itself.
+
+        In addition, at some point during the iteration, the iterator will return a 2-tuple whose zeroth element 'max_motive' and first element the value of the max_motive method. This value will be a float; the unit is implied by the default return unit of the tec.TECBase.max_motive method.
+
+        Finally, at some point during the iteration, the iterator will return a 2-tuple whose zeroth element is the str '__class__' and whose value is the type object returned by the object calling type(self).
+
+        The order of the items listed above is not guaranteed.        
+        """
+        electrodes = [("emitter", self.emitter),
+            ("collector", self.collector)]
+        max_motive_tuple = [("max_motive", self.max_motive().value)]
+        class_tuple = [("__class__", type(self))]
+        
+        return itertools.chain(electrodes, max_motive_tuple, class_tuple)
 
 
     # Methods regarding motive ----------------------------------------
