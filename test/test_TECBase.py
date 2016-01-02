@@ -74,6 +74,42 @@ class Instantiation(Base):
         except TypeError:
             self.fail("Instantiation failed with additional arbitrary args")
 
+    # Instantiation via `from_dict`
+    # =============================
+    # Bad input
+    # ---------
+    def test_from_dict_emitter_non_electrode(self):
+        """
+        emitter nonelectrode -> TECBase init raises TypeError
+        """
+        params = {"emitter": "not an electrode",
+            "collector": self.co}
+        self.assertRaises(TypeError, TECBase.from_dict, params)
+
+    def test_from_dict_collector_non_electrode(self):
+        """
+        collector nonelectrode -> TECBase init raises TypeError
+        """
+        params = {"emitter": self.em,
+            "collector": "not an electrode"}
+        self.assertRaises(TypeError, TECBase.from_dict, params)
+
+    # Valid input
+    # -----------
+    def test_from_dict_additional_arbitrary_args(self):
+        """
+        TECBase can be instantiated with additional arbitrary args
+        """
+        params = {"emitter": "not an electrode",
+            "collector": self.co,
+            "not_an_arg": "nope sure not"}
+
+        try:
+            el = TECBase.from_dict(params)
+        except TypeError:
+            self.fail("Instantiation failed with additional arbitrary args")
+
+
 class Set(Base):
     """
     Tests all aspects of setting attributes
