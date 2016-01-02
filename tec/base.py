@@ -70,6 +70,9 @@ class TECBase(object):
         """
         return self.iterelectrodesdicts()
 
+    def __repr__(self):
+        return str(dict(self))
+
     def iterelectrodes(self):
         """
         Iterator over object's data
