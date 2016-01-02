@@ -2,6 +2,7 @@
 import tec
 import unittest
 
+
 class AttributeExistence(unittest.TestCase):
     """
     Tests existence of specified attributes

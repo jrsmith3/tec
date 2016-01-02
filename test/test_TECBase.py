@@ -60,6 +60,7 @@ class Instantiation(Base):
         except TypeError:
             self.fail("Instantiation failed with additional arbitrary args")
 
+
 class Set(Base):
     """
     Tests all aspects of setting attributes

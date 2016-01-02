@@ -197,7 +197,7 @@ class Instantiation(Base):
         self.assertRaises(ValueError, SC, **self.input_params)
 
     # Other instantiation conditions
-    # ------------------------------    
+    # ------------------------------
     def test_additional_arbitrary_args(self):
         """
         SC can be instantiated with additional arbitrary args
@@ -362,7 +362,7 @@ class Instantiation(Base):
         self.assertRaises(ValueError, SC.from_dict, self.input_params)
 
     # Other instantiation conditions
-    # ------------------------------    
+    # ------------------------------
     def test_from_dict_additional_arbitrary_args(self):
         """
         SC.from_dict can be instantiated with additional arbitrary args

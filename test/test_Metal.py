@@ -158,7 +158,7 @@ class Instantiation(Base):
         self.assertRaises(ValueError, Metal, **self.input_params)
 
     # Other instantiation conditions
-    # ------------------------------    
+    # ------------------------------
     def test_additional_arbitrary_args(self):
         """
         Metal can be instantiated with additional arbitrary args
@@ -306,7 +306,7 @@ class Instantiation(Base):
         self.assertRaises(TypeError, Metal, self.input_params)
 
     # Other instantiation conditions
-    # ------------------------------    
+    # ------------------------------
     def test_from_dict_additional_arbitrary_keys(self):
         """
         Metal.from_dict can be instantiated with additional arbitrary keys

@@ -6,13 +6,13 @@ from tec.electrode import Metal
 from tec.models import Langmuir
 
 em_params = {"temp": 1000.,
-            "barrier": 2.,
-            "richardson": 10.,}
+             "barrier": 2.,
+             "richardson": 10., }
 
 co_params = {"temp": 300.,
-            "barrier": 1.,
-            "richardson": 10.,
-            "position": 10.,}
+             "barrier": 1.,
+             "richardson": 10.,
+             "position": 10., }
 
 em = Metal(**em_params)
 co = Metal(**co_params)
@@ -36,7 +36,7 @@ class Base(unittest.TestCase):
         self.em = em
         self.co = co
 
-        # Create `Langmuir` objects for each regime: accelerating, 
+        # Create `Langmuir` objects for each regime: accelerating,
         # space charge limited, and retarding.
         saturation_point_voltage = self.t.saturation_point_voltage()
         critical_point_voltage = self.t.critical_point_voltage()
@@ -49,7 +49,7 @@ class Base(unittest.TestCase):
         self.t_accel = Langmuir(em, co_accelerating)
 
         # space charge limited mode:
-        scl_voltage = (saturation_point_voltage + critical_point_voltage)/2
+        scl_voltage = (saturation_point_voltage + critical_point_voltage) / 2
         co_scl = Metal(**co_params)
         co_scl.voltage = scl_voltage
 
