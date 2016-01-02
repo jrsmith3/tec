@@ -64,6 +64,12 @@ class TECBase(object):
         self.emitter = emitter
         self.collector = collector
 
+    def __iter__(self):
+        """
+        Returns iterator from iterelectrodesdicts method
+        """
+        return self.iterelectrodesdicts()
+
     def iterelectrodes(self):
         """
         Iterator over object's data
