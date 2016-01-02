@@ -305,6 +305,18 @@ class Instantiation(Base):
         del self.input_params["barrier"]
         self.assertRaises(TypeError, Metal, self.input_params)
 
+    # Other instantiation conditions
+    # ------------------------------    
+    def test_from_dict_additional_arbitrary_keys(self):
+        """
+        Metal.from_dict can be instantiated with additional arbitrary keys
+        """
+        self.input_params["not_an_argument"] = "not_an_argument"
+        try:
+            el = Metal.from_dict(self.input_params)
+        except TypeError:
+            self.fail("Instantiation failed with additional arbitrary args")
+
 
 class Set(Base):
     """
