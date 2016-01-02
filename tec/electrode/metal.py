@@ -44,7 +44,6 @@ class Metal(object):
         """
         Construct object from dictionary
 
-
         :param kwargs: Dictionary containing keys with names identical to the arguments of the `__init__` method and values which are legal corresponding to the arguments of `__init__`.
 
         Additional key/value pairs will be silently ignored.
