@@ -63,6 +63,22 @@ class Base(unittest.TestCase):
         self.t_ret = Langmuir(em, co_retarding)
 
 
+class Instantiation(Base):
+    """
+    Tests all aspects of instantiation
+
+    Tests include: instantiation with args of wrong type, etc.
+    """
+    def test_additional_arbitrary_args(self):
+        """
+        Langmuir can be instantiated with additional arbitrary args
+        """
+        try:
+            el = Langmuir(em, co, not_an_arg="nope sure not")
+        except TypeError:
+            self.fail("Instantiation failed with additional arbitrary args")
+
+
 class MethodsInput(Base):
     """
     Tests methods which take input parameters
