@@ -337,6 +337,14 @@ class Iteration(Base):
 
         self.assertTrue(physical_properties.issubset(iteration_keys))
 
+    def test_iteration_returns_class(self):
+        """
+        One element from the iteration should have zeroth element `__class__`
+        """
+        iteration_keys = set([itm[0] for itm in iter(self.el)])
+
+        self.assertIn("__class__", iteration_keys)
+
 
 class MethodsReturnType(Base):
     """
