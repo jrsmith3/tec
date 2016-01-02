@@ -43,10 +43,9 @@ class Metal(object):
 
         This iterator functionality returns tuples such that the data contained in the object can be converted into a dictionary. All `PhysicalProperty` attributes appear once and only once during the iteration. The order of these atttibutes are not guaranteed. The values corresponding to an attribute are returned as floats; their unit is defined by the default unit of the corresponding `PhysicalProperty`.
 
-        Additionally, this iteration returns the following two attributes:
+        Additionally, this iteration returns the following attribute:
 
         * `__class__`: The object's class returned by `type(self)`.
-        * `__version__`: The __version__ of the `tec` module that was used.
         """
         # Crappy implmentation -- should use iterators/iterables.
         # Construct a list of tuples to return.
@@ -55,8 +54,7 @@ class Metal(object):
 
         attribs = zip(physical_prop_names, physical_prop_vals)
 
-        ext_attribs = [("__class__", type(self),),
-            ("__version__", tec.__version__)]
+        ext_attribs = [("__class__", type(self),)]
 
         return itertools.chain(ext_attribs, attribs)
 
