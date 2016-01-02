@@ -277,6 +277,22 @@ class Instantiation(Base):
         self.input_params["emissivity"] = 1.1
         self.assertRaises(ValueError, Metal.from_dict, self.input_params)
 
+    # Input argument missing required key
+    # -----------------------------------
+    def test_from_dict_missing_key_temp(self):
+        """
+        Metal.from_dict instantiation requires "temp" key
+        """
+        del self.input_params["temp"]
+        self.assertRaises(TypeError, Metal, self.input_params)
+
+    def test_from_dict_missing_key_barrier(self):
+        """
+        Metal.from_dict instantiation requires "barrier" key
+        """
+        del self.input_params["barrier"]
+        self.assertRaises(TypeError, Metal, self.input_params)
+
     # Other instantiation conditions
     # ===============================    
     def test_additional_arbitrary_args(self):
