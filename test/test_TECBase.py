@@ -85,6 +85,13 @@ class Instantiation(Base):
         params = {"collector": self.co}
         self.assertRaises(TypeError, TECBase.from_dict, params)
 
+    def test_from_dict_collector_missing(self):
+        """
+        TECBase.from_dict raises TypeError when misisng "collector"
+        """
+        params = {"emitter": self.em}
+        self.assertRaises(TypeError, TECBase.from_dict, params)
+
     def test_from_dict_emitter_non_electrode(self):
         """
         emitter nonelectrode -> TECBase init raises TypeError
