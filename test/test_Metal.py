@@ -157,6 +157,126 @@ class Instantiation(Base):
         self.input_params["emissivity"] = 1.1
         self.assertRaises(ValueError, Metal, **self.input_params)
 
+    # Instantiation via `from_dict`
+    # ============================
+    # Input arguments wrong type
+    # --------------------------
+    def test_from_dict_temp_non_numeric(self):
+        """
+        Metal.from_dict instantiation requires numeric `temp` value
+        """
+        self.input_params["temp"] = "this string is non-numeric."
+
+        try:
+            El = Metal.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `temp` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("Shouldn't be able to instantiate with non-numeric `temp` argument.")
+
+    def test_from_dict_barrier_non_numeric(self):
+        """
+        Metal.from_dict instantiation requires numeric `barrer` value
+        """
+        self.input_params["barrier"] = "this string is non-numeric."
+        try:
+            El = Metal.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `barrier` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("Shouldn't be able to instantiate with non-numeric `barrier` argument.")
+
+    def test_from_dict_richardson_non_numeric(self):
+        """
+        Metal.from_dict instantiation requires numeric `richardson` value
+        """
+        self.input_params["richardson"] = "this string is non-numeric."
+        try:
+            El = Metal.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `richardson` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("Shouldn't be able to instantiate with non-numeric `richardson` argument.")
+
+    def test_from_dict_voltage_non_numeric(self):
+        """
+        Metal.from_dict instantiation requires numeric `voltage` value
+        """
+        self.input_params["voltage"] = "this string is non-numeric."
+        try:
+            El = Metal.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `voltage` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("Shouldn't be able to instantiate with non-numeric `voltage` argument.")
+
+    def test_from_dict_position_non_numeric(self):
+        """
+        Metal.from_dict instantiation requires numeric `position` value
+        """
+        self.input_params["position"] = "this string is non-numeric."
+        try:
+            El = Metal.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `position` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("Shouldn't be able to instantiate with non-numeric `position` argument.")
+
+    def test_from_dict_emissivity_non_numeric(self):
+        """
+        Metal.from_dict instantiation requires numeric `emissivity` value
+        """
+        self.input_params["emissivity"] = "this string is non-numeric."
+        try:
+            El = Metal.from_dict(self.input_params)
+        except TypeError:
+            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `emissivity` argument raised a TypeError which is exactly what we wanted to do.
+            pass
+        else:
+            self.fail("Shouldn't be able to instantiate with non-numeric `emissivity` argument.")
+
+    # Input arguments outside constraints
+    # -----------------------------------
+    def test_from_dict_temp_less_than_zero(self):
+        """
+        Metal.from_dict instantiation requires `temp` > 0
+        """
+        self.input_params["temp"] = -1.1
+        self.assertRaises(ValueError, Metal, self.input_params)
+
+    def test_from_dict_barrier_less_than_zero(self):
+        """
+        Metal.from_dict instantiation requires `barrier` > 0
+        """
+        self.input_params["barrier"] = -1.1
+        self.assertRaises(ValueError, Metal, self.input_params)
+
+    def test_from_dict_richardson_less_than_zero(self):
+        """
+        Metal.from_dict instantiation requires `richardson` > 0
+        """
+        self.input_params["richardson"] = -1.1
+        self.assertRaises(ValueError, Metal, self.input_params)
+
+    def test_from_dict_emissivity_less_than_zero(self):
+        """
+        Metal.from_dict instantiation requires `emissivity` > 0
+        """
+        self.input_params["emissivity"] = -1.1
+        self.assertRaises(ValueError, Metal, self.input_params)
+
+    def test_from_dict_emissivity_greater_than_one(self):
+        """
+        Metal.from_dict instantiation requires `emissivity` < 1
+        """
+        self.input_params["emissivity"] = 1.1
+        self.assertRaises(ValueError, Metal, self.input_params)
+
     # Other instantiation conditions
     # ===============================    
     def test_additional_arbitrary_args(self):
