@@ -247,35 +247,35 @@ class Instantiation(Base):
         Metal.from_dict instantiation requires `temp` > 0
         """
         self.input_params["temp"] = -1.1
-        self.assertRaises(ValueError, Metal, self.input_params)
+        self.assertRaises(ValueError, Metal.from_dict, self.input_params)
 
     def test_from_dict_barrier_less_than_zero(self):
         """
         Metal.from_dict instantiation requires `barrier` > 0
         """
         self.input_params["barrier"] = -1.1
-        self.assertRaises(ValueError, Metal, self.input_params)
+        self.assertRaises(ValueError, Metal.from_dict, self.input_params)
 
     def test_from_dict_richardson_less_than_zero(self):
         """
         Metal.from_dict instantiation requires `richardson` > 0
         """
         self.input_params["richardson"] = -1.1
-        self.assertRaises(ValueError, Metal, self.input_params)
+        self.assertRaises(ValueError, Metal.from_dict, self.input_params)
 
     def test_from_dict_emissivity_less_than_zero(self):
         """
         Metal.from_dict instantiation requires `emissivity` > 0
         """
         self.input_params["emissivity"] = -1.1
-        self.assertRaises(ValueError, Metal, self.input_params)
+        self.assertRaises(ValueError, Metal.from_dict, self.input_params)
 
     def test_from_dict_emissivity_greater_than_one(self):
         """
         Metal.from_dict instantiation requires `emissivity` < 1
         """
         self.input_params["emissivity"] = 1.1
-        self.assertRaises(ValueError, Metal, self.input_params)
+        self.assertRaises(ValueError, Metal.from_dict, self.input_params)
 
     # Other instantiation conditions
     # ===============================    
