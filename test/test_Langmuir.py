@@ -281,4 +281,33 @@ class MethodsReturnValues(Base):
     """
     Tests values of methods against known values
     """
-    pass
+    def test_issue_155(self):
+        """
+        Langmuir.max_motive raises ValueError
+
+        There's a case where the `Langmuir.max_motive` method will raise a `ValueError`. Specifically when `self.critical_point_current_density() == self.calc_saturation_point_current_density()`. This condition is tested to ensure the `ValueError` is not raised.
+
+        See: https://github.com/jrsmith3/tec/issues/155
+        """
+        em_params = {'barrier': 1.0,
+                     'emissivity': 0.0,
+                     'position': 0.0,
+                     'richardson': 10.0,
+                     'temp': 300.0,
+                     'voltage': 0.0}
+
+        co_params = {'barrier': 1.0,
+                     'emissivity': 0.0,
+                     'position': 1.0,
+                     'richardson': 10.0,
+                     'temp': 300.0,
+                     'voltage': 0.0}
+
+        em = Metal.from_dict(em_params)
+        co = Metal.from_dict(co_params)
+        l = Langmuir(em, co)
+
+        try:
+            l.max_motive()
+        except ValueError:
+            self.fail("Issue #155 not resolved")
