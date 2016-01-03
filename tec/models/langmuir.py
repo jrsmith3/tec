@@ -323,8 +323,11 @@ class Langmuir(TECBase):
             cpcd = self.critical_point_current_density()
             cpcd = cpcd.value
 
-            output_current_density = optimize.brentq(self.output_voltage_target_function, spcd, cpcd)
-            output_current_density = units.Quantity(output_current_density, "A cm-2")
+            if spcd == cpcd:
+                output_current_density = self.saturation_point_current_density()
+            else:
+                output_current_density = optimize.brentq(self.output_voltage_target_function, spcd, cpcd)
+                output_current_density = units.Quantity(output_current_density, "A cm-2")
 
             barrier = constants.k_B * self.emitter.temp * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
 
