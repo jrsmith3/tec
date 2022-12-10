@@ -11,7 +11,7 @@ from astropy import units, constants
 from ibei import uibei
 import itertools
 import numpy as np
-from scipy import optimize
+import scipy.optimize
 
 
 class Metal(object):
@@ -343,7 +343,7 @@ class SC(Metal):
         lo = 0
         hi = self.bandgap.value
 
-        fermi_energy = optimize.brentq(self._charge_neutrality_target_fcn, lo, hi)
+        fermi_energy = scipy.optimize.brentq(self._charge_neutrality_target_fcn, lo, hi)
 
         return units.Quantity(fermi_energy, "eV")
 
