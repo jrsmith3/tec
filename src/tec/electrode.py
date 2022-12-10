@@ -9,12 +9,14 @@ Base Library (:mod:`electrode`)
 
 import astropy.constants
 import astropy.units
+import attrs
 import ibei
 import itertools
 import numpy as np
 import scipy.optimize
 
 
+@attrs.frozen
 class Metal():
     """
     Metal thermoelectron electrode
@@ -37,21 +39,13 @@ class Metal():
     :param position: Position (:math:`x`).
     :param emissivity: Radiative emissivity (:math:`epsilon`).
     """
+    temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field()
+    barrier: float | astropy.units.Quantity[astropy.units.eV] = attrs.field()
+    richardson: float | astropy.units.Quantity["A/(cm2 K2)"] = attrs.field()
+    voltage: float | astropy.units.Quantity[astropy.units.V] = attrs.field()
+    position: float | astropy.units.Quantity[astropy.units.um] = attrs.field()
+    emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled] = attrs.field()
 
-    temp = PhysicalProperty(unit="K", lo_bnd=0)
-    barrier = PhysicalProperty(unit="eV", lo_bnd=0)
-    richardson = PhysicalProperty(unit="A/(cm2 K2)", lo_bnd=0)
-    voltage = PhysicalProperty(unit="V")
-    position = PhysicalProperty(unit="um")
-    emissivity = PhysicalProperty(lo_bnd=0, up_bnd=1)
-
-    def __init__(self, temp, barrier, richardson=120, voltage=0, position=0, emissivity=0, **kwargs):
-        self.temp = temp
-        self.barrier = barrier
-        self.richardson = richardson
-        self.voltage = voltage
-        self.position = position
-        self.emissivity = emissivity
 
     def motive(self):
         """
