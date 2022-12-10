@@ -1,0 +1,26 @@
+name: Build and test package
+
+on:
+  workflow_call:
+  push:
+
+jobs:
+  build_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install tox
+
+      - name: Run tests
+        run: |
+          tox

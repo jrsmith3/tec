@@ -1,0 +1,48 @@
+# coding=utf-8
+[build-system]
+requires = [
+    "hatchling>=1.4.1",
+    "hatch-vcs",
+    "setuptools>=45",
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "tec"
+description="Utils for simulating vacuum thermionic energy conversion devices"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+  { name = "Joshua Ryan Smith", email = "joshua.r.smith@gmail.com" },
+]
+keywords = [
+  "",
+]
+classifiers=[
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+]
+dynamic = ["version"]
+
+[project.urls]
+Documentation = "https://jrsmith3.github.io/tec/"
+Issues = "https://github.com/jrsmith3/tec/issues"
+Source = "https://github.com/jrsmith3/tec"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/tec/_version.py"
