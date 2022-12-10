@@ -1,5 +1,5 @@
 # coding: utf-8
-from astropy import units
+import astropy.units
 import collections
 import copy
 import numpy as np
@@ -561,34 +561,34 @@ class MethodsReturnType(Base):
         """
         Metal.motive should return an astropy.units.Quantity
         """
-        self.assertIsInstance(self.el.motive(), units.Quantity)
+        self.assertIsInstance(self.el.motive(), astropy.units.Quantity)
 
     def test_thermoelectron_current_density(self):
         """
         Metal.thermoelectron_current_density should return an
         astropy.units.Quantity
         """
-        self.assertIsInstance(self.el.thermoelectron_current_density(), units.Quantity)
+        self.assertIsInstance(self.el.thermoelectron_current_density(), astropy.units.Quantity)
 
     def test_thermoelectron_energy_flux(self):
         """
         Metal.thermoelectron_energy_flux should return an
         astropy.units.Quantity
         """
-        self.assertIsInstance(self.el.thermoelectron_energy_flux(), units.Quantity)
+        self.assertIsInstance(self.el.thermoelectron_energy_flux(), astropy.units.Quantity)
 
     def test_photon_flux(self):
         """
         Metal.photon_flux should return an astropy.units.Quantity
         """
-        self.assertIsInstance(self.el.photon_flux(), units.Quantity)
+        self.assertIsInstance(self.el.photon_flux(), astropy.units.Quantity)
 
     def test_photon_energy_flux(self):
         """
         Metal.photon_energy_flux should return an
         astropy.units.Quantity
         """
-        self.assertIsInstance(self.el.photon_energy_flux(), units.Quantity)
+        self.assertIsInstance(self.el.photon_energy_flux(), astropy.units.Quantity)
 
 
 class MethodsReturnUnits(Base):
@@ -599,34 +599,34 @@ class MethodsReturnUnits(Base):
         """
         Metal.motive should return a value with unit eV
         """
-        self.assertEqual(self.el.motive().unit, units.Unit("eV"))
+        self.assertEqual(self.el.motive().unit, astropy.units.Unit("eV"))
 
     def test_thermoelectron_current_density(self):
         """
         Metal.thermoelectron_current_density should return a value
         with unit A/cm2
         """
-        self.assertEqual(self.el.thermoelectron_current_density().unit, units.Unit("A/cm2"))
+        self.assertEqual(self.el.thermoelectron_current_density().unit, astropy.units.Unit("A/cm2"))
 
     def test_thermoelectron_energy_flux(self):
         """
         Metal.thermoelectron_energy_flux should return a value with
         unit W/cm2
         """
-        self.assertEqual(self.el.thermoelectron_energy_flux().unit, units.Unit("W/cm2"))
+        self.assertEqual(self.el.thermoelectron_energy_flux().unit, astropy.units.Unit("W/cm2"))
 
     def test_photon_flux(self):
         """
         Metal.photon_flux should return a value with unit W/cm2
         """
-        self.assertEqual(self.el.photon_flux().unit, units.Unit("1/(s*cm2)"))
+        self.assertEqual(self.el.photon_flux().unit, astropy.units.Unit("1/(s*cm2)"))
 
     def test_photon_energy_flux(self):
         """
         Metal.photon_energy_flux should return a value with unit 1/
         (s*cm2)
         """
-        self.assertEqual(self.el.photon_energy_flux().unit, units.Unit("W/cm2"))
+        self.assertEqual(self.el.photon_energy_flux().unit, astropy.units.Unit("W/cm2"))
 
 
 class MethodsReturnValues(Base):
