@@ -3,9 +3,17 @@ import astropy.units
 import pytest
 import tec
 
+from contextlib import nullcontext as does_not_raise
+
 
 class TestMetalConstructorHappyPath():
-    pass
+    def test_params_without_default_values(self, valid_constructor_args):
+        valid_constructor_args.pop("voltage")
+        valid_constructor_args.pop("position")
+        valid_constructor_args.pop("emissivity")
+
+        with does_not_raise():
+            emitter = tec.electrode.Metal(**valid_constructor_args)
 
 
 # Pytest fixture definitions
