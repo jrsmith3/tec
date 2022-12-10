@@ -60,6 +60,7 @@ class Metal():
         motive = self.barrier + astropy.constants.e.si * self.voltage
         return motive.to("eV")
 
+
     def thermoelectron_current_density(self):
         """
         Thermoelectron emission current density
@@ -86,6 +87,7 @@ class Metal():
 
         return current_density.to("A/cm2")
 
+
     def thermoelectron_energy_flux(self):
         """
         Energy flux emitted via thermoelectrons
@@ -105,6 +107,7 @@ class Metal():
 
         return energy_flux.to("W/cm2")
 
+
     def photon_flux(self):
         """
         Number of photons per unit time per unit area
@@ -114,6 +117,7 @@ class Metal():
         """
         photon_flux = self.emissivity * ibei.uibei(2, 0, self.temp, 0)
         return photon_flux.to("1/(s*cm2)")
+
 
     def photon_energy_flux(self):
         """
