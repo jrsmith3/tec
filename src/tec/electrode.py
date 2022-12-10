@@ -39,12 +39,29 @@ class Metal():
     :param position: Position (:math:`x`).
     :param emissivity: Radiative emissivity (:math:`epsilon`).
     """
-    temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field()
-    barrier: float | astropy.units.Quantity[astropy.units.eV] = attrs.field()
-    richardson: float | astropy.units.Quantity["A/(cm2 K2)"] = attrs.field()
+    temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field(
+        validator=[
+            attrs.validators.gt(0)
+            ]
+        )
+    barrier: float | astropy.units.Quantity[astropy.units.eV] = attrs.field(
+        validator=[
+            attrs.validators.gt(0)
+            ]
+        )
+    richardson: float | astropy.units.Quantity["A/(cm2 K2)"] = attrs.field(
+        validator=[
+            attrs.validators.gt(0)
+            ]
+        )
     voltage: float | astropy.units.Quantity[astropy.units.V] = attrs.field(default=0.)
     position: float | astropy.units.Quantity[astropy.units.um] = attrs.field(default=0.)
-    emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled] = attrs.field(default=1.)
+    emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled] = attrs.field(
+        default=1.,
+        validator=[
+            attrs.validators.gt(0)
+            ]
+        )
 
 
     def motive(self):
