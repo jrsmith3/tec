@@ -64,6 +64,21 @@ class TestMetalConstructorParamsOutsideConstraints():
             emitter = tec.electrode.Metal(**invalid_constructor_args)
 
 
+    @pytest.mark.parametrize("argname", [
+            "temperature",
+            "barrier",
+            "richardson",
+            "emissivity",
+            ]
+        )
+    def test_param_lt_0(self, valid_constructor_args, argname):
+        invalid_constructor_args = valid_constructor_args.copy()
+        invalid_constructor_args[argname] = -1 * valid_constructor_args[argname]
+
+        with pytest.raises(ValueError):
+            emitter = tec.electrode.Metal(**invalid_constructor_args)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
