@@ -1,9 +1,6 @@
 # coding: utf-8
 import astropy.units
-import collections
 import copy
-import numpy as np
-from physicalproperty import find_PhysicalProperty
 from tec.electrode import Metal
 import unittest
 
