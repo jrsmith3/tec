@@ -7,7 +7,8 @@ Base Library (:mod:`electrode`)
 .. currentmodule:: electrode
 """
 
-from astropy import units, constants
+import astropy.constants
+import astropy.units
 import ibei
 import itertools
 import numpy as np
@@ -105,7 +106,7 @@ class Metal(object):
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi_{E}` (for the emitter, for example)
         """
-        motive = self.barrier + constants.e.si * self.voltage
+        motive = self.barrier + astropy.constants.e.si * self.voltage
         return motive.to("eV")
 
     def thermoelectron_current_density(self):
@@ -126,9 +127,9 @@ class Metal(object):
         :symbol: :math:`J_{RD}`
         """
         if self.temp.value == 0:
-            current_density = units.Quantity(0, "A/cm2")
+            current_density = astropy.units.Quantity(0, "A/cm2")
         else:
-            exponent = (self.barrier / (constants.k_B * self.temp)).decompose()
+            exponent = (self.barrier / (astropy.constants.k_B * self.temp)).decompose()
             coefficient = self.richardson * self.temp**2
             current_density = coefficient * np.exp(-exponent)
 
@@ -147,8 +148,8 @@ class Metal(object):
           :math:`W cm^{-2}`.
         :symbol: None
         """
-        kt2 = 2 * constants.k_B * self.temp
-        thermal_potential = (self.barrier + kt2) / constants.e.to("C")
+        kt2 = 2 * astropy.constants.k_B * self.temp
+        thermal_potential = (self.barrier + kt2) / astropy.constants.e.to("C")
         energy_flux = thermal_potential * self.thermoelectron_current_density()
 
         return energy_flux.to("W/cm2")
@@ -227,7 +228,7 @@ class SC(Metal):
     donor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
     bandgap = PhysicalProperty(unit="eV", lo_bnd=0)
 
-    def __init__(self, temp, barrier, richardson, bandgap, electron_effective_mass=constants.m_e, hole_effective_mass=constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0, **kwargs):
+    def __init__(self, temp, barrier, richardson, bandgap, electron_effective_mass=astropy.constants.m_e, hole_effective_mass=astropy.constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0, **kwargs):
         self.temp = temp
         self.barrier = barrier
         self.richardson = richardson
@@ -256,7 +257,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`N_{C}`
         """
-        dos = 2 * ((2 * np.pi * self.electron_effective_mass * constants.k_B * self.temp) / (constants.h ** 2))**(3. / 2)
+        dos = 2 * ((2 * np.pi * self.electron_effective_mass * astropy.constants.k_B * self.temp) / (astropy.constants.h ** 2))**(3. / 2)
 
         return dos.to("1/cm3")
 
@@ -273,7 +274,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`N_{V}`
         """
-        dos = 2 * ((2 * np.pi * self.hole_effective_mass * constants.k_B * self.temp) / (constants.h ** 2))**(3. / 2)
+        dos = 2 * ((2 * np.pi * self.hole_effective_mass * astropy.constants.k_B * self.temp) / (astropy.constants.h ** 2))**(3. / 2)
 
         return dos.to("1/cm3")
 
@@ -290,7 +291,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`n_{0}`
         """
-        exponent = ((self.bandgap - self.fermi_energy()) / (constants.k_B * self.temp)).decompose()
+        exponent = ((self.bandgap - self.fermi_energy()) / (astropy.constants.k_B * self.temp)).decompose()
 
         return self.cb_effective_dos() * np.exp(-exponent)
 
@@ -307,7 +308,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of :math:`cm^{-3}`
         :symbol: :math:`p_{0}`
         """
-        exponent = (self.fermi_energy() / (constants.k_B * self.temp)).decompose()
+        exponent = (self.fermi_energy() / (astropy.constants.k_B * self.temp)).decompose()
 
         return self.vb_effective_dos() * np.exp(-exponent)
 
@@ -345,17 +346,17 @@ class SC(Metal):
 
         fermi_energy = scipy.optimize.brentq(self._charge_neutrality_target_fcn, lo, hi)
 
-        return units.Quantity(fermi_energy, "eV")
+        return astropy.units.Quantity(fermi_energy, "eV")
 
     def _charge_neutrality_target_fcn(self, fermi_energy):
         """
         Target function of charge neutrality condition.
         """
-        fermi_energy = units.Quantity(fermi_energy, "eV")
+        fermi_energy = astropy.units.Quantity(fermi_energy, "eV")
 
-        exponent_1 = ((self.bandgap - fermi_energy) / (constants.k_B * self.temp)).decompose()
-        exponent_2 = (fermi_energy / (constants.k_B * self.temp)).decompose()
-        exponent_3 = ((self.acceptor_ionization_energy - fermi_energy) / (constants.k_B * self.temp)).decompose()
+        exponent_1 = ((self.bandgap - fermi_energy) / (astropy.constants.k_B * self.temp)).decompose()
+        exponent_2 = (fermi_energy / (astropy.constants.k_B * self.temp)).decompose()
+        exponent_3 = ((self.acceptor_ionization_energy - fermi_energy) / (astropy.constants.k_B * self.temp)).decompose()
 
         el_carrier_conc = self.cb_effective_dos() * np.exp(-exponent_1)
         ho_carrier_conc = self.vb_effective_dos() * np.exp(-exponent_2)
