@@ -33,6 +33,21 @@ class TestMetalConstructorHappyPath():
             emitter = tec.electrode.Metal(**valid_constructor_args)
 
 
+    @pytest.mark.parametrize("argname,val", [
+            ("temperature", astropy.units.Quantity(26.85, astropy.units.deg_C)),
+            ("barrier", astropy.units.Quantity(3.20435313e-19, astropy.units.J)),
+            ("richardson", astropy.units.Quantity(10_000., "mA/(cm2 K2)")),
+            ("voltage", astropy.units.Quantity(100., astropy.units.mV)),
+            ("position", astropy.units.Quantity(1e-7, astropy.units.m)),
+            ]
+        )
+    def test_quantity_params_compatible_units(self, valid_constructor_quantity_args, argname, val):
+        valid_constructor_quantity_args[argname] = val
+
+        with does_not_raise():
+            emitter = tec.electrode.Metal(**valid_constructor_quantity_args)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
