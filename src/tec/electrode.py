@@ -15,7 +15,7 @@ import numpy as np
 import scipy.optimize
 
 
-class Metal(object):
+class Metal():
     """
     Metal thermoelectron electrode
 
