@@ -21,6 +21,18 @@ class TestMetalConstructorHappyPath():
             emitter = tec.electrode.Metal(**valid_constructor_args)
 
 
+    @pytest.mark.parametrize("argname", [
+            "voltage",
+            "position",
+            ]
+        )
+    def test_params_that_can_equal_zero(self, valid_constructor_args, argname):
+        valid_constructor_args[argname] = 0
+
+        with does_not_raise():
+            emitter = tec.electrode.Metal(**valid_constructor_args)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
