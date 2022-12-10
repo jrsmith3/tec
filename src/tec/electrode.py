@@ -7,10 +7,10 @@ Base Library (:mod:`electrode`)
 .. currentmodule:: electrode
 """
 
-import itertools
-import numpy as np
 from astropy import units, constants
 from ibei import uibei
+import itertools
+import numpy as np
 from scipy import optimize
 
 
