@@ -4,13 +4,48 @@ import pytest
 import tec
 
 
+class TestMetalConstructorHappyPath():
+    pass
+
+
+# Pytest fixture definitions
+# ==========================
+@pytest.fixture
+def valid_constructor_quantity_args():
+    args = {
+        "temperature": astropy.units.Quantity(300., astropy.units.K),
+        "barrier": astropy.units.Quantity(2., astropy.units.eV),
+        "richardson": astropy.units.Quantity(10., "A/(cm2 K2)"),
+    }
+
+    return args
+
+
+@pytest.fixture(params=[(lambda x: x), (lambda x: x.value)])
+def valid_constructor_args(request, valid_constructor_quantity_args):
+    args = {key: request.param(val) for key, val in valid_constructor_quantity_args.items()}
+
+    return args
+
+
+
+
+
+
+
+# =========================================
+# `unittest` stuff below; delete eventually
+# =========================================
+import copy
+import unittest
+
 input_params = {"temp": 300.,
                 "barrier": 2.0,
                 "richardson": 10., }
 
-
 # Base classes
 # ============
+@pytest.mark.skip("These tests are being deprecated")
 class Base(unittest.TestCase):
     """
     Base class for tests
@@ -29,6 +64,7 @@ class Base(unittest.TestCase):
 
 # Test classes
 # ============
+@pytest.mark.skip("These tests are being deprecated")
 class Instantiation(Base):
     """
     Tests all aspects of instantiation
