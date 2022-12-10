@@ -1,12 +1,11 @@
 # coding: utf-8
-
-import collections
-import numpy as np
-from tec.electrode import Metal
 from astropy import units
-import unittest
+import collections
 import copy
+import numpy as np
 from physicalproperty import find_PhysicalProperty
+from tec.electrode import Metal
+import unittest
 
 input_params = {"temp": 300.,
                 "barrier": 2.0,
