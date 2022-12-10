@@ -8,7 +8,7 @@ Base Library (:mod:`electrode`)
 """
 
 from astropy import units, constants
-from ibei import uibei
+import ibei
 import itertools
 import numpy as np
 import scipy.optimize
@@ -160,7 +160,7 @@ class Metal(object):
         :returns: `astropy.units.Quantity` in units of
           :math:`s^{-1} cm^{-2}`.
         """
-        photon_flux = self.emissivity * uibei(2, 0, self.temp, 0)
+        photon_flux = self.emissivity * ibei.uibei(2, 0, self.temp, 0)
         return photon_flux.to("1/(s*cm2)")
 
     def photon_energy_flux(self):
@@ -177,7 +177,7 @@ class Metal(object):
         :returns: `astropy.units.Quantity` in units of
           :math:`W cm^{-2}`.
         """
-        energy_flux = self.emissivity * uibei(3, 0, self.temp, 0)
+        energy_flux = self.emissivity * ibei.uibei(3, 0, self.temp, 0)
         return energy_flux.to("W/cm2")
 
 
@@ -371,7 +371,7 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of
           :math:`s^{-1} cm^{-2}`.
         """
-        photon_flux = self.emissivity * uibei(2, self.bandgap, self.temp, 0)
+        photon_flux = self.emissivity * ibei.uibei(2, self.bandgap, self.temp, 0)
         return photon_flux.to("1/(s*cm2)")
 
     def photon_energy_flux(self):
@@ -388,5 +388,5 @@ class SC(Metal):
         :returns: `astropy.units.Quantity` in units of
           :math:`W cm^{-2}`.
         """
-        energy_flux = self.emissivity * uibei(3, self.bandgap, self.temp, 0)
+        energy_flux = self.emissivity * ibei.uibei(3, self.bandgap, self.temp, 0)
         return energy_flux.to("W/cm2")
