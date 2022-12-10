@@ -137,6 +137,7 @@ class Metal():
         return energy_flux.to("W/cm2")
 
 
+@attrs.frozen
 class SC(Metal):
     """
     P-type semiconductor thermoelectron electrode
@@ -171,14 +172,14 @@ class SC(Metal):
     :param position: Position (:math:`x`).
     :param emissivity: Radiative emissivity (:math:`epsilon`).
     """
+    electron_effective_mass: float | astropy.units.Quantity[astropy.units.kg] = attrs.field()
+    hole_effective_mass: float | astropy.units.Quantity[astropy.units.kg] = attrs.field()
+    acceptor_concentration: float | astropy.units.Quantity["1/cm3"] = attrs.field()
+    acceptor_ionization_energy: float | astropy.units.Quantity[astropy.units.meV] = attrs.field()
+    donor_concentration: float | astropy.units.Quantity["1/cm3"] = attrs.field()
+    donor_ionization_energy: float | astropy.units.Quantity[astropy.units.meV] = attrs.field()
+    bandgap: float | astropy.units.Quantity[astropy.units.eV] = attrs.field()
 
-    electron_effective_mass = PhysicalProperty(unit="kg", lo_bnd=0)
-    hole_effective_mass = PhysicalProperty(unit="kg", lo_bnd=0)
-    acceptor_concentration = PhysicalProperty(unit="1/cm3", lo_bnd=0)
-    acceptor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
-    donor_concentration = PhysicalProperty(unit="1/cm3", lo_bnd=0)
-    donor_ionization_energy = PhysicalProperty(unit="meV", lo_bnd=0)
-    bandgap = PhysicalProperty(unit="eV", lo_bnd=0)
 
     def __init__(self, temp, barrier, richardson, bandgap, electron_effective_mass=astropy.constants.m_e, hole_effective_mass=astropy.constants.m_e, acceptor_concentration=0, acceptor_ionization_energy=0, donor_concentration=0, donor_ionization_energy=0, voltage=0, position=0, emissivity=0, **kwargs):
         self.temp = temp
