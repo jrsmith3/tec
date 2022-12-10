@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding: utf-8
 #
 # tec documentation build configuration file, created by
 # sphinx-quickstart on Sun Nov  9 17:43:13 2014.
