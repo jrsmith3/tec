@@ -53,49 +53,6 @@ class Metal(object):
         self.position = position
         self.emissivity = emissivity
 
-    @classmethod
-    def from_dict(cls, kwargs):
-        """
-        Construct object from dictionary
-
-        :param kwargs: Dictionary containing keys with names identical
-          to the arguments of the `__init__` method and values which
-          are legal corresponding to the arguments of `__init__`.
-
-        Additional key/value pairs will be silently ignored.
-        """
-        return cls(**kwargs)
-
-    def __iter__(self):
-        """
-        Implement iterator functionality
-
-        This iterator functionality returns tuples such that the data
-        contained in the object can be converted into a dictionary.
-        All `PhysicalProperty` attributes appear once and only once
-        during the iteration. The order of these atttibutes are not
-        guaranteed. The values corresponding to an attribute are
-        returned as floats; their unit is defined by the default unit
-        of the corresponding `PhysicalProperty`.
-
-        Additionally, this iteration returns the following attribute:
-
-        * `__class__`: The object's class returned by `type(self)`.
-        """
-        # Crappy implmentation -- should use iterators/iterables.
-        # Construct a list of tuples to return.
-        physical_prop_names = find_PhysicalProperty(self)
-        physical_prop_vals = [getattr(self, prop).value for prop in physical_prop_names]
-
-        attribs = zip(physical_prop_names, physical_prop_vals)
-
-        ext_attribs = [("__class__", type(self),)]
-
-        return itertools.chain(ext_attribs, attribs)
-
-    def __repr__(self):
-        return str(dict(self))
-
     def motive(self):
         """
         Motive just outside electrode
