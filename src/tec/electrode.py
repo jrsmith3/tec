@@ -10,7 +10,6 @@ Base Library (:mod:`electrode`)
 import itertools
 import numpy as np
 from astropy import units, constants
-from physicalproperty import PhysicalProperty, find_PhysicalProperty
 from ibei import uibei
 from scipy import optimize
 
