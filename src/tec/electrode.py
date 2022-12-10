@@ -182,9 +182,6 @@ class Metal(object):
         return energy_flux.to("W/cm2")
 
 
-# ----------------------------------------------------------
-
-
 class SC(Metal):
     """
     P-type semiconductor thermoelectron electrode
