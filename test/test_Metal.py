@@ -18,7 +18,9 @@ class Base(unittest.TestCase):
     """
     Base class for tests
 
-    This class is intended to be subclassed so that the same `setUp` method does not have to be rewritten for each class containing tests.
+    This class is intended to be subclassed so that the same `setUp`
+    method does not have to be rewritten for each class containing
+    tests.
     """
     def setUp(self):
         """
@@ -34,7 +36,8 @@ class Instantiation(Base):
     """
     Tests all aspects of instantiation
 
-    Tests include: instantiation with args of wrong type, instantiation with input values outside constraints, etc.
+    Tests include: instantiation with args of wrong type,
+    instantiation with input values outside constraints, etc.
     """
     # Instantiation via `__init__`
     # ============================
@@ -49,7 +52,9 @@ class Instantiation(Base):
         try:
             El = Metal(**self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `temp` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `temp` argument raised a TypeError which is
+            # exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `temp` argument.")
@@ -62,7 +67,9 @@ class Instantiation(Base):
         try:
             El = Metal(**self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `barrier` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `barrier` argument raised a TypeError which
+            # is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `barrier` argument.")
@@ -75,7 +82,9 @@ class Instantiation(Base):
         try:
             El = Metal(**self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `richardson` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `richardson` argument raised a TypeError
+            # which is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `richardson` argument.")
@@ -88,7 +97,9 @@ class Instantiation(Base):
         try:
             El = Metal(**self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `voltage` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `voltage` argument raised a TypeError which
+            # is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `voltage` argument.")
@@ -101,7 +112,9 @@ class Instantiation(Base):
         try:
             El = Metal(**self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `position` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `position` argument raised a TypeError
+            # which is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `position` argument.")
@@ -114,7 +127,9 @@ class Instantiation(Base):
         try:
             El = Metal(**self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `emissivity` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `emissivity` argument raised a TypeError
+            # which is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `emissivity` argument.")
@@ -181,7 +196,9 @@ class Instantiation(Base):
         try:
             El = Metal.from_dict(self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `temp` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `temp` argument raised a TypeError which is
+            # exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `temp` argument.")
@@ -194,7 +211,9 @@ class Instantiation(Base):
         try:
             El = Metal.from_dict(self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `barrier` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `barrier` argument raised a TypeError which
+            # is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `barrier` argument.")
@@ -207,7 +226,9 @@ class Instantiation(Base):
         try:
             El = Metal.from_dict(self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `richardson` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `richardson` argument raised a TypeError
+            # which is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `richardson` argument.")
@@ -220,7 +241,9 @@ class Instantiation(Base):
         try:
             El = Metal.from_dict(self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `voltage` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `voltage` argument raised a TypeError which
+            # is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `voltage` argument.")
@@ -233,7 +256,9 @@ class Instantiation(Base):
         try:
             El = Metal.from_dict(self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `position` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `position` argument raised a TypeError
+            # which is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `position` argument.")
@@ -246,7 +271,9 @@ class Instantiation(Base):
         try:
             El = Metal.from_dict(self.input_params)
         except TypeError:
-            # Attempting to instantiate a `tec.electrode.Metal` with a non-numeric `emissivity` argument raised a TypeError which is exactly what we wanted to do.
+            # Attempting to instantiate a `tec.electrode.Metal` with a
+            # non-numeric `emissivity` argument raised a TypeError
+            # which is exactly what we wanted to do.
             pass
         else:
             self.fail("Shouldn't be able to instantiate with non-numeric `emissivity` argument.")
@@ -321,7 +348,8 @@ class Set(Base):
     """
     Tests all aspects of setting attributes
 
-    Tests include: setting attributes of wrong type, setting attributes outside their constraints, etc.
+    Tests include: setting attributes of wrong type, setting
+    attributes outside their constraints, etc.
     """
     # Set attribute wrong type
     # ========================
@@ -333,7 +361,8 @@ class Set(Base):
         try:
             self.el.temp = non_num
         except TypeError:
-            # Setting `temp` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `temp` as a type that isn't numeric should raise
+            # a TypeError, so things are working.
             pass
         else:
             self.fail("`temp` attribute can be assigned a non-numeric value.")
@@ -346,7 +375,8 @@ class Set(Base):
         try:
             self.el.barrier = non_num
         except TypeError:
-            # Setting `barrier` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `barrier` as a type that isn't numeric should
+            # raise a TypeError, so things are working.
             pass
         else:
             self.fail("`barrier` attribute can be assigned a non-numeric value.")
@@ -359,7 +389,8 @@ class Set(Base):
         try:
             self.el.richardson = non_num
         except TypeError:
-            # Setting `richardson` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `richardson` as a type that isn't numeric should
+            # raise a TypeError, so things are working.
             pass
         else:
             self.fail("`richardson` attribute can be assigned a non-numeric value.")
@@ -372,7 +403,8 @@ class Set(Base):
         try:
             self.el.voltage = non_num
         except TypeError:
-            # Setting `voltage` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `voltage` as a type that isn't numeric should
+            # raise a TypeError, so things are working.
             pass
         else:
             self.fail("`voltage` attribute can be assigned a non-numeric value.")
@@ -385,7 +417,8 @@ class Set(Base):
         try:
             self.el.position = non_num
         except TypeError:
-            # Setting `position` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `position` as a type that isn't numeric should
+            # raise a TypeError, so things are working.
             pass
         else:
             self.fail("`position` attribute can be assigned a non-numeric value.")
@@ -398,7 +431,8 @@ class Set(Base):
         try:
             self.el.emissivity = non_num
         except TypeError:
-            # Setting `emissivity` as a type that isn't numeric should raise a TypeError, so things are working.
+            # Setting `emissivity` as a type that isn't numeric should
+            # raise a TypeError, so things are working.
             pass
         else:
             self.fail("`emissivity` attribute can be assigned a non-numeric value.")
@@ -412,7 +446,9 @@ class Set(Base):
         try:
             self.el.temp = -1.1
         except ValueError:
-            # Attempting to set the `temp` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `temp` attribute with a negative
+            # value raised a ValueError which is exactly what we
+            # wanted to do.
             pass
         else:
             self.fail("`temp` attribute can be assigned a negative value.")
@@ -424,7 +460,9 @@ class Set(Base):
         try:
             self.el.barrier = -1.1
         except ValueError:
-            # Attempting to set the `barrier` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `barrier` attribute with a
+            # negative value raised a ValueError which is exactly
+            # what we wanted to do.
             pass
         else:
             self.fail("`barrier` attribute can be assigned a negative value.")
@@ -436,7 +474,9 @@ class Set(Base):
         try:
             self.el.richardson = -1.1
         except ValueError:
-            # Attempting to set the `richardson` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `richardson` attribute with a
+            # negative value raised a ValueError which is exactly
+            # what we wanted to do.
             pass
         else:
             self.fail("`richardson` attribute can be assigned a negative value.")
@@ -448,7 +488,9 @@ class Set(Base):
         try:
             self.el.emissivity = -1.1
         except ValueError:
-            # Attempting to set the `emissivity` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `emissivity` attribute with a
+            # negative value raised a ValueError which is exactly
+            # what we wanted to do.
             pass
         else:
             self.fail("`emissivity` attribute can be assigned a negative value.")
@@ -460,7 +502,9 @@ class Set(Base):
         try:
             self.el.emissivity = 1.1
         except ValueError:
-            # Attempting to set the `emissivity` attribute with a negative value raised a ValueError which is exactly what we wanted to do.
+            # Attempting to set the `emissivity` attribute with a
+            # negative value raised a ValueError which is exactly
+            # what we wanted to do.
             pass
         else:
             self.fail("`emissivity` attribute can be assigned a negative value.")
@@ -490,7 +534,8 @@ class Iteration(Base):
 
     def test_iteration_returns_all_physicalproperties(self):
         """
-        All PhysicalProperty attributes should appear once and only once during the iteration
+        All PhysicalProperty attributes should appear once and only
+        once during the iteration
         """
         # Use sets to compare results
         physical_properties = set(find_PhysicalProperty(self.el))
@@ -500,7 +545,8 @@ class Iteration(Base):
 
     def test_iteration_returns_class(self):
         """
-        One element from the iteration should have zeroth element `__class__`
+        One element from the iteration should have zeroth element
+        `__class__`
         """
         iteration_keys = set([itm[0] for itm in iter(self.el)])
 
@@ -519,13 +565,15 @@ class MethodsReturnType(Base):
 
     def test_thermoelectron_current_density(self):
         """
-        Metal.thermoelectron_current_density should return an astropy.units.Quantity
+        Metal.thermoelectron_current_density should return an
+        astropy.units.Quantity
         """
         self.assertIsInstance(self.el.thermoelectron_current_density(), units.Quantity)
 
     def test_thermoelectron_energy_flux(self):
         """
-        Metal.thermoelectron_energy_flux should return an astropy.units.Quantity
+        Metal.thermoelectron_energy_flux should return an
+        astropy.units.Quantity
         """
         self.assertIsInstance(self.el.thermoelectron_energy_flux(), units.Quantity)
 
@@ -537,7 +585,8 @@ class MethodsReturnType(Base):
 
     def test_photon_energy_flux(self):
         """
-        Metal.photon_energy_flux should return an astropy.units.Quantity
+        Metal.photon_energy_flux should return an
+        astropy.units.Quantity
         """
         self.assertIsInstance(self.el.photon_energy_flux(), units.Quantity)
 
@@ -554,13 +603,15 @@ class MethodsReturnUnits(Base):
 
     def test_thermoelectron_current_density(self):
         """
-        Metal.thermoelectron_current_density should return a value with unit A/cm2
+        Metal.thermoelectron_current_density should return a value
+        with unit A/cm2
         """
         self.assertEqual(self.el.thermoelectron_current_density().unit, units.Unit("A/cm2"))
 
     def test_thermoelectron_energy_flux(self):
         """
-        Metal.thermoelectron_energy_flux should return a value with unit W/cm2
+        Metal.thermoelectron_energy_flux should return a value with
+        unit W/cm2
         """
         self.assertEqual(self.el.thermoelectron_energy_flux().unit, units.Unit("W/cm2"))
 
@@ -572,7 +623,8 @@ class MethodsReturnUnits(Base):
 
     def test_photon_energy_flux(self):
         """
-        Metal.photon_energy_flux should return a value with unit 1/(s*cm2)
+        Metal.photon_energy_flux should return a value with unit 1/
+        (s*cm2)
         """
         self.assertEqual(self.el.photon_energy_flux().unit, units.Unit("W/cm2"))
 
