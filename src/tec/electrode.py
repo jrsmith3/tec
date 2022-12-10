@@ -42,9 +42,9 @@ class Metal():
     temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field()
     barrier: float | astropy.units.Quantity[astropy.units.eV] = attrs.field()
     richardson: float | astropy.units.Quantity["A/(cm2 K2)"] = attrs.field()
-    voltage: float | astropy.units.Quantity[astropy.units.V] = attrs.field()
-    position: float | astropy.units.Quantity[astropy.units.um] = attrs.field()
-    emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled] = attrs.field()
+    voltage: float | astropy.units.Quantity[astropy.units.V] = attrs.field(default=0.)
+    position: float | astropy.units.Quantity[astropy.units.um] = attrs.field(default=0.)
+    emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled] = attrs.field(default=1.)
 
 
     def motive(self):
@@ -138,7 +138,7 @@ class Metal():
 
 
 @attrs.frozen
-class SC(Metal):
+class SC():
     """
     P-type semiconductor thermoelectron electrode
 
