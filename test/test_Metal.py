@@ -16,6 +16,9 @@ def valid_constructor_quantity_args():
         "temperature": astropy.units.Quantity(300., astropy.units.K),
         "barrier": astropy.units.Quantity(2., astropy.units.eV),
         "richardson": astropy.units.Quantity(10., "A/(cm2 K2)"),
+        "voltage": astropy.units.Quantity(0.1, astropy.units.V),
+        "position": astropy.units.Quantity(0.1, astropy.units.um),
+        "emissivity": astropy.units.Quantity(1., astropy.units.dimensionless_unscaled),
     }
 
     return args
