@@ -1,8 +1,8 @@
 # coding: utf-8
 import astropy.units
-import copy
-from tec.electrode import Metal
-import unittest
+import pytest
+import tec
+
 
 input_params = {"temp": 300.,
                 "barrier": 2.0,
