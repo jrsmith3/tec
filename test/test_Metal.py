@@ -16,6 +16,11 @@ class TestMetalConstructorHappyPath():
             emitter = tec.electrode.Metal(**valid_constructor_args)
 
 
+    def test_params_with_default_values(self, valid_constructor_args):
+        with does_not_raise():
+            emitter = tec.electrode.Metal(**valid_constructor_args)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
