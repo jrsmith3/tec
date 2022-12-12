@@ -95,6 +95,27 @@ class TestMetalConstructorParamsOutsideConstraints():
             emitter = tec.electrode.Metal(**invalid_constructor_args)
 
 
+# There's only one test in the following test categories so I'm
+# implementing them using functions instead of classes.
+@pytest.mark.parametrize("argname,val", [
+        ("temperature", astropy.units.s),
+        ("barrier", astropy.units.s),
+        ("richardson", astropy.units.s),
+        ("voltage", astropy.units.s),
+        ("position", astropy.units.s),
+        ("emissivity", astropy.units.m),
+        ]
+    )
+def test_metal_constructor_params_incompatible_units(valid_constructor_quantity_args, argname, val):
+    valid_constructor_arg_value = valid_constructor_quantity_args[argname].value
+
+    invalid_constructor_args = valid_constructor_quantity_args.copy()
+    invalid_constructor_args[argname] = astropy.units.Quantity(valid_constructor_arg_value, val)
+
+    with pytest.raises(astropy.units.core.UnitConversionError):
+        emitter = tec.electrode.Metal(**invalid_constructor_args)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
