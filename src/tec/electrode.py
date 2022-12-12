@@ -17,6 +17,11 @@ import numpy as np
 import scipy.optimize
 
 
+def _validate_is_scalar(instance, attribute, value):
+    if not value.isscalar:
+        raise TypeError("Attributes must be scalar")
+
+
 def _temperature_converter(val):
     try:
         temperature = astropy.units.Quantity(val, astropy.units.K)
@@ -52,33 +57,43 @@ class Metal():
     temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field(
         converter=_temperature_converter,
         validator=[
+            _validate_is_scalar,
             attrs.validators.gt(0)
             ]
         )
     barrier: float | astropy.units.Quantity[astropy.units.eV] = attrs.field(
         converter=functools.partial(astropy.units.Quantity, unit=astropy.units.eV),
         validator=[
+            _validate_is_scalar,
             attrs.validators.gt(0)
             ]
         )
     richardson: float | astropy.units.Quantity["A/(cm2 K2)"] = attrs.field(
         converter=functools.partial(astropy.units.Quantity, unit="A/(cm2 K2)"),
         validator=[
+            _validate_is_scalar,
             attrs.validators.gt(0)
             ]
         )
     voltage: float | astropy.units.Quantity[astropy.units.V] = attrs.field(
         default=0.,
         converter=functools.partial(astropy.units.Quantity, unit=astropy.units.V),
+        validator=[
+            _validate_is_scalar,
+            ]
         )
     position: float | astropy.units.Quantity[astropy.units.um] = attrs.field(
         default=0.,
         converter=functools.partial(astropy.units.Quantity, unit=astropy.units.um),
+        validator=[
+            _validate_is_scalar,
+            ]
         )
     emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled] = attrs.field(
         default=1.,
         converter=functools.partial(astropy.units.Quantity, unit=astropy.units.dimensionless_unscaled),
         validator=[
+            _validate_is_scalar,
             attrs.validators.gt(0),
             attrs.validators.le(1),
             ]
