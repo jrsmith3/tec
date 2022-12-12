@@ -10,10 +10,20 @@ Base Library (:mod:`electrode`)
 import astropy.constants
 import astropy.units
 import attrs
+import functools
 import ibei
 import itertools
 import numpy as np
 import scipy.optimize
+
+
+def _temperature_converter(val):
+    try:
+        temperature = astropy.units.Quantity(val, astropy.units.K)
+    except astropy.units.UnitConversionError:
+        temperature = val.to(astropy.units.K, equivalencies=astropy.units.temperature())
+
+    return temperature
 
 
 @attrs.frozen
@@ -40,24 +50,34 @@ class Metal():
     :param emissivity: Radiative emissivity (:math:`epsilon`).
     """
     temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field(
+        converter=_temperature_converter,
         validator=[
             attrs.validators.gt(0)
             ]
         )
     barrier: float | astropy.units.Quantity[astropy.units.eV] = attrs.field(
+        converter=functools.partial(astropy.units.Quantity, unit=astropy.units.eV),
         validator=[
             attrs.validators.gt(0)
             ]
         )
     richardson: float | astropy.units.Quantity["A/(cm2 K2)"] = attrs.field(
+        converter=functools.partial(astropy.units.Quantity, unit="A/(cm2 K2)"),
         validator=[
             attrs.validators.gt(0)
             ]
         )
-    voltage: float | astropy.units.Quantity[astropy.units.V] = attrs.field(default=0.)
-    position: float | astropy.units.Quantity[astropy.units.um] = attrs.field(default=0.)
+    voltage: float | astropy.units.Quantity[astropy.units.V] = attrs.field(
+        default=0.,
+        converter=functools.partial(astropy.units.Quantity, unit=astropy.units.V),
+        )
+    position: float | astropy.units.Quantity[astropy.units.um] = attrs.field(
+        default=0.,
+        converter=functools.partial(astropy.units.Quantity, unit=astropy.units.um),
+        )
     emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled] = attrs.field(
         default=1.,
+        converter=functools.partial(astropy.units.Quantity, unit=astropy.units.dimensionless_unscaled),
         validator=[
             attrs.validators.gt(0),
             attrs.validators.le(1),
