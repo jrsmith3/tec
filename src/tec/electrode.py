@@ -59,7 +59,8 @@ class Metal():
     emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled] = attrs.field(
         default=1.,
         validator=[
-            attrs.validators.gt(0)
+            attrs.validators.gt(0),
+            attrs.validators.le(1),
             ]
         )
 
