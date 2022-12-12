@@ -116,6 +116,24 @@ def test_metal_constructor_params_incompatible_units(valid_constructor_quantity_
         emitter = tec.electrode.Metal(**invalid_constructor_args)
 
 
+@pytest.mark.parametrize("argname", [
+        "temperature",
+        "barrier",
+        "richardson",
+        "voltage",
+        "position",
+        "emissivity",
+        ]
+    )
+def test_meetal_constructor_params_non_scalar(valid_constructor_args, argname):
+    invalid_constructor_args = valid_constructor_args.copy()
+    val = valid_constructor_args[argname]
+    invalid_constructor_args[argname] = [val, val]
+
+    with pytest.raises(TypeError):
+        emitter = tec.electrode.Metal(**invalid_constructor_args)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
