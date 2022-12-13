@@ -87,6 +87,14 @@ class Metal():
         If ``emissivity`` param <= 0
     ValueError
         If ``emissivity`` param > 1
+
+
+    Notes
+    -----
+    Instance attributes of `Metal` objects are of type
+    ``astropy.units.Quantity``. Computations involving units can be
+    tricky, and the use of ``Quantity`` objects throughout will expose
+    arithmetic implementation errors and unit conversion errors.
     """
     temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field(
         converter=_temperature_converter,
