@@ -166,8 +166,8 @@ class Metal():
             J_{RD} = A T^{2} \exp \left( \\frac{\phi}{kT} \\right)
 
         """
-        exponent = (self.barrier / (astropy.constants.k_B * self.temp)).decompose()
-        coefficient = self.richardson * self.temp**2
+        exponent = (self.barrier / (astropy.constants.k_B * self.temperature)).decompose()
+        coefficient = self.richardson * self.temperature**2
         current_density = coefficient * np.exp(-exponent)
 
         return current_density.to("A/cm2")
