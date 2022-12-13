@@ -138,7 +138,7 @@ class Metal():
         return current_density.to("A/cm2")
 
 
-    def thermoelectron_energy_flux(self) -> astropy.units.Quantity["W/cm2"]::
+    def thermoelectron_energy_flux(self) -> astropy.units.Quantity["W/cm2"]:
         """
         Energy flux emitted via thermoelectrons
 
