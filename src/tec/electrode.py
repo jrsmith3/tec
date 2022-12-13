@@ -55,6 +55,22 @@ class Metal():
         system is one-dimensional. Corresponds to :math:`x`.
     emissivity:
         Radiative emissivity. Corresponds to :math:`\epsilon`.
+
+
+    Attributes
+    ----------
+    temperature: astropy.units.Quantity[astropy.units.K]
+        Same as constructor parameter.
+    barrier: astropy.units.Quantity[astropy.units.eV]
+        Same as constructor parameter.
+    richardson: astropy.units.Quantity["A/cm2"]
+        Same as constructor parameter.
+    voltage: astropy.units.Quantity[astropy.units.V]
+        Same as constructor parameter.
+    position: astropy.units.Quantity[astropy.units.um]
+        Same as constructor parameter.
+    emissivity: astropy.units.Quantity[astropy.units.dimensionless_unscaled]
+        Same as constructor parameter.
     """
     temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field(
         converter=_temperature_converter,
