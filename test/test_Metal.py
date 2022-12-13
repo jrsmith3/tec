@@ -86,9 +86,9 @@ class TestMetalConstructorParamsOutsideConstraints():
     def test_param_gt_1(self, valid_constructor_args, argname):
         invalid_constructor_args = valid_constructor_args.copy()
 
-        if isinstance(valid_constructor_args[argname], astropy.units.Quantity):
+        try:
             invalid_constructor_args[argname] = 1.1 * valid_constructor_args[argname].unit
-        else:
+        except AttributeError:
             invalid_constructor_args[argname] = 1.1 * valid_constructor_args[argname]
 
         with pytest.raises(ValueError):
