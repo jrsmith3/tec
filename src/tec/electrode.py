@@ -100,7 +100,7 @@ class Metal():
         )
 
 
-    def motive(self):
+    def motive(self) -> astropy.units.Quantity[astropy.units.eV]:
         """
         Motive just outside electrode
 
@@ -114,7 +114,7 @@ class Metal():
         return motive.to("eV")
 
 
-    def thermoelectron_current_density(self):
+    def thermoelectron_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Thermoelectron emission current density
 
@@ -141,7 +141,7 @@ class Metal():
         return current_density.to("A/cm2")
 
 
-    def thermoelectron_energy_flux(self):
+    def thermoelectron_energy_flux(self) -> astropy.units.Quantity["W/cm2"]::
         """
         Energy flux emitted via thermoelectrons
 
@@ -161,7 +161,7 @@ class Metal():
         return energy_flux.to("W/cm2")
 
 
-    def photon_flux(self):
+    def photon_flux(self) -> astropy.units.Quantity["1/(s*cm2)"]:
         """
         Number of photons per unit time per unit area
 
@@ -172,7 +172,7 @@ class Metal():
         return photon_flux.to("1/(s*cm2)")
 
 
-    def photon_energy_flux(self):
+    def photon_energy_flux(self) -> astropy.units.Quantity["W/cm2"]:
         """
         Energy flux emitted by Stefan-Boltzmann radiation
 
