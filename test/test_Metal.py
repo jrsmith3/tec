@@ -146,7 +146,16 @@ def test_meetal_constructor_params_non_scalar(valid_constructor_args, argname):
                 "motive",
                 astropy.units.Quantity(3., astropy.units.eV)
             ),
-            # thermoelectron_current_density
+            (
+                {
+                    "temperature": astropy.units.Quantity(2000., astropy.units.K),
+                    "barrier": astropy.units.Quantity(3., astropy.units.eV),
+                    "richardson": astropy.units.Quantity(120., "A/cm2 K2"),
+                    "voltage": astropy.units.Quantity(1., astropy.units.V),
+                },
+                "thermoelectron_current_density",
+                astropy.units.Quantity(13.23043, "A/cm2")
+            ),
             # thermoelectron_energy_flux
             # photon_flux
             # photon_energy_flux
