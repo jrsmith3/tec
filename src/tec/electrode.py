@@ -184,8 +184,8 @@ class Metal():
             J_{RD} \\frac{\phi + 2kT}{e}
 
         """
-        kt2 = 2 * astropy.constants.k_B * self.temp
-        thermal_potential = (self.barrier + kt2) / astropy.constants.e.to("C")
+        kt2 = 2 * astropy.constants.k_B * self.temperature
+        thermal_potential = (self.barrier + kt2) / astropy.constants.si.e
         energy_flux = thermal_potential * self.thermoelectron_current_density()
 
         return energy_flux.to("W/cm2")
