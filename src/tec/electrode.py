@@ -194,9 +194,6 @@ class Metal():
     def photon_flux(self) -> astropy.units.Quantity["1/(cm2 s)"]:
         """
         Number of photons per unit time per unit area
-
-        :returns: `astropy.units.Quantity` in units of
-          :math:`s^{-1} cm^{-2}`.
         """
         photon_flux = self.emissivity * ibei.BEI(order=2, energy_bound=0, temperature=self.temperature).photon_flux()
         return photon_flux.to("1/(cm2 s)")
@@ -207,14 +204,12 @@ class Metal():
         Energy flux emitted by Stefan-Boltzmann radiation
 
         The energy flux (or power density) of Stefan-Boltzmann photons
-        is given by
+        is given by the following expression.
 
         .. math::
 
             j = \\frac{2 \pi^{5} k^{4}}{15 c^{2} h^{3}} T^{4}
 
-        :returns: `astropy.units.Quantity` in units of
-          :math:`W cm^{-2}`.
         """
         energy_flux = self.emissivity * ibei.BEI(order=2, energy_bound=0, temperature=self.temperature).radiant_power_flux()
         return energy_flux.to("W/cm2")
