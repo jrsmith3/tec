@@ -178,13 +178,11 @@ class Metal():
         Energy flux emitted via thermoelectrons
 
         The energy flux (power density) of thermoelectrons is given by
+        the following expression.
 
         .. math::
             J_{RD} \\frac{\phi + 2kT}{e}
 
-        :returns: `astropy.units.Quantity` in units of
-          :math:`W cm^{-2}`.
-        :symbol: None
         """
         kt2 = 2 * astropy.constants.k_B * self.temp
         thermal_potential = (self.barrier + kt2) / astropy.constants.e.to("C")
