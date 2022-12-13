@@ -174,7 +174,15 @@ def test_meetal_constructor_params_non_scalar(valid_constructor_args, argname):
                 "photon_flux",
                 astropy.units.Quantity(1.21636869e+21, "1/(cm2 s)")
             ),
-            # photon_energy_flux
+            (
+                {
+                    "temperature": astropy.units.Quantity(2000., astropy.units.K),
+                    "barrier": astropy.units.Quantity(3., astropy.units.eV),
+                    "richardson": astropy.units.Quantity(120., "A/cm2 K2"),
+                },
+                "photon_energy_flux",
+                astropy.units.Quantity(90.72599071, "W/cm2")
+            ),
         ]
     )
 def test_methods_regression(args, method_under_test, expected_output):
