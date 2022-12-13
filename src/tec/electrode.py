@@ -34,25 +34,27 @@ def _temperature_converter(val):
 @attrs.frozen
 class Metal():
     """
-    Metal thermoelectron electrode
+    Planar, metal thermoelectron electrode
 
-    A `Metal` electrode is instantiated with values to populate its
-    public data attributes. Each argument's value must satisfy the
-    constraints noted with the corresponding public data attribute.
-    Arguments can be some kind of numeric type or of type
-    `astropy.units.Quantity` so long as the units are compatible with
-    what's listed.
 
-    Arguments in addition to the ones listed will be ignored.
-
-    :param temp: Temperature (:math:`T`).
-    :param barrier: Emission barrier (a.k.a. work function). The
-      barrier is the difference between the vacuum energy of the
-      surface and the Fermi energy. (:math:`\phi`)
-    :param richardson: Richardson's constant (:math:`A`)
-    :param voltage: Bias voltage relative to ground (:math:`V`).
-    :param position: Position (:math:`x`).
-    :param emissivity: Radiative emissivity (:math:`epsilon`).
+    Parameters
+    ----------
+    temperature:
+        Temperature of the electrode. Corresponds to :math:`T`.
+    barrier:
+        Energy difference between vacuum energy of the surface and
+        Fermi energy. Also known as the work function. Corresponds
+        to :math:`\phi`.
+    richardson:
+        Richardson's constant. Corresponds to :math:`A`.
+    voltage:
+        Bias voltage relative to ground. Corresponds to :math:`V`.
+    position:
+        Location of the electrode, perpendicular to the electrode. The
+        electrode is considered to be an infinite plane, so the
+        system is one-dimensional. Corresponds to :math:`x`.
+    emissivity:
+        Radiative emissivity. Corresponds to :math:`\epsilon`.
     """
     temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field(
         converter=_temperature_converter,
