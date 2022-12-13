@@ -131,12 +131,9 @@ class Metal():
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{RD}`
         """
-        if self.temp.value == 0:
-            current_density = astropy.units.Quantity(0, "A/cm2")
-        else:
-            exponent = (self.barrier / (astropy.constants.k_B * self.temp)).decompose()
-            coefficient = self.richardson * self.temp**2
-            current_density = coefficient * np.exp(-exponent)
+        exponent = (self.barrier / (astropy.constants.k_B * self.temp)).decompose()
+        coefficient = self.richardson * self.temp**2
+        current_density = coefficient * np.exp(-exponent)
 
         return current_density.to("A/cm2")
 
