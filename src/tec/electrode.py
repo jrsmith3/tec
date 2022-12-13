@@ -183,7 +183,7 @@ class Metal():
         :returns: `astropy.units.Quantity` in units of
           :math:`W cm^{-2}`.
         """
-        energy_flux = self.emissivity * ibei.uibei(3, 0, self.temp, 0)
+        energy_flux = self.emissivity * ibei.BEI(order=2, energy_bound=0, temperature=self.temperature).radiant_power_flux()
         return energy_flux.to("W/cm2")
 
 
