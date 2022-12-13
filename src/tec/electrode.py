@@ -159,17 +159,12 @@ class Metal():
         Thermoelectron emission current density
 
         This quantity is calculated according to the Richardson
-        equation
+        equation.
 
         .. math::
 
             J_{RD} = A T^{2} \exp \left( \\frac{\phi}{kT} \\right)
 
-        If either the `temp` or `richardson` attributes are equal to
-        0, this  method returns a value of 0.
-
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J_{RD}`
         """
         exponent = (self.barrier / (astropy.constants.k_B * self.temp)).decompose()
         coefficient = self.richardson * self.temp**2
