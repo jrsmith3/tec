@@ -134,6 +134,31 @@ def test_meetal_constructor_params_non_scalar(valid_constructor_args, argname):
         emitter = tec.electrode.Metal(**invalid_constructor_args)
 
 
+@pytest.mark.parametrize("args,method_under_test,expected_output",
+        [
+            (
+                {
+                    "temperature": astropy.units.Quantity(2000., astropy.units.K),
+                    "barrier": astropy.units.Quantity(2., astropy.units.eV),
+                    "richardson": astropy.units.Quantity(120., "A/cm2 K2"),
+                    "voltage": astropy.units.Quantity(1., astropy.units.V),
+                },
+                "motive",
+                astropy.units.Quantity(3., astropy.units.eV)
+            ),
+            # thermoelectron_current_density
+            # thermoelectron_energy_flux
+            # photon_flux
+            # photon_energy_flux
+        ]
+    )
+def test_methods_regression(args, method_under_test, expected_output):
+    emitter = tec.electrode.Metal(**args)
+    output = getattr(emitter, method_under_test)()
+
+    assert astropy.units.allclose(expected_output, output)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
