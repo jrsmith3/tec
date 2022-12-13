@@ -147,10 +147,8 @@ class Metal():
         Motive just outside electrode
 
         The motive just outside the electrode is the position of the
-        vacuum energy relative to electrical ground.
-
-        :returns: `astropy.units.Quantity` in units of :math:`eV`.
-        :symbol: :math:`\psi_{E}` (for the emitter, for example)
+        vacuum energy relative to electrical ground. Corresponds to
+        :math:`\psi`.
         """
         motive = self.barrier + astropy.constants.e.si * self.voltage
         return motive.to("eV")
