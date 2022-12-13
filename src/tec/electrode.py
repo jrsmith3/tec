@@ -158,15 +158,15 @@ class Metal():
         return energy_flux.to("W/cm2")
 
 
-    def photon_flux(self) -> astropy.units.Quantity["1/(s*cm2)"]:
+    def photon_flux(self) -> astropy.units.Quantity["1/(cm2 s)"]:
         """
         Number of photons per unit time per unit area
 
         :returns: `astropy.units.Quantity` in units of
           :math:`s^{-1} cm^{-2}`.
         """
-        photon_flux = self.emissivity * ibei.uibei(2, 0, self.temp, 0)
-        return photon_flux.to("1/(s*cm2)")
+        photon_flux = self.emissivity * ibei.BEI(order=2, energy_bound=0, temperature=self.temperature).photon_flux()
+        return photon_flux.to("1/(cm2 s)")
 
 
     def photon_energy_flux(self) -> astropy.units.Quantity["W/cm2"]:
