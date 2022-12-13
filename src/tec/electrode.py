@@ -71,6 +71,22 @@ class Metal():
         Same as constructor parameter.
     emissivity: astropy.units.Quantity[astropy.units.dimensionless_unscaled]
         Same as constructor parameter.
+
+
+    Raises
+    ------
+    TypeError
+        If non-scalar arguments are passed to the constructor.
+    ValueError
+        If ``temperature`` param <= 0
+    ValueError
+        If ``barrier`` param <= 0
+    ValueError
+        If ``richardson`` param <= 0
+    ValueError
+        If ``emissivity`` param <= 0
+    ValueError
+        If ``emissivity`` param > 1
     """
     temperature: float | astropy.units.Quantity[astropy.units.K] = attrs.field(
         converter=_temperature_converter,
