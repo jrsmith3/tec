@@ -7,9 +7,9 @@ from astropy import units, constants
 from tec.electrode import Metal
 
 
-class TECBase(object):
+class TEC():
     """
-    Base thermoelectron engine class
+    Thermoelectron energy conversion device
 
     This class provides the base API for subclasses which implement
     particular models of TEC electron transport. Even though this
