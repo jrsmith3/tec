@@ -1,19 +1,10 @@
 # coding: utf-8
 
 import inspect
-import itertools
 import numpy as np
-from scipy import interpolate, optimize
+from scipy import interpolate
 from astropy import units, constants
 from tec.electrode import Metal
-
-# Optional packages
-try:
-    import matplotlib.pyplot as plt
-    import matplotlib
-except ImportError, e:
-    if not e.args[0].startswith('No module named matplotlib'):
-        raise
 
 
 class TECBase(object):
