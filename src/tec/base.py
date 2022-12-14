@@ -20,16 +20,24 @@ class TECBase(object):
     """
     Base thermoelectron engine class
 
-    This class provides the base API for subclasses which implement particular models of TEC electron transport. Even though this class isn't intended to be a model, it implements a model of electron transport which completely ignores the negative space charge effect, similar to the model described on p. 51 of :cite:`9780262080590`.
+    This class provides the base API for subclasses which implement
+    particular models of TEC electron transport. Even though this
+    class isn't intended to be a model, it implements a model of
+    electron transport which completely ignores the negative space
+    charge effect, similar to the model described on p. 51
+    of :cite:`9780262080590`.
 
-    :param emitter: Object from `tec.electrode` which initializes emitter.
-    :param collector: Object from `tec.electrode` which initializes collector.
+    :param emitter: Object from `tec.electrode` which initializes
+    emitter.
+    :param collector: Object from `tec.electrode` which initializes
+    collector.
 
     Arguments in addition to the ones listed will be ignored.
 
     Attributes
     ==========
-    `TECBase` objects have two attributes: `emitter` and `collector`, both of which are objects from `tec.electrode`.
+    `TECBase` objects have two attributes: `emitter` and `collector`,
+    both of which are objects from `tec.electrode`.
 
     Examples
     ========
@@ -80,13 +88,25 @@ class TECBase(object):
         """
         Iterator over object's data
 
-        This iterator yields 2-tuples. The zeroth element of the 2-tuple will be a str.
+        This iterator yields 2-tuples. The zeroth element of the
+        2-tuple will be a str.
 
-        All of the TECBase's electrodes will appear once and only once during the iteration (i.e. the emitter and collector attributes). Specifically, the iterator will return a 2-tuple whose zeroth element is a string with the attribute name and whose first element is the electrode object itself.
+        All of the TECBase's electrodes will appear once and only once
+        during the iteration (i.e. the emitter and collector
+        attributes). Specifically, the iterator will return a 2-tuple
+        whose zeroth element is a string with the attribute name and
+        whose first element is the electrode object itself.
 
-        In addition, at some point during the iteration, the iterator will return a 2-tuple whose zeroth element 'max_motive' and first element the value of the max_motive method. This value will be a float; the unit is implied by the default return unit of the tec.TECBase.max_motive method.
+        In addition, at some point during the iteration, the iterator
+        will return a 2-tuple whose zeroth element 'max_motive' and
+        first element the value of the max_motive method. This value
+        will be a float; the unit is implied by the default return
+        unit of the tec.TECBase.max_motive method.
 
-        Finally, at some point during the iteration, the iterator will return a 2-tuple whose zeroth element is the str '__class__' and whose value is the type object returned by the object calling type(self).
+        Finally, at some point during the iteration, the iterator will
+        return a 2-tuple whose zeroth element is the str '__class__'
+        and whose value is the type object returned by the object
+        calling type(self).
 
         The order of the items listed above is not guaranteed.
         """
@@ -101,13 +121,30 @@ class TECBase(object):
         """
         Iterator over object's data with dicts for electrodes
 
-        This method will return an iterator. This iterator will yield 2-tuples. The zeroth element of the 2-tuple will be a `str`.
+        This method will return an iterator. This iterator will yield
+        2-tuples. The zeroth element of the 2-tuple will be a `str`.
 
-        All of the `TECBase`'s electrodes will appear once and only once during the iteration (i.e. the `emitter` and `collector` attributes). Specifically, the iterator will return a 2-tuple whose zeroth element is a string with the attribute name and whose first element is *a dictionary* of the electrode object itself. Note that this functionality is in contrast to the functionality of the `tec.TECBase.iterelectrodes` method. The dictionaries returned in this case will be the same as those obtained by calling `dict` on one of the `TECBase`'s electrodes.
+        All of the `TECBase`'s electrodes will appear once and only
+        once during the iteration (i.e. the `emitter` and `collector`
+        attributes). Specifically, the iterator will return a 2-tuple
+        whose zeroth element is a string with the attribute name and
+        whose first element is *a dictionary* of the electrode object
+        itself. Note that this functionality is in contrast to the
+        functionality of the `tec.TECBase.iterelectrodes` method. The
+        dictionaries returned in this case will be the same as those
+        obtained by calling `dict` on one of the `TECBase`'s
+        electrodes.
 
-        In addition, at some point during the iteration, the iterator will return a 2-tuple whose zeroth element `'max_motive'` and first element the value of the `TECBase.max_motive` method. This value will be a `float`; the unit is implied by the default return unit of the `tec.TECBase.max_motive` method.
+        In addition, at some point during the iteration, the iterator
+        will return a 2-tuple whose zeroth element `'max_motive'` and
+        first element the value of the `TECBase.max_motive` method.
+        This value will be a `float`; the unit is implied by the
+        default return unit of the `tec.TECBase.max_motive` method.
 
-        Finally, at some point during the iteration, the iterator will return a 2-tuple whose zeroth element is the `str` `'__class__'` and whose value is the `type` object returned by the object calling `type(self)`.
+        Finally, at some point during the iteration, the iterator will
+        return a 2-tuple whose zeroth element is the `str`
+        `'__class__'` and whose value is the `type` object returned
+        by the object calling `type(self)`.
 
         The order of the items listed above is not guaranteed.
         """
@@ -124,8 +161,11 @@ class TECBase(object):
         """
         Value of motive relative to electrical ground
 
-        :param position: float or numpy array at which motive is to be evaluated. This argument can also be an `astropy.units.Quantity`, but it must be in units of length.
-        :raises: ValueError if position falls outside interelectrode space.
+        :param position: float or numpy array at which motive is to be
+        evaluated. This argument can also be an
+        `astropy.units.Quantity`, but it must be in units of length.
+        :raises: ValueError if position falls outside interelectrode
+        space.
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi`
         """
@@ -195,7 +235,11 @@ class TECBase(object):
         """
         Contact potential between collector and emitter
 
-        The contact potential is defined as the difference in barrier height between the emitter and collector. This value should not be confused with the quantity returned by :meth:`output_voltage` which is the voltage difference between the collector and emitter.
+        The contact potential is defined as the difference in barrier
+        height between the emitter and collector. This value should
+        not be confused with the quantity returned
+        by :meth:`output_voltage` which is the voltage difference
+        between the collector and emitter.
 
         .. math::
             V_{contact} = \\frac{\psi_{E} - \psi_{C}}{e}
@@ -278,7 +322,9 @@ class TECBase(object):
         """
         Carnot efficiency
 
-        :returns: float between 0 and 1 where unity is 100% efficiency. Returns NaN if collector temperature is greater than emitter temperature.
+        :returns: float between 0 and 1 where unity is 100%
+        efficiency. Returns NaN if collector temperature is greater
+        than emitter temperature.
         :symbol: :math:`\eta_{c}`
         """
         if self.emitter.temp >= self.collector.temp:
@@ -293,24 +339,40 @@ class TECBase(object):
         """
         Total thermal efficiency
 
-        This method calculates the thermal efficiency of a TEC after Hatsopoulos and Gyftopoulos :cite:`97802620800590` Sec. 2.7. Efficiency, :math:`\eta`, is defined as the ratio of the output power, :math:`W_{T}`, to the rate at which heat is added to the device, :math:`Q_{in}`.
+        This method calculates the thermal efficiency of a TEC after
+        Hatsopoulos and Gyftopoulos :cite:`97802620800590` Sec. 2.7.
+        Efficiency, :math:`\eta`, is defined as the ratio of the
+        output power, :math:`W_{T}`, to the rate at which heat is
+        added to the device, :math:`Q_{in}`.
 
         .. math::
             \eta = \\frac{W_{T}}{Q_{in}}
 
-        The law of conservation of energy determines the relationship between these quantities and the heat rejection rate, :math:`Q_{out}`
+        The law of conservation of energy determines the relationship
+        between these quantities and the heat rejection
+        rate, :math:`Q_{out}`
 
         .. math::
             Q_{in} = W_{T} + Q_{out}
 
-        The quantities :math:`Q_{in}` and :math:`Q_{out}` are determined by accounting for all the flows of energy into and out of the system. For the purposes of calculating the efficiency, :math:`Q_{in}` accounts for the heat transport via electrons (see :meth:`electron_cooling_rate`, denoted by :math:`Q_{E}`) and photons (see :meth:`thermal_rad_rate`, denoted by :math:`Q_{r}`). This efficiency calculation *does not* presently account for heat conducted via the leads. Therefore, :math:`Q_{in}` is given by
+        The quantities :math:`Q_{in}` and :math:`Q_{out}` are
+        determined by accounting for all the flows of energy into and
+        out of the system. For the purposes of calculating the
+        efficiency, :math:`Q_{in}` accounts for the heat transport
+        via electrons (see :meth:`electron_cooling_rate`, denoted
+        by :math:`Q_{E}`) and photons
+        (see :meth:`thermal_rad_rate`, denoted by :math:`Q_
+        {r}`). This efficiency calculation *does not* presently
+        account for heat conducted via the leads.
+        Therefore, :math:`Q_{in}` is given by
 
         .. math::
             Q_{in} = Q_{E} + Q_{r}
 
         See :meth:`heat_supply_rate` for more information about :math:`Q_{in}`.
 
-        :returns: float between 0 and 1 where unity is 100% efficiency. Returns NaN if the output power is less than zero.
+        :returns: float between 0 and 1 where unity is 100%
+        efficiency. Returns NaN if the output power is less than zero.
         :symbol: :math:`\eta`
         """
         if self.output_power_density() > 0:
@@ -326,12 +388,18 @@ class TECBase(object):
         """
         Rate at which heat enters device
 
-        The heat supply rate is the sum of all rates of heat transferred to the emitter. Currently this method accounts for heat transferred via thermoelectrons and photons, *but not* heat transferred through the electrical leads of the device.
+        The heat supply rate is the sum of all rates of heat
+        transferred to the emitter. Currently this method accounts
+        for heat transferred via thermoelectrons and photons, *but
+        not* heat transferred through the electrical leads of the
+        device.
 
         .. math::
             Q_{in} = Q_{E} + Q_{r}
 
-        where :math:`Q_{E}` and :math:`Q_{r}` are calculated using :meth:`electron_cooling_rate` and :meth:`thermal_rad_rate`, respectively.
+        where :math:`Q_{E}` and :math:`Q_{r}` are calculated
+        using :meth:`electron_cooling_rate`
+        and :meth:`thermal_rad_rate`, respectively.
 
         :returns: `astropy.units.Quantity` in units of :math:`W`.
         :symbol: :math:`Q_{in}`
@@ -345,12 +413,15 @@ class TECBase(object):
         """
         Electronic cooling rate of emitter
 
-        This method calculates the net heat flow carried by electrons from the emitter according to Hatsopoulos and Gyftopoulos :cite:`97802620800590` Eq. 2.57a, repeated below
+        This method calculates the net heat flow carried by electrons
+        from the emitter according to Hatsopoulos and
+        Gyftopoulos :cite:`97802620800590` Eq. 2.57a, repeated below
 
         .. math::
             Q_{E} = S J_{f} \\frac{\psi_{max} - \mu_{E} + 2kT_{E}}{e} - S J_{b}\\frac{\psi_{max} - \mu_{E} + 2kT_{C}}{e}
 
-        The quantity :math:`S` is the area of the electrode, and taken to be unit area (1 cm^2) here.
+        The quantity :math:`S` is the area of the electrode, and taken
+        to be unit area (1 cm^2) here.
 
         :returns: `astropy.units.Quantity` in units of :math:`W`.
         :symbol: :math:`Q_{E}`
@@ -371,7 +442,12 @@ class TECBase(object):
         """
         Interelectrode thermal radiation rate
 
-        This method calculates the heat transfer carried across the interelectrode space via blackbody photons. Since the emitter and collector can have different values of emissivity, the TEC will have a net emissivity, accounted for by (NAME) :cite:`9780471457275` p. 793, Eq. 13.19. The thermal radiation rate is given by
+        This method calculates the heat transfer carried across the
+        interelectrode space via blackbody photons. Since the emitter
+        and collector can have different values of emissivity, the
+        TEC will have a net emissivity, accounted for by
+        (NAME) :cite:`9780471457275` p. 793, Eq. 13.19. The thermal
+        radiation rate is given by
 
         .. math::
             Q_{r} = \\frac{\sigma (T_{E}^{4} - T_{C}^{4})}{\\frac{1}{\epsilon_{E}} + \\frac{1}{\epsilon_{C}} - 1}
