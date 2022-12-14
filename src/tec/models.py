@@ -9,14 +9,26 @@ class DimensionlessLangmuirPoissonSoln(dict):
     """
     Numerical solution of Langmuir's dimensionless Poisson's equation.
 
-    The purpose of this class is to provide an API to the solution of Langmuir's dimensionless Poisson's equation :cite:`10.1103/PhysRev.21.419` to provide the appropriate level of simplicity to the user. Via the class methods, the user can access either the dimensionless motive vs. dimensionless position or the dimensionless position vs. dimensionless motive, both of which are necessary in the Langmuir model. This class uses an ode solver to approximate the solution to the ode, then interpolation to return values at arbitrary abscissae -- see the source for details of the ode solver and interpolation algorithm.
+    The purpose of this class is to provide an API to the solution of
+    Langmuir's dimensionless Poisson's
+    equation :cite:`10.1103/PhysRev.21.419` to provide the
+    appropriate level of simplicity to the user. Via the class
+    methods, the user can access either the dimensionless motive vs.
+    dimensionless position or the dimensionless position vs.
+    dimensionless motive, both of which are necessary in the Langmuir
+    model. This class uses an ode solver to approximate the solution
+    to the ode, then interpolation to return values at arbitrary
+    abscissae -- see the source for details of the ode solver and
+    interpolation algorithm.
     """
 
     def __init__(self):
         # Here is the algorithm:
         # 1. Set up the default ode solver parameters.
-        # 2. Check to see if either the rhs or lhs params were passed as arguments. If not, use the default params.
-        # 3. Cat the additional default ode solver parameters to the lhs and rhs set of params.
+        # 2. Check to see if either the rhs or lhs params were passed
+        #    as arguments. If not, use the default params.
+        # 3. Cat the additional default ode solver parameters to the
+        #    lhs and rhs set of params.
         # 4. Solve both the lhs and rhs odes.
         # 5. Create the lhs and rhs interpolation objects.
 
@@ -40,13 +52,17 @@ class DimensionlessLangmuirPoissonSoln(dict):
         :param int num_points: Number of points for ode solver to use.
         :rtype: Dictionary of interpolation objects.
 
-        This method returns a dictionary with items, "motive_v_position" and "position_v_motive"; each item an interpolation of what its name describes.
+        This method returns a dictionary with
+        items, "motive_v_position" and "position_v_motive"; each item
+        an interpolation of what its name describes.
         """
         ics = np.array([0, 0])
         position_array = np.linspace(0, endpoint, num_points)
         motive_array = integrate.odeint(self.langmuir_poisson_eq, ics, position_array)
 
-        # Create the motive_v_position interpolation, but first check the abscissae (position_array) are monotonically increasing.
+        # Create the motive_v_position interpolation, but first check
+        # the abscissae (position_array) are monotonically
+        # increasing.
         if position_array[0] < position_array[-1]:
             motive_v_position = \
                 interpolate.InterpolatedUnivariateSpline(position_array, motive_array[:, 0])
@@ -54,7 +70,10 @@ class DimensionlessLangmuirPoissonSoln(dict):
             motive_v_position = \
                 interpolate.InterpolatedUnivariateSpline(position_array[::-1], motive_array[::-1, 0])
 
-        # Now create the position_v_motive interpolation but first check the abscissae (motive_array in this case) are monotonically increasing. Use linear interpolation to avoid weirdness near the origin.
+        # Now create the position_v_motive interpolation but first
+        # check the abscissae (motive_array in this case) are
+        # monotonically increasing. Use linear interpolation to avoid
+        # weirdness near the origin.
 
         # I think I don't need the following block.
         if motive_array[0, 0] < motive_array[-1, 0]:
@@ -68,7 +87,8 @@ class DimensionlessLangmuirPoissonSoln(dict):
 
     def position(self, motive, branch="lhs"):
         """
-        Interpolation of dimensionless position at arbitrary dimensionless motive.
+        Interpolation of dimensionless position at arbitrary
+        dimensionless motive.
 
         :param float motive: Argument of interpolation.
         :param str branch=="lhs": Interpolate from left-hand side of solution to ode.
@@ -76,7 +96,10 @@ class DimensionlessLangmuirPoissonSoln(dict):
         :returns: Interpolated position.
         :rtype: float
 
-        The left or right hand side must be specified since the inverse of the solution to Langmuir's dimensionless Poisson's equation is not a single-valued function. Returns NaN if motive is < 0.
+        The left or right hand side must be specified since the
+        inverse of the solution to Langmuir's dimensionless Poisson's
+        equation is not a single-valued function. Returns NaN if
+        motive is < 0.
         """
 
         if type(branch) is not str:
@@ -97,7 +120,9 @@ class DimensionlessLangmuirPoissonSoln(dict):
         """
         Value of motive relative to ground for given value(s) of position in J.
 
-        :param position: float or numpy array at which motive is to be evaluated. Returns NaN if position falls outside of the interelectrode space.
+        :param position: float or numpy array at which motive is to be
+        evaluated. Returns NaN if position falls outside of the
+        interelectrode space.
         """
         if position < -2.55389:
             return np.NaN
@@ -125,14 +150,22 @@ class Langmuir(TECBase):
     """
     Considers space charge, ignores NEA and back emission.
 
-    This class explicitly ignores the fact that either electrode may have NEA and determines the vacuum level of an electrode at the barrier. The model is based on :cite:`10.1103/PhysRev.21.419`.
+    This class explicitly ignores the fact that either electrode may
+    have NEA and determines the vacuum level of an electrode at the
+    barrier. The model is based on :cite:`10.1103/PhysRev.21.419`.
 
     Attributes
     ----------
-    :class:`Langmuir` objects have the same attributes as :class:`tec.TECBase`; "motive_data" is structured specifically for this model and contains the following data. For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    :class:`Langmuir` objects have the same attributes as
+    :class:`tec.TECBase`; "motive_data" is structured specifically for
+    this model and contains the following data. For brevity,
+    "dimensionless" prefix omitted from "position" and "motive"
+    variable names.
 
-    * saturation_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
-    * critical_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the critical point.
+    * saturation_pt: Dictionary with keys "output_voltage" [V] and 
+      "output_current_density" [A m^-2] at the saturation point.
+    * critical_pt: Dictionary with keys "output_voltage" [V] and
+      "output_current_density" [A m^-2] at the critical point.
     * dps: Langmuir's dimensionless Poisson's equation solution object.
 
     Examples and interface testing
@@ -287,7 +320,9 @@ class Langmuir(TECBase):
         """
         String describing regime of electron transport
 
-        This method evaluates the TEC and returns either "accelerating", "space charge limited", or "retarding" to indicate the regime in which the TEC is operating.
+        This method evaluates the TEC and returns
+        either "accelerating", "space charge limited", or "retarding"
+        to indicate the regime in which the TEC is operating.
 
         :returns: `string`.
         """
@@ -338,7 +373,8 @@ class Langmuir(TECBase):
         """
         Target function for the output voltage rootfinder.
         """
-        # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+        # For brevity, "dimensionless" prefix omitted from "position"
+        # and "motive" variable names.
         current_density = units.Quantity(current_density, "A cm-2")
 
 
@@ -372,18 +408,29 @@ class Langmuir(TECBase):
 
 class NEAC(Langmuir):
   """
-  Considers space charge and collector NEA, assumes emitter PEA, ignores back emission.
+  Considers space charge and collector NEA, assumes emitter PEA,
+  ignores back emission.
 
-  This class explicitly ignres the possibility that the emitter has PEA but considers the possibility the collector features NEA. The model is based on :cite:`10.1063/1.4826202`.
+  This class explicitly ignres the possibility that the emitter has
+  PEA but considers the possibility the collector features NEA. The
+  model is based on :cite:`10.1063/1.4826202`.
 
   Attributes
   ----------
-  :class:`NEAC` objects have the same attributes as :class:`tec.TECBase`; "motive_data" is structured specifically for this model and contains the following data. For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+  :class:`NEAC` objects have the same attributes as
+  :class:`tec.TECBase`; "motive_data" is structured specifically for
+  this model and contains the following data. For brevity,
+  "dimensionless" prefix omitted from "position" and "motive" variable
+  names.
 
-  * saturation_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
-  * virt_critical_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the critical point.
+  * saturation_pt: Dictionary with keys "output_voltage" [V] and
+    "output_current_density" [A m^-2] at the saturation point.
+  * virt_critical_pt: Dictionary with keys "output_voltage" [V] and
+    "output_current_density" [A m^-2] at the critical point.
   * dps: Langmuir's dimensionless Poisson's equation solution object.
-  * spclmbs_max_dist: Space charge limited mode boundary surface (spclmbs) maximum distance [m]. The distance below which the TEC experiences no space charge limited mode.
+  * spclmbs_max_dist: Space charge limited mode boundary surface
+    (spclmbs) maximum distance [m]. The distance below which the TEC
+    experiences no space charge limited mode.
 
   Examples and interface testing
   ------------------------------
@@ -448,7 +495,8 @@ class NEAC(Langmuir):
       
   def calc_spclmbs_max_dist(self):
     """
-    Space charge limited mode boundary surface (spclmbs) maximum interelectrode distance.
+    Space charge limited mode boundary surface (spclmbs) maximum
+    interelectrode distance.
 
     :returns: The distance below which the no space charge limited mode is experienced [m].
     :rtype: float
@@ -471,10 +519,13 @@ class NEAC(Langmuir):
     """
     Determine saturation point condition.
     
-    :rtype: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
+    :rtype: Dictionary with keys "output_voltage" [V] and
+    "output_current_density" [A m^-2] at the saturation point.
     """    
-    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    # If the device is operating within the space charge limited mode boundary surface, we can immediately set the values and exit.
+    # For brevity, "dimensionless" prefix omitted from "position" and
+    # "motive" variable names.
+    # If the device is operating within the space charge limited mode
+    # boundary surface, we can immediately set the values and exit.
     if self.calc_interelectrode_spacing() <= self["motive_data"]["spclmbs_max_dist"]:
       return {"output_voltage":self.calc_contact_potential(),
               "output_current_density":self["Emitter"].calc_saturation_current_density()}
@@ -500,10 +551,13 @@ class NEAC(Langmuir):
     """
     Determine virtual critical point condition.
     
-    :rtype: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the virtual critical point.
+    :rtype: Dictionary with keys "output_voltage" [V] and
+    "output_current_density" [A m^-2] at the virtual critical point.
     """
-    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-    # If the device is operating within the space charge limited mode boundary surface, we can immediately set the values and exit.
+    # For brevity, "dimensionless" prefix omitted from "position"
+    # and "motive" variable names.
+    # If the device is operating within the space charge limited mode
+    # boundary surface, we can immediately set the values and exit.
     if self.calc_interelectrode_spacing() <= self["motive_data"]["spclmbs_max_dist"]:
       return {"output_voltage":self.calc_contact_potential(),
               "output_current_density":self["Emitter"].calc_saturation_current_density()}
@@ -523,7 +577,9 @@ class NEAC(Langmuir):
     """
     Target function for virtual critical point rootfinder.
     """
-    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names. Since this method is only about the virtual critical point, I don't use any suffix.
+    # For brevity, "dimensionless" prefix omitted from "position"
+    # and "motive" variable names. Since this method is only about
+    # the virtual critical point, I don't use any suffix.
     co_motive = self["Collector"]["nea"]/ \
       (physical_constants["boltzmann"] * self["Emitter"]["temp"])
     co_position = self["motive_data"]["dps"].get_position(co_motive,branch="rhs")
@@ -535,7 +591,8 @@ class NEAC(Langmuir):
     
     em_position = self["motive_data"]["dps"].get_position(em_motive)
     
-    # offset is the dimensionless distance term which, along with the emitter and collector dimensionless distance, sums to zero.
+    # offset is the dimensionless distance term which, along with the
+    # emitter and collector dimensionless distance, sums to zero.
     offset = self.calc_interelectrode_spacing() * \
       ((2 * np.pi * physical_constants["electron_mass"] * physical_constants["electron_charge"]**2) / \
       (physical_constants["permittivity0"]**2 * physical_constants["boltzmann"]**3))**(1.0/4) * \
@@ -547,7 +604,8 @@ class NEAC(Langmuir):
     """
     Target function for the output voltage rootfinder.
     """
-    # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    # For brevity, "dimensionless" prefix omitted from "position"
+    # and "motive" variable names.
     em_motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
     em_position = self["motive_data"]["dps"].get_position(em_motive)
     
