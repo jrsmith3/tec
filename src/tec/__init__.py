@@ -6,6 +6,8 @@ Base Library (:mod:`tec`)
 .. currentmodule:: tec
 """
 
+from . import electrode
+
 try:
     from ._version import __version__
 except ModuleNotFoundError:

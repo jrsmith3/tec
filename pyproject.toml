@@ -30,6 +30,10 @@ classifiers=[
   "Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
+    "astropy > 5.0",
+    "attrs",
+    "ibei",
+    "scipy",
 ]
 dynamic = ["version"]
 

@@ -1,5 +1,6 @@
 2.0.0
 =====
+* 170: Update `tec.electrode.Metal` class.
 * 168: Remove `src/tec/version.py`.
 * 160: Minimum viable package.
 * 136: Include source encoding string as per PEP-263.
