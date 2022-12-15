@@ -1,6 +1,7 @@
 # coding: utf-8
-import astropy.units
 import astropy.constants
+import astropy.units
+import attrs
 import inspect
 import numpy as np
 import scipy.interpolate
@@ -8,6 +9,7 @@ import scipy.interpolate
 from .electrode import Metal
 
 
+@attrs.frozen
 class TEC():
     """
     Thermoelectron energy conversion device
@@ -39,18 +41,21 @@ class TEC():
     >>> co = Metal(temp=300, barrier=0.8, richardson=10, emissivity=0.5, voltage=0, position=10,)
     >>> example_tec = TECBase(emitter = em, collector = co)
     """
-
-    # Methods regarding motive ----------------------------------------
-    def motive(self, position):
-        pass
-
-
-    def max_motive(self):
-        pass
+    emitter: tec.electrode.Metal = attrs.field()
+    collector: tec.electrode.Metal = attrs.field()
+    model = attrs.field(default=tec.models.Basic)
 
 
-    def max_motive_position(self):
-        pass
+    def __attrs_post_init__(self):
+        # The following code contains bugs, but it expresses the
+        # behavior I want.
+        self.model = model(emitter = emitter, collector = collector, back_emission = back_emission)
+        self.emitter = self.model.emitter
+        self.collector = self.model.collector
+        self.motive = self.model.motive
+        self.max_motive = self.model.max_motive
+        self.max_motive_position = self.model.max_motive_position
+        self.back_emission = self.model.back_emission
 
 
     # Methods returning basic data about the TEC ----------------------
