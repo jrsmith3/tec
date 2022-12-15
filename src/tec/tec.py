@@ -40,86 +40,17 @@ class TEC():
     >>> example_tec = TECBase(emitter = em, collector = co)
     """
 
-    @property
-    def emitter(self):
-        return self._emitter
-
-    @emitter.setter
-    def emitter(self, value):
-        if Metal not in inspect.getmro(value.__class__):
-            raise TypeError("Cannot set 'emitter' with non-electrode type.")
-        else:
-            self._emitter = value
-
-    @property
-    def collector(self):
-        return self._collector
-
-    @collector.setter
-    def collector(self, value):
-        if Metal not in inspect.getmro(value.__class__):
-            raise TypeError("Cannot set 'collector' with non-electrode type.")
-        else:
-            self._collector = value
-
-
-    def __init__(self, emitter, collector, **kwargs):
-        self.emitter = emitter
-        self.collector = collector
-
-
     # Methods regarding motive ----------------------------------------
     def motive(self, position):
-        """
-        Value of motive relative to electrical ground
-
-        :param position: float or numpy array at which motive is to be
-        evaluated. This argument can also be an
-        `astropy.units.Quantity`, but it must be in units of length.
-        :raises: ValueError if position falls outside interelectrode
-        space.
-        :returns: `astropy.units.Quantity` in units of :math:`eV`.
-        :symbol: :math:`\psi`
-        """
-        # Explictly set abscissae and ordinates in um and eV, respectively
-        abscissae = astropy.units.Quantity([self.emitter.position, self.collector.position], "um")
-        ordinates = astropy.units.Quantity([self.emitter.motive(), self.collector.motive()], "eV")
-
-        spl = scipy.interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext=2)
-
-        motive = spl(position) * ordinates.unit
-
-        return motive
+        pass
 
 
     def max_motive(self):
-        """
-        Value of maximum motive relative to electrical ground
-
-        :returns: `astropy.units.Quantity` in units of :math:`eV`.
-        :symbol: :math:`\psi_{m}`
-        """
-        if self.emitter.motive() > self.collector.motive():
-            max_motive = self.emitter.motive()
-        else:
-            max_motive = self.collector.motive()
-
-        return max_motive
+        pass
 
 
     def max_motive_position(self):
-        """
-        Position at maximum motive
-
-        :returns: `astropy.units.Quantity` in units of :math:`um`.
-        :symbol: :math:`x_{m}`
-        """
-        if self.emitter.motive() > self.collector.motive():
-            max_motive_position = self.emitter.position
-        else:
-            max_motive_position = self.collector.position
-
-        return max_motive_position
+        pass
 
 
     # Methods returning basic data about the TEC ----------------------
