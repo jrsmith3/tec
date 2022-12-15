@@ -1,10 +1,11 @@
 # coding: utf-8
-
+import astropy.units
+import astropy.constants
 import inspect
 import numpy as np
-from scipy import interpolate
-from astropy import units, constants
-from tec.electrode import Metal
+import scipy.interpolate
+
+from .electrode import Metal
 
 
 class TEC():
@@ -81,10 +82,10 @@ class TEC():
         :symbol: :math:`\psi`
         """
         # Explictly set abscissae and ordinates in um and eV, respectively
-        abscissae = units.Quantity([self.emitter.position, self.collector.position], "um")
-        ordinates = units.Quantity([self.emitter.motive(), self.collector.motive()], "eV")
+        abscissae = astropy.units.Quantity([self.emitter.position, self.collector.position], "um")
+        ordinates = astropy.units.Quantity([self.emitter.motive(), self.collector.motive()], "eV")
 
-        spl = interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext=2)
+        spl = scipy.interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext=2)
 
         motive = spl(position) * ordinates.unit
 
@@ -158,7 +159,7 @@ class TEC():
         :returns: `astropy.units.Quantity` in units of :math:`V`.
         :symbol: :math:`V_{contact}`
         """
-        contact_potential = (self.emitter.barrier - self.collector.barrier) / constants.e.si
+        contact_potential = (self.emitter.barrier - self.collector.barrier) / astropy.constants.e.si
 
         return contact_potential.to("V")
 
@@ -174,7 +175,7 @@ class TEC():
         diff_barrier = self.max_motive() - self.emitter.motive()
 
         if diff_barrier > 0:
-            kT = constants.k_B * self.emitter.temp
+            kT = astropy.constants.k_B * self.emitter.temp
             exponent = (diff_barrier / kT).decompose()
             scaling_factor = np.exp(-exponent)
         else:
@@ -195,7 +196,7 @@ class TEC():
         diff_barrier = self.max_motive() - self.collector.motive()
 
         if diff_barrier > 0:
-            kT = constants.k_B * self.collector.temp
+            kT = astropy.constants.k_B * self.collector.temp
             exponent = (diff_barrier / kT).decompose()
             scaling_factor = np.exp(-exponent)
         else:
@@ -337,12 +338,12 @@ class TEC():
         :returns: `astropy.units.Quantity` in units of :math:`W`.
         :symbol: :math:`Q_{E}`
         """
-        kT_E2 = 2 * constants.k_B * self.emitter.temp
-        kT_C2 = 2 * constants.k_B * self.collector.temp
-        max_motive = self.max_motive() - (constants.e.si * self.emitter.voltage)
+        kT_E2 = 2 * astropy.constants.k_B * self.emitter.temp
+        kT_C2 = 2 * astropy.constants.k_B * self.collector.temp
+        max_motive = self.max_motive() - (astropy.constants.e.si * self.emitter.voltage)
 
-        forward = units.Unit("cm2") * self.forward_current_density() * (max_motive + kT_E2) / constants.e.si
-        back = units.Unit("cm2") * self.back_current_density() * (max_motive + kT_C2) / constants.e.si
+        forward = astropy.units.Unit("cm2") * self.forward_current_density() * (max_motive + kT_E2) / astropy.constants.e.si
+        back = astropy.units.Unit("cm2") * self.back_current_density() * (max_motive + kT_C2) / astropy.constants.e.si
 
         cooling_rate = (forward - back).to("W")
 
@@ -366,7 +367,7 @@ class TEC():
         :returns: `astropy.units.Quantity` in units of :math:`W`.
         :symbol: :math:`Q_{r}`
         """
-        ideal_rad_rate = constants.sigma_sb * (self.emitter.temp**4 - self.collector.temp**4)
+        ideal_rad_rate = astropy.constants.sigma_sb * (self.emitter.temp**4 - self.collector.temp**4)
 
         emissivities = np.array([self.emitter.emissivity, self.collector.emissivity])
         if any(emissivities == 0):
@@ -374,6 +375,6 @@ class TEC():
         else:
             net_emissivity = 1. / ((1. / self.emitter.emissivity) + (1. / self.collector.emissivity) - 1.)
 
-        rad_rate = ideal_rad_rate * net_emissivity * units.Unit("cm2")
+        rad_rate = ideal_rad_rate * net_emissivity * astropy.units.Unit("cm2")
 
         return rad_rate.to("W")
