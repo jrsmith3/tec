@@ -66,6 +66,27 @@ class Basic():
         self.motive = spl(position) * ordinates.unit
 
 
+    def max_motive(self) -> astropy.units.Quantity[astropy.units.eV]:
+        """
+        Value of maximum motive
+        """
+        max_motive = max(self.emitter.motive(), self.collector.motive())
+
+        return max_motive
+
+
+    def max_motive_position(self) -> astropy.units.Quantity[astropy.units.eV]:
+        """
+        Position of maximum motive
+        """
+        if self.emitter.motive() > self.collector.motive():
+            max_motive_position = self.emitter.position
+        else:
+            max_motive_position = self.collector.position
+
+        return max_motive_position
+
+
 class DimensionlessLangmuirPoissonSoln(dict):
     """
     Numerical solution of Langmuir's dimensionless Poisson's equation.
