@@ -1,11 +1,15 @@
 # coding: utf-8
-from astropy import units, constants
+import astropy.constants
+import astropy.units
 import attrs
 import numpy as np
-from tec import TECBase
-from scipy import interpolate, optimize, integrate, special
+import scipy.integrate
+import scipy.interpolate
+import scipy.optimize
+import scipy.special
 
 from . import electrode
+from tec import TECBase
 
 
 @attrs.frozen
@@ -109,17 +113,17 @@ class DimensionlessLangmuirPoissonSoln(dict):
         """
         ics = np.array([0, 0])
         position_array = np.linspace(0, endpoint, num_points)
-        motive_array = integrate.odeint(self.langmuir_poisson_eq, ics, position_array)
+        motive_array = scipy.integrate.odeint(self.langmuir_poisson_eq, ics, position_array)
 
         # Create the motive_v_position interpolation, but first check
         # the abscissae (position_array) are monotonically
         # increasing.
         if position_array[0] < position_array[-1]:
             motive_v_position = \
-                interpolate.InterpolatedUnivariateSpline(position_array, motive_array[:, 0])
+                scipy.interpolate.InterpolatedUnivariateSpline(position_array, motive_array[:, 0])
         else:
             motive_v_position = \
-                interpolate.InterpolatedUnivariateSpline(position_array[::-1], motive_array[::-1, 0])
+                scipy.interpolate.InterpolatedUnivariateSpline(position_array[::-1], motive_array[::-1, 0])
 
         # Now create the position_v_motive interpolation but first
         # check the abscissae (motive_array in this case) are
@@ -129,10 +133,10 @@ class DimensionlessLangmuirPoissonSoln(dict):
         # I think I don't need the following block.
         if motive_array[0, 0] < motive_array[-1, 0]:
             position_v_motive = \
-                interpolate.InterpolatedUnivariateSpline(motive_array[:, 0], position_array, k=1)
+                scipy.interpolate.InterpolatedUnivariateSpline(motive_array[:, 0], position_array, k=1)
         else:
             position_v_motive = \
-                interpolate.InterpolatedUnivariateSpline(motive_array[::-1, 0], position_array[::-1], k=1)
+                scipy.interpolate.InterpolatedUnivariateSpline(motive_array[::-1, 0], position_array[::-1], k=1)
 
         return {"motive_v_position": motive_v_position, "position_v_motive": position_v_motive}
 
@@ -195,9 +199,9 @@ class DimensionlessLangmuirPoissonSoln(dict):
         # motive[1] = motive[0]'
 
         if position >= 0:
-            return np.array([motive[1], 0.5*np.exp(motive[0])*(1-special.erf(motive[0]**0.5))])
+            return np.array([motive[1], 0.5*np.exp(motive[0])*(1-scipy.special.erf(motive[0]**0.5))])
         if position < 0:
-            return np.array([motive[1], 0.5*np.exp(motive[0])*(1+special.erf(motive[0]**0.5))])
+            return np.array([motive[1], 0.5*np.exp(motive[0])*(1+scipy.special.erf(motive[0]**0.5))])
 
 
 class Langmuir(TECBase):
@@ -266,15 +270,15 @@ class Langmuir(TECBase):
         :symbol: :math:`x_{0}`
         """
         # Coerce `current_density` to `astropy.units.Quantity`
-        current_density = units.Quantity(current_density, "A cm-2")
+        current_density = astropy.units.Quantity(current_density, "A cm-2")
 
         if current_density < 0:
             raise ValueError("current_density cannot be negative")
 
-        prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
+        prefactor = ((astropy.constants.eps0**2 * astropy.constants.k_B**3)/(2 * np.pi * astropy.constants.m_e * astropy.constants.e.si**2))**(1./4.)
 
         if current_density == 0:
-            result = units.Quantity(np.inf, "um")
+            result = astropy.units.Quantity(np.inf, "um")
         else:
             result = prefactor * self.emitter.temp**(3./4.) / current_density**(1./2.)
 
@@ -297,7 +301,7 @@ class Langmuir(TECBase):
 
         motive = self._dps.motive(position)
 
-        voltage = (self.emitter.barrier - self.collector.barrier - (motive * constants.k_B * self.emitter.temp))/constants.e.si
+        voltage = (self.emitter.barrier - self.collector.barrier - (motive * astropy.constants.k_B * self.emitter.temp))/astropy.constants.e.si
 
         return voltage.to("V")
 
@@ -327,7 +331,7 @@ class Langmuir(TECBase):
 
         motive = np.log(self.emitter.thermoelectron_current_density() / output_current_density)
 
-        voltage = (self.emitter.barrier - self.collector.barrier + (motive * constants.k_B * self.emitter.temp))/constants.e.si
+        voltage = (self.emitter.barrier - self.collector.barrier + (motive * astropy.constants.k_B * self.emitter.temp))/astropy.constants.e.si
 
         return voltage.to("V")
 
@@ -341,8 +345,8 @@ class Langmuir(TECBase):
         """
         # Rootfinder to get critical point output current density.
         current_density_hi_limit = self.emitter.thermoelectron_current_density()
-        output_current_density = optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
-        output_current_density = units.Quantity(output_current_density, "A cm-2")
+        output_current_density = scipy.optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
+        output_current_density = astropy.units.Quantity(output_current_density, "A cm-2")
 
         return output_current_density
 
@@ -353,7 +357,7 @@ class Langmuir(TECBase):
 
         :returns: `float`.
         """
-        current_density = units.Quantity(current_density, "A cm-2")
+        current_density = astropy.units.Quantity(current_density, "A cm-2")
 
         # The prefix "dimensionless" is implied in the following
         # calculations.
@@ -419,10 +423,10 @@ class Langmuir(TECBase):
             if spcd == cpcd:
                 output_current_density = self.saturation_point_current_density()
             else:
-                output_current_density = optimize.brentq(self.output_voltage_target_function, spcd, cpcd)
-                output_current_density = units.Quantity(output_current_density, "A cm-2")
+                output_current_density = scipy.optimize.brentq(self.output_voltage_target_function, spcd, cpcd)
+                output_current_density = astropy.units.Quantity(output_current_density, "A cm-2")
 
-            barrier = constants.k_B * self.emitter.temp * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
+            barrier = astropy.constants.k_B * self.emitter.temp * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
 
             motive = barrier + self.emitter.motive()
 
@@ -435,7 +439,7 @@ class Langmuir(TECBase):
         """
         # For brevity, "dimensionless" prefix omitted from "position"
         # and "motive" variable names.
-        current_density = units.Quantity(current_density, "A cm-2")
+        current_density = astropy.units.Quantity(current_density, "A cm-2")
 
 
         # The `em_motive` calculation below could be broken into
@@ -448,7 +452,7 @@ class Langmuir(TECBase):
         co_position = self.interelectrode_spacing() / normalization_length + em_position
         co_motive = self._dps.motive(co_position)
 
-        target_voltage = ((self.emitter.barrier + em_motive * constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * constants.k_B * self.emitter.temp)) / constants.e.si
+        target_voltage = ((self.emitter.barrier + em_motive * astropy.constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * astropy.constants.k_B * self.emitter.temp)) / astropy.constants.e.si
 
         difference = self.output_voltage() - target_voltage
 
@@ -463,7 +467,7 @@ class Langmuir(TECBase):
         :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
         :symbol: :math:`J_{b}`
         """
-        return units.Quantity(0, "A/cm2")
+        return astropy.units.Quantity(0, "A/cm2")
 
 
 class NEAC(Langmuir):
@@ -544,7 +548,7 @@ class NEAC(Langmuir):
       self["motive_data"]["max_motive_ht"] = self["Collector"].calc_barrier_ht()
     else:
       # Space charge limited mode.
-      output_current_density = optimize.brentq(self.output_voltage_target_function,\
+      output_current_density = scipy.optimize.brentq(self.output_voltage_target_function,\
         self["motive_data"]["saturation_pt"]["output_current_density"],\
         self["motive_data"]["virt_critical_pt"]["output_current_density"])
 
@@ -623,7 +627,7 @@ class NEAC(Langmuir):
       return {"output_voltage":self.calc_contact_potential(),
               "output_current_density":self["Emitter"].calc_saturation_current_density()}
 
-    output_current_density = optimize.brentq(self.virt_critical_point_target_function,\
+    output_current_density = scipy.optimize.brentq(self.virt_critical_point_target_function,\
       self["Emitter"].calc_saturation_current_density(),0)
 
     motive = np.log(self["Emitter"].calc_saturation_current_density()/output_current_density)
