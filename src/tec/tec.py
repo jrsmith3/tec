@@ -41,16 +41,16 @@ class TEC():
     >>> co = Metal(temp=300, barrier=0.8, richardson=10, emissivity=0.5, voltage=0, position=10,)
     >>> example_tec = TECBase(emitter = em, collector = co)
     """
-    emitter: tec.electrode.Metal = attrs.field()
-    collector: tec.electrode.Metal = attrs.field()
-    model = attrs.field()
-    max_motive = attrs.field()
-    max_motive_position = attrs.field()
-    back_emission = attrs.field()
+    model: tec.electrode.Basic = attrs.field()
+    emitter: tec.electrode.Metal = attrs.field(init=False)
+    collector: tec.electrode.Metal = attrs.field(init=False)
+    motive = attrs.field(init=False)
+    max_motive = attrs.field(init=False)
+    max_motive_position = attrs.field(init=False)
+    back_emission = attrs.field(init=False)
 
 
-    def __init__(self, emitter: tec.electrode.Metal, collector: tec.electrode.Metal, model=tec.models.Basic, **kwargs):
-        self.model = model(emitter = emitter, collector = collector, **kwargs)  # Refactor to copy emitter and collector objects.
+    def __attrs_post_init__(self):
         self.emitter = self.model.emitter
         self.collector = self.model.collector
         self.motive = self.model.motive
