@@ -1,8 +1,29 @@
 # coding: utf-8
 from astropy import units, constants
+import attrs
 import numpy as np
 from tec import TECBase
 from scipy import interpolate, optimize, integrate, special
+
+
+@attrs.frozen
+class Basic():
+    """
+    TEC which ignores the effects of space charge
+    """
+    back_emission: bool = attrs.field()
+
+
+    def motive(self, x):
+        pass
+
+
+    def max_motive(self):
+        pass
+
+
+    def max_motive_position(self):
+        pass
 
 
 class DimensionlessLangmuirPoissonSoln(dict):
