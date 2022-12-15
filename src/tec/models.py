@@ -5,6 +5,8 @@ import numpy as np
 from tec import TECBase
 from scipy import interpolate, optimize, integrate, special
 
+from . import electrode
+
 
 @attrs.frozen
 class Basic():
@@ -12,6 +14,42 @@ class Basic():
     TEC which ignores the effects of space charge
     """
     back_emission: bool = attrs.field()
+
+
+    def __init__(self,
+            emitter_temperature: float | astropy.units.Quantity[astropy.units.K],
+            emitter_barrier: float | astropy.units.Quantity[astropy.units.eV],
+            emitter_richardson: float | astropy.units.Quantity["A/(cm2 K2)"],
+            emitter_voltage: float | astropy.units.Quantity[astropy.units.V]=0.,
+            emitter_position: float | astropy.units.Quantity[astropy.units.um]=0.,
+            emitter_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
+            collector_temperature: float | astropy.units.Quantity[astropy.units.K],
+            collector_barrier: float | astropy.units.Quantity[astropy.units.eV],
+            collector_richardson: float | astropy.units.Quantity["A/(cm2 K2)"],
+            collector_voltage: float | astropy.units.Quantity[astropy.units.V],
+            collector_position: float | astropy.units.Quantity[astropy.units.um],
+            collector_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
+            back_emission=False,
+        ):
+        self.emitter = electrode.Metal(
+                temperature = emitter_temperature,
+                barrier = emitter_barrier,
+                richardson = emitter_richardson,
+                voltage = emitter_voltage,
+                position = emitter_position,
+                emissivity = emitter_emissivity,
+            )
+
+        self.collector = electrode.Metal(
+                temperature = collector_temperature,
+                barrier = collector_barrier,
+                richardson = collector_richardson,
+                voltage = collector_voltage,
+                position = collector_position,
+                emissivity = collector_emissivity,
+            )
+
+        self.back_emission = back_emission
 
 
     def motive(self, x):
