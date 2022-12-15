@@ -43,7 +43,7 @@ class Basic():
     """
     emitter: tec.electrode.Metal = attrs.field()
     collector: tec.electrode.Metal = attrs.field()
-    back_emission: bool = attrs.field()
+    back_emission: bool = attrs.field(default=False)
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
 
