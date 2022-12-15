@@ -17,11 +17,14 @@ class Basic():
     """
     TEC which ignores the effects of space charge
     """
+    emitter: tec.electrode.Metal = attrs.field()
+    collector: tec.electrode.Metal = attrs.field()
     back_emission: bool = attrs.field()
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
 
-    def __init__(self,
+    @classmethod
+    def from_args(cls,
             emitter_temperature: float | astropy.units.Quantity[astropy.units.K],
             emitter_barrier: float | astropy.units.Quantity[astropy.units.eV],
             emitter_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
@@ -35,8 +38,48 @@ class Basic():
             collector_position: float | astropy.units.Quantity[astropy.units.um],
             collector_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
             back_emission=False,
-        ):
-        self.emitter = electrode.Metal(
+        ) -> "tec.models.Basic":
+        """
+        Create model from individual arguments
+
+
+        Parameters
+        ----------
+        emitter_temperature:
+            Temperature of emitter electrode.
+        emitter_barrier:
+            Barrier of emitter electrode.
+        emitter_richardson:
+            Richardson's constant of emitter electrode.
+        emitter_voltage:
+            Bias voltage of emitter electrode.
+        emitter_position:
+            Location of emitter electrode.
+        emitter_emissivity:
+            Radiative emissivity of emitter electrode.
+        collector_temperature:
+            Temperature of collector electrode.
+        collector_barrier:
+            Barrier of collector electrode.
+        collector_richardson:
+            Richardson's constant of collector electrode.
+        collector_voltage:
+            Bias voltage of collector electrode.
+        collector_position:
+            Location of collector electrode.
+        collector_emissivity:
+            Radiative emissivity of collector electrode.
+        back_emission:
+            If `False`, the TEC's back current density will equal
+            zero, regardless of the collector parameters.
+
+        
+        See also
+        --------
+        tec.electrode.Metal: For more details on the parameters used
+            to construct the `emitter` and `collector` attributes.
+        """
+        emitter = electrode.Metal(
                 temperature = emitter_temperature,
                 barrier = emitter_barrier,
                 richardson = emitter_richardson,
@@ -45,7 +88,7 @@ class Basic():
                 emissivity = emitter_emissivity,
             )
 
-        self.collector = electrode.Metal(
+        collector = electrode.Metal(
                 temperature = collector_temperature,
                 barrier = collector_barrier,
                 richardson = collector_richardson,
@@ -54,7 +97,7 @@ class Basic():
                 emissivity = collector_emissivity,
             )
 
-        self.back_emission = back_emission
+        return = cls(emitter = emitter, collector = collector, back_emission = back_emission)
 
 
     def __attrs_post_init__(self):
