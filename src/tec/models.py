@@ -1,8 +1,8 @@
 # coding: utf-8
-import numpy as np
-from scipy import interpolate, optimize, integrate, special
 from astropy import units, constants
+import numpy as np
 from tec import TECBase
+from scipy import interpolate, optimize, integrate, special
 
 
 class DimensionlessLangmuirPoissonSoln(dict):
