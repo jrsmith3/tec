@@ -16,6 +16,30 @@ from tec import TECBase
 class Basic():
     """
     TEC which ignores the effects of space charge
+
+
+    Parameters
+    ----------
+    emitter:
+        Emitter electrode.
+    collector:
+        Collector electrode.
+    back_emission:
+        If `False`, the TEC's back current density will equal
+        zero, regardless of the collector parameters.
+
+
+    Attributes
+    ----------
+    emitter:
+        Same as constructor parameter.
+    collector:
+        Same as constructor parameter.
+    back_emission:
+        Same as constructor parameter.
+    motive:
+        A spline to approximate the motive within the interelectrode
+        space at an arbitrary point.
     """
     emitter: tec.electrode.Metal = attrs.field()
     collector: tec.electrode.Metal = attrs.field()
