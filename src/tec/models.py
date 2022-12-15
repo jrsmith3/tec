@@ -18,6 +18,7 @@ class Basic():
     TEC which ignores the effects of space charge
     """
     back_emission: bool = attrs.field()
+    motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
 
     def __init__(self,
@@ -56,16 +57,13 @@ class Basic():
         self.back_emission = back_emission
 
 
-    def motive(self, x):
-        pass
+    def __attrs_post_init__(self):
+        abscissae = astropy.units.Quantity([self.emitter.position, self.collector.position], "um")
+        ordinates = astropy.units.Quantity([self.emitter.motive(), self.collector.motive()], "eV")
 
+        spl = scipy.interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext="raise")
 
-    def max_motive(self):
-        pass
-
-
-    def max_motive_position(self):
-        pass
+        self.motive = spl(position) * ordinates.unit
 
 
 class DimensionlessLangmuirPoissonSoln(dict):
