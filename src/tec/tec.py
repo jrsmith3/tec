@@ -43,13 +43,14 @@ class TEC():
     """
     emitter: tec.electrode.Metal = attrs.field()
     collector: tec.electrode.Metal = attrs.field()
-    model = attrs.field(default=tec.models.Basic)
+    model = attrs.field()
+    max_motive = attrs.field()
+    max_motive_position = attrs.field()
+    back_emission = attrs.field()
 
 
-    def __attrs_post_init__(self):
-        # The following code contains bugs, but it expresses the
-        # behavior I want.
-        self.model = model(emitter = emitter, collector = collector, back_emission = back_emission)
+    def __init__(self, emitter: tec.electrode.Metal, collector: tec.electrode.Metal, model=tec.models.Basic, **kwargs):
+        self.model = model(emitter = emitter, collector = collector, **kwargs)  # Refactor to copy emitter and collector objects.
         self.emitter = self.model.emitter
         self.collector = self.model.collector
         self.motive = self.model.motive
