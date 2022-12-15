@@ -142,7 +142,7 @@ class TEC():
 
 
     # Methods returning basic data about the TEC ----------------------
-    def interelectrode_spacing(self):
+    def interelectrode_spacing(self) -> astropy.units.Quantity[astropy.units.um]:
         """
         Distance between collector and emitter
 
@@ -152,7 +152,7 @@ class TEC():
         return self.collector.position - self.emitter.position
 
 
-    def output_voltage(self):
+    def output_voltage(self) -> astropy.units.Quantity[astropy.units.V]:
         """
         Voltage difference between collector and emitter
 
@@ -162,7 +162,7 @@ class TEC():
         return self.collector.voltage - self.emitter.voltage
 
 
-    def contact_potential(self):
+    def contact_potential(self) -> astropy.units.Quantity[astropy.units.V]:
         """
         Contact potential between collector and emitter
 
@@ -184,7 +184,7 @@ class TEC():
 
 
     # Methods regarding current and power -----------------------------
-    def forward_current_density(self):
+    def forward_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Net current moving from emitter to collector
 
@@ -205,7 +205,7 @@ class TEC():
         return current
 
 
-    def back_current_density(self):
+    def back_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Net current moving from collector to emitter
 
@@ -226,7 +226,7 @@ class TEC():
         return current
 
 
-    def output_current_density(self):
+    def output_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Net current density flowing across device
 
@@ -236,7 +236,7 @@ class TEC():
         return self.forward_current_density() - self.back_current_density()
 
 
-    def output_power_density(self):
+    def output_power_density(self) -> astropy.units.Quantity["W/cm2"]:
         """
         Output power density of device
 
@@ -249,7 +249,7 @@ class TEC():
 
 
     # Methods regarding efficiency ------------------------------------
-    def carnot_efficiency(self):
+    def carnot_efficiency(self) -> astropy.units.Quantity[astropy.units.dimensionless_unscaled]:
         """
         Carnot efficiency
 
@@ -266,7 +266,7 @@ class TEC():
         return efficiency.decompose().value
 
 
-    def efficiency(self):
+    def efficiency(self) -> astropy.units.Quantity[astropy.units.dimensionless_unscaled]:
         """
         Total thermal efficiency
 
@@ -315,7 +315,7 @@ class TEC():
         return efficiency
 
 
-    def heat_supply_rate(self):
+    def heat_supply_rate(self) -> astropy.units.Quantity[astropy.units.W]:
         """
         Rate at which heat enters device
 
@@ -340,7 +340,7 @@ class TEC():
         return heat_supply_rate
 
 
-    def electron_cooling_rate(self):
+    def electron_cooling_rate(self) -> astropy.units.Quantity[astropy.units.W]:
         """
         Electronic cooling rate of emitter
 
@@ -369,7 +369,7 @@ class TEC():
         return cooling_rate
 
 
-    def thermal_rad_rate(self):
+    def thermal_rad_rate(self) -> astropy.units.Quantity[astropy.units.W]:
         """
         Interelectrode thermal radiation rate
 
