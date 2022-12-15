@@ -59,6 +59,88 @@ class TEC():
         self.back_emission = self.model.back_emission
 
 
+    @classmethod
+    def from_args(cls,
+            model = tec.models.Basic,
+            emitter_temperature: float | astropy.units.Quantity[astropy.units.K],
+            emitter_barrier: float | astropy.units.Quantity[astropy.units.eV],
+            emitter_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
+            emitter_voltage: float | astropy.units.Quantity[astropy.units.V]=0.,
+            emitter_position: float | astropy.units.Quantity[astropy.units.um]=0.,
+            emitter_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
+            collector_temperature: float | astropy.units.Quantity[astropy.units.K],
+            collector_barrier: float | astropy.units.Quantity[astropy.units.eV],
+            collector_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
+            collector_voltage: float | astropy.units.Quantity[astropy.units.V],
+            collector_position: float | astropy.units.Quantity[astropy.units.um],
+            collector_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
+            **kwargs
+        ) -> tec.TEC:
+        """
+        Create TEC from individual arguments
+
+
+        Parameters
+        ----------
+        model:
+            Class corresponding to model to be used in the TEC object.
+        emitter_temperature:
+            Temperature of emitter electrode.
+        emitter_barrier:
+            Barrier of emitter electrode.
+        emitter_richardson:
+            Richardson's constant of emitter electrode.
+        emitter_voltage:
+            Bias voltage of emitter electrode.
+        emitter_position:
+            Location of emitter electrode.
+        emitter_emissivity:
+            Radiative emissivity of emitter electrode.
+        collector_temperature:
+            Temperature of collector electrode.
+        collector_barrier:
+            Barrier of collector electrode.
+        collector_richardson:
+            Richardson's constant of collector electrode.
+        collector_voltage:
+            Bias voltage of collector electrode.
+        collector_position:
+            Location of collector electrode.
+        collector_emissivity:
+            Radiative emissivity of collector electrode.
+        kwargs:
+            Additional arguments passed to the constructor of the
+            class specified in the `model` argument.
+
+        
+        See also
+        --------
+        tec.electrode.Metal: For more details on the parameters used
+            to construct the `emitter` and `collector` attributes.
+        """
+        emitter = electrode.Metal(
+                temperature = emitter_temperature,
+                barrier = emitter_barrier,
+                richardson = emitter_richardson,
+                voltage = emitter_voltage,
+                position = emitter_position,
+                emissivity = emitter_emissivity,
+            )
+
+        collector = electrode.Metal(
+                temperature = collector_temperature,
+                barrier = collector_barrier,
+                richardson = collector_richardson,
+                voltage = collector_voltage,
+                position = collector_position,
+                emissivity = collector_emissivity,
+            )
+
+        model_instance = model(emitter, collector, **kwargs)
+
+        return = cls(model=model_instance)
+
+
     # Methods returning basic data about the TEC ----------------------
     def interelectrode_spacing(self):
         """
