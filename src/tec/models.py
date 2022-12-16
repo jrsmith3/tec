@@ -134,6 +134,7 @@ class Basic():
         return = cls(emitter, collector, back_emission=back_emission)
 
 
+    @property
     def max_motive(self) -> astropy.units.Quantity[astropy.units.eV]:
         """
         Value of maximum motive
@@ -143,6 +144,7 @@ class Basic():
         return max_motive
 
 
+    @property
     def max_motive_position(self) -> astropy.units.Quantity[astropy.units.eV]:
         """
         Position of maximum motive
