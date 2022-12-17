@@ -124,6 +124,9 @@ class TEC():
     def back_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Net current moving from collector to emitter
+
+        The output of this method will always be zero if the
+        `back_emission` attribute of the `TEC` instance is `False`.
         """
         diff_barrier = self.max_motive() - self.collector.motive()
 
@@ -134,7 +137,9 @@ class TEC():
         else:
             scaling_factor = 1.
 
-        current_density = self.collector.thermoelectron_current_density() * scaling_factor
+        # Kind of janky multiplying a bool with other values, but
+        # hooray duck typing I guess.
+        current_density = self.back_emission * self.collector.thermoelectron_current_density() * scaling_factor
 
         return current_density.to("A/cm2")
 
