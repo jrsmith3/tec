@@ -134,9 +134,9 @@ class TEC():
         else:
             scaling_factor = 1.
 
-        current = self.collector.thermoelectron_current_density() * scaling_factor
+        current_density = self.collector.thermoelectron_current_density() * scaling_factor
 
-        return current
+        return current_density.to("A/cm2")
 
 
     def output_current_density(self) -> astropy.units.Quantity["A/cm2"]:
