@@ -160,12 +160,9 @@ class TEC():
         """
         Carnot efficiency
         """
-        if self.emitter.temp >= self.collector.temp:
-            efficiency = 1 - (self.collector.temp / self.emitter.temp)
-        else:
-            efficiency = np.NaN
+        efficiency = 1 - (self.collector.temperature / self.emitter.temperature)
 
-        return efficiency.decompose().value
+        return efficiency.decompose().to(astropy.units.dimensionless_unscaled)
 
 
     def efficiency(self) -> astropy.units.Quantity[astropy.units.dimensionless_unscaled]:
