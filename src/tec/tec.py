@@ -191,7 +191,7 @@ class TEC():
         efficiency, :math:`Q_{in}` accounts for the heat transport
         via electrons (see :meth:`electron_cooling_rate`, denoted
         by :math:`Q_{E}`) and photons
-        (see :meth:`thermal_rad_rate`, denoted by :math:`Q_
+        (see :meth:`thermal_radiation_rate`, denoted by :math:`Q_
         {r}`). This efficiency calculation *does not* presently
         account for heat conducted via the leads.
         Therefore, :math:`Q_{in}` is given by
@@ -227,9 +227,9 @@ class TEC():
 
         where :math:`Q_{E}` and :math:`Q_{r}` are calculated
         using :meth:`electron_cooling_rate`
-        and :meth:`thermal_rad_rate`, respectively.
+        and :meth:`thermal_radiation_rate`, respectively.
         """
-        heat_supply_rate = self.electron_cooling_rate() + self.thermal_rad_rate()
+        heat_supply_rate = self.electron_cooling_rate() + self.thermal_radiation_rate()
 
         return heat_supply_rate.to(astropy.units.W)
 
@@ -260,7 +260,7 @@ class TEC():
         return cooling_rate
 
 
-    def thermal_rad_rate(self) -> astropy.units.Quantity[astropy.units.W]:
+    def thermal_radiation_rate(self) -> astropy.units.Quantity[astropy.units.W]:
         """
         Interelectrode thermal radiation rate
 
