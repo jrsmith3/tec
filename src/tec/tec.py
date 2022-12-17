@@ -50,7 +50,7 @@ class TEC():
         zero, regardless of the collector parameters. Exact same
         object as `model.back_emission`.
     """
-    model: tec.electrode.Basic = attrs.field()
+    model: tec.models.Basic = attrs.field()
     emitter: tec.electrode.Metal = attrs.field(init=False)
     collector: tec.electrode.Metal = attrs.field(init=False)
     motive = attrs.field(init=False)
