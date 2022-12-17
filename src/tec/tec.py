@@ -231,7 +231,7 @@ class TEC():
         """
         heat_supply_rate = self.electron_cooling_rate() + self.thermal_rad_rate()
 
-        return heat_supply_rate
+        return heat_supply_rate.to(astropy.units.W)
 
 
     def electron_cooling_rate(self) -> astropy.units.Quantity[astropy.units.W]:
