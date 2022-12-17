@@ -17,6 +17,10 @@ class Basic():
     """
     TEC which ignores the effects of space charge
 
+    This class implements a model of electron transport which
+    completely ignores the negative space charge effect, similar to
+    the model described on p. 51 of :cite:`9780262080590`.
+
 
     Parameters
     ----------
