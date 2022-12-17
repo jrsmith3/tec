@@ -99,7 +99,7 @@ class TEC():
         """
         contact_potential = (self.emitter.barrier - self.collector.barrier) / astropy.constants.e.si
 
-        return contact_potential.to("V")
+        return contact_potential.to(astropy.units.V)
 
 
     # Methods regarding current and power -----------------------------
