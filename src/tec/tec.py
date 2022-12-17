@@ -80,7 +80,7 @@ class TEC():
         """
         Voltage difference between collector and emitter
         """
-        return self.collector.voltage - self.emitter.voltage
+        return (self.collector.voltage - self.emitter.voltage).to(astropy.units.V)
 
 
     def contact_potential(self) -> astropy.units.Quantity[astropy.units.V]:
