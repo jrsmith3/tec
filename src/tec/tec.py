@@ -207,7 +207,9 @@ class TEC():
         else:
             efficiency = np.nan
 
-        return efficiency
+        output = astropy.units.Quantity(efficiency, astropy.units.dimensionless_unscaled)
+
+        return output
 
 
     def heat_supply_rate(self) -> astropy.units.Quantity[astropy.units.W]:
