@@ -150,9 +150,9 @@ class TEC():
         """
         Output power density of device
         """
-        power_dens = self.output_current_density() * self.output_voltage()
+        power_density = self.output_current_density() * self.output_voltage()
 
-        return power_dens.to("W/cm2")
+        return power_density.to("W/cm2")
 
 
     # Methods regarding efficiency ------------------------------------
