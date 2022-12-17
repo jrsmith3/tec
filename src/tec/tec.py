@@ -73,7 +73,7 @@ class TEC():
         """
         Distance between collector and emitter
         """
-        return self.collector.position - self.emitter.position
+        return (self.collector.position - self.emitter.position).to(astropy.units.um)
 
 
     def output_voltage(self) -> astropy.units.Quantity[astropy.units.V]:
