@@ -72,9 +72,6 @@ class TEC():
     def interelectrode_spacing(self) -> astropy.units.Quantity[astropy.units.um]:
         """
         Distance between collector and emitter
-
-        :returns: `astropy.units.Quantity` in units of :math:`um`.
-        :symbol: :math:`d`
         """
         return self.collector.position - self.emitter.position
 
@@ -82,9 +79,6 @@ class TEC():
     def output_voltage(self) -> astropy.units.Quantity[astropy.units.V]:
         """
         Voltage difference between collector and emitter
-
-        :returns: `astropy.units.Quantity` in units of :math:`V`.
-        :symbol: :math:`V`
         """
         return self.collector.voltage - self.emitter.voltage
 
@@ -102,8 +96,6 @@ class TEC():
         .. math::
             V_{contact} = \\frac{\psi_{E} - \psi_{C}}{e}
 
-        :returns: `astropy.units.Quantity` in units of :math:`V`.
-        :symbol: :math:`V_{contact}`
         """
         contact_potential = (self.emitter.barrier - self.collector.barrier) / astropy.constants.e.si
 
@@ -114,9 +106,6 @@ class TEC():
     def forward_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Net current moving from emitter to collector
-
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J_{f}`
         """
         diff_barrier = self.max_motive() - self.emitter.motive()
 
@@ -135,9 +124,6 @@ class TEC():
     def back_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Net current moving from collector to emitter
-
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J_{b}`
         """
         diff_barrier = self.max_motive() - self.collector.motive()
 
@@ -156,9 +142,6 @@ class TEC():
     def output_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Net current density flowing across device
-
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J`
         """
         return self.forward_current_density() - self.back_current_density()
 
@@ -166,9 +149,6 @@ class TEC():
     def output_power_density(self) -> astropy.units.Quantity["W/cm2"]:
         """
         Output power density of device
-
-        :returns: `astropy.units.Quantity` in units of :math:`W cm^{-2}`.
-        :symbol: :math:`w`
         """
         power_dens = self.output_current_density() * self.output_voltage()
 
@@ -179,11 +159,6 @@ class TEC():
     def carnot_efficiency(self) -> astropy.units.Quantity[astropy.units.dimensionless_unscaled]:
         """
         Carnot efficiency
-
-        :returns: float between 0 and 1 where unity is 100%
-        efficiency. Returns NaN if collector temperature is greater
-        than emitter temperature.
-        :symbol: :math:`\eta_{c}`
         """
         if self.emitter.temp >= self.collector.temp:
             efficiency = 1 - (self.collector.temp / self.emitter.temp)
@@ -228,10 +203,6 @@ class TEC():
             Q_{in} = Q_{E} + Q_{r}
 
         See :meth:`heat_supply_rate` for more information about :math:`Q_{in}`.
-
-        :returns: float between 0 and 1 where unity is 100%
-        efficiency. Returns NaN if the output power is less than zero.
-        :symbol: :math:`\eta`
         """
         if self.output_power_density() > 0:
             efficiency = self.output_power_density() / self.heat_supply_rate()
@@ -258,9 +229,6 @@ class TEC():
         where :math:`Q_{E}` and :math:`Q_{r}` are calculated
         using :meth:`electron_cooling_rate`
         and :meth:`thermal_rad_rate`, respectively.
-
-        :returns: `astropy.units.Quantity` in units of :math:`W`.
-        :symbol: :math:`Q_{in}`
         """
         heat_supply_rate = self.electron_cooling_rate() + self.thermal_rad_rate()
 
@@ -280,9 +248,6 @@ class TEC():
 
         The quantity :math:`S` is the area of the electrode, and taken
         to be unit area (1 cm^2) here.
-
-        :returns: `astropy.units.Quantity` in units of :math:`W`.
-        :symbol: :math:`Q_{E}`
         """
         kT_E2 = 2 * astropy.constants.k_B * self.emitter.temp
         kT_C2 = 2 * astropy.constants.k_B * self.collector.temp
@@ -310,8 +275,6 @@ class TEC():
         .. math::
             Q_{r} = \\frac{\sigma (T_{E}^{4} - T_{C}^{4})}{\\frac{1}{\epsilon_{E}} + \\frac{1}{\epsilon_{C}} - 1}
 
-        :returns: `astropy.units.Quantity` in units of :math:`W`.
-        :symbol: :math:`Q_{r}`
         """
         ideal_rad_rate = astropy.constants.sigma_sb * (self.emitter.temp**4 - self.collector.temp**4)
 
