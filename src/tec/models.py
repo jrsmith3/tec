@@ -13,9 +13,9 @@ from tec import TECBase
 
 
 @attrs.frozen
-class Basic():
+class Ideal():
     """
-    TEC which ignores the effects of space charge
+    Model of ideal performance TEC
 
     This class implements a model of electron transport which
     completely ignores the negative space charge effect, similar to
