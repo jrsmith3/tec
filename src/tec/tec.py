@@ -14,32 +14,41 @@ class TEC():
     """
     Thermoelectron energy conversion device
 
-    This class provides the base API for subclasses which implement
-    particular models of TEC electron transport. Even though this
-    class isn't intended to be a model, it implements a model of
-    electron transport which completely ignores the negative space
-    charge effect, similar to the model described on p. 51
-    of :cite:`9780262080590`.
+    Instances of the `TEC` class provide additional functionality for
+    computing interesting values (e.g. output power density) beyond
+    the minimal functionality provided by a `Model` object.
 
-    :param emitter: Object from `tec.electrode` which initializes
-    emitter.
-    :param collector: Object from `tec.electrode` which initializes
-    collector.
 
-    Arguments in addition to the ones listed will be ignored.
+    Parameters
+    ----------
+    model:
+        Object implementing a particular model of a thermoelectron
+        energy conversion device.
+
 
     Attributes
-    ==========
-    `TECBase` objects have two attributes: `emitter` and `collector`,
-    both of which are objects from `tec.electrode`.
-
-    Examples
-    ========
-    >>> from tec.electrode import Metal
-    >>> from tec import TECBase
-    >>> em = Metal(temp=1000, barrier=1, richardson=10, voltage=0, position=0, emissivity=0.5)
-    >>> co = Metal(temp=300, barrier=0.8, richardson=10, emissivity=0.5, voltage=0, position=10,)
-    >>> example_tec = TECBase(emitter = em, collector = co)
+    ----------
+    model:
+        The `tec.models.Model` object used to construct the `TEC`.
+    emitter:
+        Emitter electrode. Exact same object as `model.emitter`.
+    collector:
+        Collector electrode. Exact same object as `model.collector`.
+    motive:
+        A spline to approximate the motive within the interelectrode
+        space at an arbitrary point. Exact same object as
+        `model.motive`.
+    max_motive:
+        Value of maximum motive. Exact same object as
+        `model.max_motive`.
+    max_motive_position:
+        Position of maximum motive. Exact same object as
+        `model.max_motive_position`.
+    back_emission:
+        Boolean indicating if the model considers back emission or
+        not. `False` indicates back current density will always be
+        zero, regardless of the collector parameters. Exact same
+        object as `model.back_emission`.
     """
     model: tec.electrode.Basic = attrs.field()
     emitter: tec.electrode.Metal = attrs.field(init=False)
