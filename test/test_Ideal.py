@@ -20,14 +20,42 @@ class TestIdealConstructorHappyPath():
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
-def valid_emitter():
-    emitter = tec.electrode.Metal(temperature=2000, barrier=1.4)
+def valid_emitter_args():
+    args = {
+        "temperature": 2000.,
+        "barrier": 2.,
+        "richardson": 120.,
+        "voltage": 0.,
+        "position": 0.,
+        "emissivity": 1.,
+    }
+
+    return args
+
+
+@pytest.fixture
+def valid_collector_args():
+    args = {
+        "temperature": 300.,
+        "barrier": 0.8,
+        "richardson": 120.,
+        "voltage": 0.,
+        "position": 10.,
+        "emissivity": 1.,
+    }
+
+    return args
+
+
+@pytest.fixture
+def valid_emitter(valid_emitter_args):
+    emitter = tec.electrode.Metal(**valid_emitter_args)
 
     return emitter
 
 
 @pytest.fixture
-def valid_collector():
-    collector = tec.electrode.Metal(temperature=300, barrier=0.8, position=10)
+def valid_collector(valid_collector_args):
+    collector = tec.electrode.Metal(**valid_collector_args)
 
     return collector
