@@ -6,7 +6,7 @@ import inspect
 import numpy as np
 import scipy.interpolate
 
-from .electrode import Metal
+from . import electrode, models
 
 
 @attrs.frozen
@@ -50,9 +50,9 @@ class TEC():
         zero, regardless of the collector parameters. Exact same
         object as `model.back_emission`.
     """
-    model: tec.models.Ideal = attrs.field()
-    emitter: tec.electrode.Metal = attrs.field(init=False)
-    collector: tec.electrode.Metal = attrs.field(init=False)
+    model: models.Ideal = attrs.field()
+    emitter: electrode.Metal = attrs.field(init=False)
+    collector: electrode.Metal = attrs.field(init=False)
     motive = attrs.field(init=False)
     max_motive = attrs.field(init=False)
     max_motive_position = attrs.field(init=False)
