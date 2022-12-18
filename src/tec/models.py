@@ -307,7 +307,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
             return np.array([motive[1], 0.5*np.exp(motive[0])*(1+scipy.special.erf(motive[0]**0.5))])
 
 
-class Langmuir(TECBase):
+class Langmuir():
     """
     Considers space charge, ignores NEA and back emission.
 
