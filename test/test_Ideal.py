@@ -17,7 +17,7 @@ class TestIdealConstructorHappyPath():
             ideal_model = tec.models.Ideal(emitter=valid_emitter, collector=valid_collector, back_emission=False)
 
 
-class TestMetalConstructorParamsOutsideConstraints():
+class TestIdealConstructorParamsOutsideConstraints():
     def test_emitter_temperature_lt_collector_temperature(self, valid_emitter_args, valid_collector_args):
         invalid_emitter_args = valid_emitter_args.copy()
         invalid_emitter_args["temperature"] = 0.5 * valid_collector_args["temperature"]
