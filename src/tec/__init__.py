@@ -46,7 +46,7 @@ constructing a `TEC` from a flattened list of parameters.
 .. currentmodule:: tec
 """
 
-from . import electrode
+from . import electrode, models
 
 try:
     from ._version import __version__
