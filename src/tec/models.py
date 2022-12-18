@@ -60,10 +60,16 @@ class Ideal():
             raise ValueError("Emitter barrier must be greater than collector barrier")
 
 
+    def _emitter_position_lt_collector_position(self):
+        if self.emitter.position >= self.collector.position:
+            raise ValueError("Emitter position must be greater than collector position")
+
+
     def __attrs_post_init__(self):
         # Check constraints.
         self._emitter_temperature_gt_collector_temperature()
         self._emitter_barrier_gt_collector_barrier()
+        self._emitter_position_lt_collector_position()
 
         # Construct motive spline.
         abscissae = astropy.units.Quantity([self.emitter.position, self.collector.position], "um")
