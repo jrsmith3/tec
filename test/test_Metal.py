@@ -8,6 +8,7 @@ from contextlib import nullcontext as does_not_raise
 
 class TestMetalConstructorHappyPath():
     def test_params_without_default_values(self, valid_constructor_args):
+        valid_constructor_args.pop("richardson")
         valid_constructor_args.pop("voltage")
         valid_constructor_args.pop("position")
         valid_constructor_args.pop("emissivity")
