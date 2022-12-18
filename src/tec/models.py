@@ -145,7 +145,7 @@ class Ideal():
                 emissivity = collector_emissivity,
             )
 
-        return = cls(emitter, collector, back_emission=back_emission)
+        return cls(emitter, collector, back_emission=back_emission)
 
 
     @property
