@@ -50,7 +50,16 @@ class Ideal():
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
 
+    def _emitter_temperature_gt_collector_temperature(self):
+        if self.emitter.temperature < self.collector.temperature:
+            raise ValueError("Emitter temperature must be greater than collector temperature")
+
+
     def __attrs_post_init__(self):
+        # Check constraints.
+        self._emitter_temperature_gt_collector_temperature()
+
+        # Construct motive spline.
         abscissae = astropy.units.Quantity([self.emitter.position, self.collector.position], "um")
         ordinates = astropy.units.Quantity([self.emitter.motive(), self.collector.motive()], "eV")
 
