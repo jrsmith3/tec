@@ -18,7 +18,7 @@ class TestIdealConstructorHappyPath():
 
 
 class TestMetalConstructorParamsOutsideConstraints():
-    def test_emitter_temperature_gt_collector_temperature(self, valid_emitter_args, valid_collector_args):
+    def test_emitter_temperature_lt_collector_temperature(self, valid_emitter_args, valid_collector_args):
         invalid_emitter_args = valid_emitter_args.copy()
         invalid_emitter_args["temperature"] = 0.5 * valid_collector_args["temperature"]
 
