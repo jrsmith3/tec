@@ -47,6 +47,7 @@ constructing a `TEC` from a flattened list of parameters.
 """
 
 from . import electrode, models
+from .tec import TEC
 
 try:
     from ._version import __version__
