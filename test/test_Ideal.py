@@ -12,6 +12,11 @@ class TestIdealConstructorHappyPath():
             ideal_model = tec.models.Ideal(emitter=valid_emitter, collector=valid_collector)
 
 
+    def test_params_with_default_values(self, valid_emitter, valid_collector):
+        with does_not_raise():
+            ideal_model = tec.models.Ideal(emitter=valid_emitter, collector=valid_collector, back_emission=False)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
