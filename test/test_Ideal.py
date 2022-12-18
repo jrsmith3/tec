@@ -51,6 +51,17 @@ class TestMetalConstructorParamsOutsideConstraints():
             ideal_model = tec.models.Ideal(emitter=emitter, collector=collector)
 
 
+    def test_emitter_barrier_eq_collector_barrier(self, valid_emitter_args, valid_collector_args):
+        invalid_emitter_args = valid_emitter_args.copy()
+        invalid_emitter_args["barrier"] = valid_collector_args["barrier"]
+
+        emitter = tec.electrode.Metal(**invalid_emitter_args)
+        collector = tec.electrode.Metal(**valid_collector_args)
+
+        with pytest.raises(ValueError):
+            ideal_model = tec.models.Ideal(emitter=emitter, collector=collector)
+
+
     def test_emitter_position_gt_collector_position(self, valid_emitter_args, valid_collector_args):
         invalid_emitter_args = valid_emitter_args.copy()
         invalid_emitter_args["position"] = 2 * valid_collector_args["position"]
