@@ -51,12 +51,12 @@ class Ideal():
 
 
     def _emitter_temperature_gt_collector_temperature(self):
-        if self.emitter.temperature < self.collector.temperature:
+        if self.emitter.temperature <= self.collector.temperature:
             raise ValueError("Emitter temperature must be greater than collector temperature")
 
 
     def _emitter_barrier_gt_collector_barrier(self):
-        if self.emitter.barrier < self.collector.barrier:
+        if self.emitter.barrier <= self.collector.barrier:
             raise ValueError("Emitter barrier must be greater than collector barrier")
 
 
