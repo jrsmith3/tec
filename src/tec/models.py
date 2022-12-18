@@ -9,7 +9,6 @@ import scipy.optimize
 import scipy.special
 
 from . import electrode
-from tec import TECBase
 
 
 @attrs.frozen
