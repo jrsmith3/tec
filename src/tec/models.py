@@ -65,16 +65,16 @@ class Ideal():
             cls,
             emitter_temperature: float | astropy.units.Quantity[astropy.units.K],
             emitter_barrier: float | astropy.units.Quantity[astropy.units.eV],
-            emitter_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
+            collector_temperature: float | astropy.units.Quantity[astropy.units.K],
+            collector_barrier: float | astropy.units.Quantity[astropy.units.eV],
+            collector_voltage: float | astropy.units.Quantity[astropy.units.V],
+            collector_position: float | astropy.units.Quantity[astropy.units.um],
             emitter_voltage: float | astropy.units.Quantity[astropy.units.V]=0.,
             emitter_position: float | astropy.units.Quantity[astropy.units.um]=0.,
             emitter_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
-            collector_temperature: float | astropy.units.Quantity[astropy.units.K],
-            collector_barrier: float | astropy.units.Quantity[astropy.units.eV],
-            collector_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
-            collector_voltage: float | astropy.units.Quantity[astropy.units.V],
-            collector_position: float | astropy.units.Quantity[astropy.units.um],
+            emitter_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
             collector_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
+            collector_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
             back_emission=False,
         ) -> tec.TEC:
         """
@@ -114,8 +114,18 @@ class Ideal():
         
         See also
         --------
-        tec.electrode.Metal: For more details on the parameters used
-            to construct the `emitter` and `collector` attributes.
+        tec.electrode.Metal: For more details on the arguments used to
+            construct the `emitter` and `collector` attributes.
+
+
+        Notes
+        -----
+        The order of the arguments to this method is wonky; it would
+        be better to list all of the emitter arguments, then list the
+        collector arguments. It was impossible to achieve a sensible
+        ordering *and* set sensible default values, so I decided the
+        default values were more important because they are
+        convenient.
         """
         emitter = electrode.Metal(
                 temperature = emitter_temperature,
