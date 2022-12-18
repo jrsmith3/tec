@@ -111,6 +111,7 @@ class Metal():
             ]
         )
     richardson: float | astropy.units.Quantity["A/(cm2 K2)"] = attrs.field(
+        default=astropy.units.Quantity(120., "A/(cm2 K2)"),
         converter=functools.partial(astropy.units.Quantity, unit="A/(cm2 K2)"),
         validator=[
             _validate_is_scalar,
