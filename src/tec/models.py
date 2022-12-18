@@ -9,7 +9,6 @@ import scipy.optimize
 import scipy.special
 
 from . import electrode
-from .tec import TEC
 
 
 @attrs.frozen
@@ -76,7 +75,7 @@ class Ideal():
             collector_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
             collector_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
             back_emission=False,
-        ) -> TEC:
+        ) -> "tec.TEC":
         """
         Create TEC from individual arguments using this model
 
