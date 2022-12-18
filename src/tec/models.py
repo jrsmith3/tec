@@ -9,6 +9,7 @@ import scipy.optimize
 import scipy.special
 
 from . import electrode
+from .tec import TEC
 
 
 @attrs.frozen
@@ -44,8 +45,8 @@ class Ideal():
         A spline to approximate the motive within the interelectrode
         space at an arbitrary point.
     """
-    emitter: tec.electrode.Metal = attrs.field()
-    collector: tec.electrode.Metal = attrs.field()
+    emitter: electrode.Metal = attrs.field()
+    collector: electrode.Metal = attrs.field()
     back_emission: bool = attrs.field(default=False)
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
@@ -75,7 +76,7 @@ class Ideal():
             collector_emissivity: float | astropy.units.Quantity[astropy.units.dimensionless_unscaled]=1.,
             collector_richardson: float | astropy.units.Quantity["A/(cm2 K2)"]=astropy.units.Quantity(120., "A/(cm2 K2)"),
             back_emission=False,
-        ) -> tec.TEC:
+        ) -> TEC:
         """
         Create TEC from individual arguments using this model
 
