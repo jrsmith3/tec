@@ -56,7 +56,7 @@ class Ideal():
 
         spl = scipy.interpolate.UnivariateSpline(abscissae, ordinates, k=1, ext="raise")
 
-        self.motive = spl(position) * ordinates.unit
+        object.__setattr__(self, "motive", spl)
 
 
     @classmethod
