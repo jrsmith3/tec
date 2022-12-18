@@ -84,6 +84,16 @@ class TestIdealConstructorParamsOutsideConstraints():
             ideal_model = tec.models.Ideal(emitter=emitter, collector=collector)
 
 
+# There's only one test in the following test categories so I'm
+# implementing them using functions instead of classes.
+def test_Ideal_alt_constructor_from_args_returns_TEC(valid_emitter_args, valid_collector_args):
+    args = dict({"emitter_" + key: val for key, val in valid_emitter_args.items()})
+    args.update({"collector_" + key: val for key, val in valid_collector_args.items()})
+    args.update({"back_emission": False})
+
+    assert isinstance(tec.models.Ideal.from_args(**args), tec.TEC)
+
+
 # Pytest fixture definitions
 # ==========================
 @pytest.fixture
