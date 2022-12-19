@@ -205,14 +205,11 @@ class TEC():
         See :meth:`heat_supply_rate` for more information about :math:`Q_{in}`.
         """
         if self.output_power_density() > 0:
-            efficiency = self.output_power_density() / self.heat_supply_rate()
-            efficiency = efficiency.value
+            efficiency = astropy.units.Unit("cm2") * (self.output_power_density() / self.heat_supply_rate())
         else:
-            efficiency = np.nan
+            efficiency = astropy.units.Quantity(np.nan, astropy.units.dimensionless_unscaled)
 
-        output = astropy.units.Quantity(efficiency, astropy.units.dimensionless_unscaled)
-
-        return output
+        return efficiency.to(astropy.units.dimensionless_unscaled)
 
 
     def heat_supply_rate(self) -> astropy.units.Quantity[astropy.units.W]:
