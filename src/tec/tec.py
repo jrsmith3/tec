@@ -251,9 +251,9 @@ class TEC():
         The quantity :math:`S` is the area of the electrode, and taken
         to be unit area (1 cm^2) here.
         """
-        kT_E2 = 2 * astropy.constants.k_B * self.emitter.temp
-        kT_C2 = 2 * astropy.constants.k_B * self.collector.temp
-        max_motive = self.max_motive() - (astropy.constants.e.si * self.emitter.voltage)
+        kT_E2 = 2 * astropy.constants.k_B * self.emitter.temperature
+        kT_C2 = 2 * astropy.constants.k_B * self.collector.temperature
+        max_motive = self.max_motive - (astropy.constants.e.si * self.emitter.voltage)
 
         forward = astropy.units.Unit("cm2") * self.forward_current_density() * (max_motive + kT_E2) / astropy.constants.e.si
         back = astropy.units.Unit("cm2") * self.back_current_density() * (max_motive + kT_C2) / astropy.constants.e.si
@@ -278,7 +278,7 @@ class TEC():
             Q_{r} = \\frac{\sigma (T_{E}^{4} - T_{C}^{4})}{\\frac{1}{\epsilon_{E}} + \\frac{1}{\epsilon_{C}} - 1}
 
         """
-        ideal_rad_rate = astropy.constants.sigma_sb * (self.emitter.temp**4 - self.collector.temp**4)
+        ideal_rad_rate = astropy.constants.sigma_sb * (self.emitter.temperature**4 - self.collector.temperature**4)
 
         emissivities = np.array([self.emitter.emissivity, self.collector.emissivity])
         if any(emissivities == 0):
