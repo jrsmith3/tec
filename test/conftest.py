@@ -1,6 +1,7 @@
 # coding: utf-8
 import astropy.units
 import pytest
+import tec
 
 
 collect_ignore = [
@@ -31,3 +32,45 @@ def valid_metal_constructor_args(request, valid_metal_constructor_quantity_args)
     args = {key: request.param(val) for key, val in valid_metal_constructor_quantity_args.items()}
 
     return args
+
+
+@pytest.fixture
+def valid_emitter_args():
+    args = {
+        "temperature": 2000.,
+        "barrier": 2.,
+        "richardson": 120.,
+        "voltage": 0.,
+        "position": 0.,
+        "emissivity": 1.,
+    }
+
+    return args
+
+
+@pytest.fixture
+def valid_collector_args():
+    args = {
+        "temperature": 300.,
+        "barrier": 0.8,
+        "richardson": 120.,
+        "voltage": 0.,
+        "position": 10.,
+        "emissivity": 1.,
+    }
+
+    return args
+
+
+@pytest.fixture
+def valid_emitter(valid_emitter_args):
+    emitter = tec.electrode.Metal(**valid_emitter_args)
+
+    return emitter
+
+
+@pytest.fixture
+def valid_collector(valid_collector_args):
+    collector = tec.electrode.Metal(**valid_collector_args)
+
+    return collector
