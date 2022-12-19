@@ -86,7 +86,6 @@ class TestIdealConstructorParamsOutsideConstraints():
 
 # There's only one test in the following test categories so I'm
 # implementing them using functions instead of classes.
-@pytest.mark.skip("TEC class has issues that need to be fixed before this test works.")
 def test_Ideal_alt_constructor_from_args_returns_TEC(valid_emitter_args, valid_collector_args):
     args = dict({"emitter_" + key: val for key, val in valid_emitter_args.items()})
     args.update({"collector_" + key: val for key, val in valid_collector_args.items()})
