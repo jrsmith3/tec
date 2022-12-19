@@ -29,6 +29,10 @@ def test_tec_constructor_happy_path(valid_ideal_model):
                 "forward_current_density",
                 astropy.units.Quantity(1.16381647e-06, "A/cm2"),
             ),
+            (
+                "back_current_density",
+                astropy.units.Quantity(3.92658733e-07, "A/cm2"),
+            ),
         ]
     )
 def test_methods_regression(valid_ideal_model, method_under_test, expected_output):

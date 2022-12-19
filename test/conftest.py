@@ -77,6 +77,6 @@ def valid_collector(valid_collector_args):
 
 @pytest.fixture
 def valid_ideal_model(valid_emitter, valid_collector):
-    ideal_model = tec.models.Ideal(emitter=valid_emitter, collector=valid_collector)
+    ideal_model = tec.models.Ideal(emitter=valid_emitter, collector=valid_collector, back_emission=True)
 
     return ideal_model
