@@ -147,6 +147,11 @@ class Ideal():
         default values were more important because they are
         convenient.
         """
+        # FIXME
+        # I am not sure how to place this `import` statement at the
+        # top of this file and also avoid a circular import.
+        from .tec import TEC
+
         emitter = electrode.Metal(
                 temperature = emitter_temperature,
                 barrier = emitter_barrier,
@@ -165,7 +170,9 @@ class Ideal():
                 emissivity = collector_emissivity,
             )
 
-        return cls(emitter, collector, back_emission=back_emission)
+        ideal_model = cls(emitter, collector, back_emission=back_emission)
+
+        return TEC(model=ideal_model)
 
 
     @property
