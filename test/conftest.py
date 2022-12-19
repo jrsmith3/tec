@@ -53,7 +53,7 @@ def valid_collector_args():
         "temperature": 300.,
         "barrier": 0.8,
         "richardson": 120.,
-        "voltage": 0.,
+        "voltage": 5.,
         "position": 10.,
         "emissivity": 1.,
     }
