@@ -255,9 +255,9 @@ class TEC():
         forward = astropy.units.Unit("cm2") * self.forward_current_density() * (max_motive + kT_E2) / astropy.constants.e.si
         back = astropy.units.Unit("cm2") * self.back_current_density() * (max_motive + kT_C2) / astropy.constants.e.si
 
-        cooling_rate = (forward - back).to("W")
+        cooling_rate = forward - back
 
-        return cooling_rate
+        return cooling_rate.to(astropy.units.W)
 
 
     def thermal_radiation_rate(self) -> astropy.units.Quantity[astropy.units.W]:
