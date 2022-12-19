@@ -103,3 +103,14 @@ def test_TEC_back_current_density_zero_back_emission_false(valid_emitter_args, v
 
     assert device.back_emission is False
     assert device.back_current_density() == 0
+
+
+def test_TEC_back_current_density_nonzero_back_emission_true(valid_emitter_args, valid_collector_args):
+    args = dict({"emitter_" + key: val for key, val in valid_emitter_args.items()})
+    args.update({"collector_" + key: val for key, val in valid_collector_args.items()})
+    args.update({"back_emission": True})
+
+    device = tec.models.Ideal.from_args(**args)
+
+    assert device.back_emission is True
+    assert device.back_current_density() > 0
