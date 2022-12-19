@@ -285,4 +285,4 @@ class TEC():
 
         rad_rate = ideal_rad_rate * net_emissivity * astropy.units.Unit("cm2")
 
-        return rad_rate.to("W")
+        return rad_rate.to(astropy.units.W)
