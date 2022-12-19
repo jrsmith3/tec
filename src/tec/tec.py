@@ -105,10 +105,10 @@ class TEC():
         """
         Net current moving from emitter to collector
         """
-        diff_barrier = self.max_motive() - self.emitter.motive()
+        diff_barrier = self.max_motive - self.emitter.motive()
 
         if diff_barrier > 0:
-            kT = astropy.constants.k_B * self.emitter.temp
+            kT = astropy.constants.k_B * self.emitter.temperature
             exponent = (diff_barrier / kT).decompose()
             scaling_factor = np.exp(-exponent)
         else:
