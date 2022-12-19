@@ -74,3 +74,10 @@ def valid_collector(valid_collector_args):
     collector = tec.electrode.Metal(**valid_collector_args)
 
     return collector
+
+
+@pytest.fixture
+def valid_ideal_model(valid_emitter, valid_collector):
+    ideal_model = tec.models.Ideal(emitter=valid_emitter, collector=valid_collector)
+
+    return ideal_model
