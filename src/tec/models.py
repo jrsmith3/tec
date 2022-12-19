@@ -8,7 +8,7 @@ import scipy.interpolate
 import scipy.optimize
 import scipy.special
 
-from . import electrode
+from . import electrode, tec
 
 
 @attrs.frozen
@@ -147,11 +147,6 @@ class Ideal():
         default values were more important because they are
         convenient.
         """
-        # FIXME
-        # I am not sure how to place this `import` statement at the
-        # top of this file and also avoid a circular import.
-        from .tec import TEC
-
         emitter = electrode.Metal(
                 temperature = emitter_temperature,
                 barrier = emitter_barrier,
@@ -172,7 +167,7 @@ class Ideal():
 
         ideal_model = cls(emitter, collector, back_emission=back_emission)
 
-        return TEC(model=ideal_model)
+        return tec.TEC(model=ideal_model)
 
 
     @property
