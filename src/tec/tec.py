@@ -58,12 +58,12 @@ class TEC():
 
 
     def __attrs_post_init__(self):
-        self.emitter = self.model.emitter
-        self.collector = self.model.collector
-        self.motive = self.model.motive
-        self.max_motive = self.model.max_motive
-        self.max_motive_position = self.model.max_motive_position
-        self.back_emission = self.model.back_emission
+        object.__setattr__(self, "emitter", self.model.emitter)
+        object.__setattr__(self, "collector", self.model.collector)
+        object.__setattr__(self, "motive", self.model.motive)
+        object.__setattr__(self, "max_motive", self.model.max_motive)
+        object.__setattr__(self, "max_motive_position", self.model.max_motive_position)
+        object.__setattr__(self, "back_emission", self.model.back_emission)
 
 
     # Methods returning basic data about the TEC ----------------------
