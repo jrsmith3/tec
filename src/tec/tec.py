@@ -126,10 +126,10 @@ class TEC():
         The output of this method will always be zero if the
         `back_emission` attribute of the `TEC` instance is `False`.
         """
-        diff_barrier = self.max_motive() - self.collector.motive()
+        diff_barrier = self.max_motive - self.collector.motive()
 
         if diff_barrier > 0:
-            kT = astropy.constants.k_B * self.collector.temp
+            kT = astropy.constants.k_B * self.collector.temperature
             exponent = (diff_barrier / kT).decompose()
             scaling_factor = np.exp(-exponent)
         else:
