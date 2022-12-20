@@ -44,8 +44,12 @@ class Ideal():
         A spline to approximate the motive within the interelectrode
         space at an arbitrary point.
     """
-    emitter: electrode.Metal = attrs.field()
-    collector: electrode.Metal = attrs.field()
+    emitter: electrode.Metal = attrs.field(
+        converter = lambda x: x.copy()
+        )
+    collector: electrode.Metal = attrs.field(
+        converter = lambda x: x.copy()
+        )
     back_emission: bool = attrs.field(default=False)
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
