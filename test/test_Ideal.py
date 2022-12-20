@@ -18,6 +18,16 @@ class TestIdealConstructorHappyPath():
             ideal_model = tec.models.Ideal(emitter=valid_emitter, collector=valid_collector, back_emission=False)
 
 
+def test_electrode_args_are_copied_on_instantiation(valid_emitter, valid_collector):
+    """
+    The `emitter` and `collector` objects passed to the constructor should be copied.
+    """
+    ideal_model = tec.models.Ideal(valid_emitter, valid_collector)
+
+    assert ideal_model.emitter is not valid_emitter
+    assert ideal_model.collector is not valid_collector
+
+
 class TestIdealConstructorParamsOutsideConstraints():
     def test_emitter_temperature_lt_collector_temperature(self, valid_emitter_args, valid_collector_args):
         invalid_emitter_args = valid_emitter_args.copy()
