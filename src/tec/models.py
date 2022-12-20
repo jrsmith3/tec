@@ -197,6 +197,15 @@ class Ideal():
         return max_motive_position
 
 
+    def copy(self) -> "tec.models.Ideal":
+        """
+        Copy of Metal object
+        """
+        args = attrs.asdict(self, recurse=False)
+        del args["motive"]
+        return Ideal(**args)
+
+
 class DimensionlessLangmuirPoissonSoln(dict):
     """
     Numerical solution of Langmuir's dimensionless Poisson's equation.
