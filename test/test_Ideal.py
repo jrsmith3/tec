@@ -130,3 +130,15 @@ class TestIdealMethodsConsistency():
 
         assert ideal_model.emitter.motive() > ideal_model.collector.motive()
         assert ideal_model.max_motive == ideal_model.emitter.motive()
+
+
+    def test_max_motive_at_collector(self, valid_emitter_args, valid_collector_args):
+        emitter = tec.electrode.Metal(**valid_emitter_args)
+
+        valid_collector_args["voltage"] = 2 * (emitter.motive() / astropy.constants.e.si)
+        collector = tec.electrode.Metal(**valid_collector_args)
+
+        ideal_model = tec.models.Ideal(emitter, collector)
+
+        assert ideal_model.collector.motive() > ideal_model.emitter.motive()
+        assert ideal_model.max_motive == ideal_model.collector.motive()
