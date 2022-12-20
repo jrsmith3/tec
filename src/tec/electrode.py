@@ -216,6 +216,13 @@ class Metal():
         return energy_flux.to("W/cm2")
 
 
+    def copy(self) -> "tec.electrode.Metal":
+        """
+        Copy of Metal object
+        """
+        return Metal(**attrs.asdict(self))
+
+
 @attrs.frozen
 class SC():
     """
