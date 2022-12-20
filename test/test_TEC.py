@@ -11,6 +11,15 @@ def test_tec_constructor_happy_path(valid_ideal_model):
         device = tec.TEC(valid_ideal_model)
 
 
+def test_model_arg_copied_on_instantiation(valid_ideal_model):
+    """
+    The `model` object passed to the constructor should be copied
+    """
+    device = tec.TEC(valid_ideal_model)
+
+    assert device.model is not valid_ideal_model
+
+
 @pytest.mark.parametrize("method_under_test,expected_output",
         [
             (
