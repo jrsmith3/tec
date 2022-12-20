@@ -1,4 +1,5 @@
 # coding: utf-8
+import astropy.constants
 import astropy.units
 import pytest
 import tec
@@ -113,3 +114,19 @@ class TestIdealfrom_argsCases():
 
         assert device.back_emission is True
         assert device.back_current_density() > 0
+
+
+class TestIdealMethodsConsistency():
+    """
+    Test specific conditions for `Ideal` object's methods
+    """
+    def test_max_motive_at_emitter(self, valid_emitter_args, valid_collector_args):
+        collector = tec.electrode.Metal(**valid_collector_args)
+
+        valid_emitter_args["voltage"] = 2 * (collector.motive() / astropy.constants.e.si)
+        emitter = tec.electrode.Metal(**valid_emitter_args)
+
+        ideal_model = tec.models.Ideal(emitter, collector)
+
+        assert ideal_model.emitter.motive() > ideal_model.collector.motive()
+        assert ideal_model.max_motive == ideal_model.emitter.motive()
