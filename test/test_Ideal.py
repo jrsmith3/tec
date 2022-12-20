@@ -18,9 +18,9 @@ class TestIdealConstructorHappyPath():
             ideal_model = tec.models.Ideal(emitter=valid_emitter, collector=valid_collector, back_emission=False)
 
 
-def test_electrode_args_are_copied_on_instantiation(valid_emitter, valid_collector):
+def test_electrode_args_copied_on_instantiation(valid_emitter, valid_collector):
     """
-    The `emitter` and `collector` objects passed to the constructor should be copied.
+    The `emitter` and `collector` objects passed to the constructor should be copied
     """
     ideal_model = tec.models.Ideal(valid_emitter, valid_collector)
 
