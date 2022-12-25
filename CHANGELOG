@@ -1,6 +1,7 @@
 2.0.0
 =====
 * 174: Set default value of `richardson` for `tec.electrode.Metal`.
+* 171: Update TEC class.
 * 170: Update `tec.electrode.Metal` class.
 * 168: Remove `src/tec/version.py`.
 * 160: Minimum viable package.
