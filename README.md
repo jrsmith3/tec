@@ -86,3 +86,61 @@ instance must be created.
 
 ## License
 MIT
+
+
+## Development
+This repository uses [`tox`](https://tox.wiki/en/latest) for most of
+its automation, so install it before hacking on the source.
+
+```bash
+# Install dependencies for development.
+pip install tox
+```
+
+
+To run the tests, just call `tox`. `tox` will install the necessary
+dependencies (e.g. `pytest`) in a virtual environment, build the
+package, install the package that was built (which is
+[a good practice](https://blog.ionelmc.ro/2014/05/25/python-packaging))
+into that virtual environment, then call `pytest` to run the tests.
+
+```bash
+# Run the tests in your local environment.
+tox
+```
+
+
+This repo also features GitHub workflows for continuous integration
+automations. Some of these automations leverage `tox` as well, and
+there are corresponding `tox` environments defined in the `tox.ini`
+file. These `tox` environments are not intended to be run on a
+developer's machine -- see the `tox` config and the automation
+definitions in the `.github` subdirectory for information on how they
+work.
+
+Version numbers are [`PEP-440`](https://peps.python.org/pep-0440/)
+compliant. Versions are indicated by a tagged commit in the repo
+(i.e. a "version tag"). Version tags are formatted as a "version
+string"; version strings include a literal "v" prefix followed by a
+string that can be parsed according to `pep-440`. For example:
+`v2.0.0` and not simply `2.0.0`. Such version strings will have three
+components, MAJOR.MINOR.PATCH, which follow clauses 1-8 of the
+[semver 2.0.0 specification](https://semver.org). Any documentation
+change by itself will result in an increment of the PATCH component
+of the version string.
+
+All commits to the `main` branch will be tagged releases. There is no
+`dev` branch in this repo. This repo may include post-release
+versions. Such post-release versions correspond to changes to the
+development infrastructure and not functional changes to the
+codebase.
+
+This repo includes a GitHub workflow to automatically build the
+package, test the package, and create a GitHub release. Version tags
+are manually created by me (Joshua Ryan Smith) in my local clone of
+the repo. Therefore, releasing is semi-automated but is initiated by
+a manual tagging process. I.e. when I want to create a new release, I
+create a version tag in the repo and push that tag -- the GitHub
+workflows take care of the rest. Such version tags should be
+annotated. The tag message should include the list of issues that are
+included in the release.
