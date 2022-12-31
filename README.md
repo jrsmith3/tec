@@ -122,7 +122,7 @@ Version numbers are [`PEP-440`](https://peps.python.org/pep-0440/)
 compliant. Versions are indicated by a tagged commit in the repo
 (i.e. a "version tag"). Version tags are formatted as a "version
 string"; version strings include a literal "v" prefix followed by a
-string that can be parsed according to `pep-440`. For example:
+string that can be parsed according to `PEP-440`. For example:
 `v2.0.0` and not simply `2.0.0`. Such version strings will have three
 components, MAJOR.MINOR.PATCH, which follow clauses 1-8 of the
 [semver 2.0.0 specification](https://semver.org). Any documentation
