@@ -1,8 +1,11 @@
 # tec - Utils for simulating thermoelectron energy conversion devices
-## Scope
-The tec package provides a uniform and extensible API for easily
-simulating thermionic energy conversion devices (TECs). A few models
-are supplied with the tec package, but others can be easily added.
+A
+[thermoelectron energy conversion device](https://en.wikipedia.org/wiki/Thermionic_converter)
+(TEC) is a vacuum or vapor device that converts heat directly to
+electrical work and is based on the phenomenon of
+[thermoelectron emission](https://en.wikipedia.org/wiki/Thermionic_emission)
+(often called _thermionic_ emission). This package includes utilities
+for simulating the performance of TECs.
 
 
 ## Installation
