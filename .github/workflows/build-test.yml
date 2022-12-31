@@ -29,7 +29,8 @@ jobs:
           echo "IBEI_TOX_DISTDIR_PATH=$(cat $IBEI_TOX_DISTDIR_PATH_PATH)" >> $GITHUB_ENV
 
       - name: Upload package
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dist
           path: ${{ env.IBEI_TOX_DISTDIR_PATH }}
+          if-no-files-found: error
