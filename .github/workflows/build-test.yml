@@ -6,8 +6,6 @@ on:
 
 jobs:
   build_test:
-    env:
-      IBEI_TOX_DISTDIR_PATH_PATH: ${{ github.workspace }}/tox_distdir_path.txt
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
@@ -24,13 +22,11 @@ jobs:
         run: pip install tox
 
       - name: Run tests and extract location of package artifact parent directory
-        run: |
-          tox -e github
-          echo "IBEI_TOX_DISTDIR_PATH=$(cat $IBEI_TOX_DISTDIR_PATH_PATH)" >> $GITHUB_ENV
+        run: tox run -e github
 
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: ${{ env.IBEI_TOX_DISTDIR_PATH }}
+          path: ${{ github.workspace }}/dist
           if-no-files-found: error
