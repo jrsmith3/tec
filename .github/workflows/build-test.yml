@@ -7,6 +7,8 @@ on:
 jobs:
   build_test:
     runs-on: ubuntu-latest
+    env:
+      JRS_DIST_DIR: ${{ github.workspace }}/dist
     steps:
       - name: Check out repo
         uses: actions/checkout@v3
@@ -26,8 +28,8 @@ jobs:
 
       - name: Fetch name and path of package for upload step
         run: |
-          echo "JRS_PACKAGE_FILENAME=$(basename $(ls dist))" >> $GITHUB_ENV
-          echo "JRS_PACKAGE_PATH=$(readlink -f $(find dist -type f))" >> $GITHUB_ENV
+          echo "JRS_PACKAGE_FILENAME=$(basename $(ls $JRS_DIST_DIR))" >> $GITHUB_ENV
+          echo "JRS_PACKAGE_PATH=$(readlink -f $(find $JRS_DIST_DIR -type f))" >> $GITHUB_ENV
 
       - name: Upload package
         uses: actions/upload-artifact@v3
