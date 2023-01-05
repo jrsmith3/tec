@@ -21,12 +21,17 @@ jobs:
       - name: Install dependencies
         run: pip install tox
 
-      - name: Run tests and extract location of package artifact parent directory
+      - name: Run tests and copy package to `dist` directory in repo root
         run: tox run -e github
+
+      - name: Fetch name and path of package for upload step
+        run: |
+          echo "JRS_PACKAGE_FILENAME=$(basename $(ls dist))" >> $GITHUB_ENV
+          echo "JRS_PACKAGE_PATH=$(readlink -f $(find dist -type f))" >> $GITHUB_ENV
 
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
-          name: dist
-          path: ${{ github.workspace }}/dist
+          name: "${{ env.JRS_PACKAGE_FILENAME }}"
+          path: "${{ env.JRS_PACKAGE_PATH }}"
           if-no-files-found: error
