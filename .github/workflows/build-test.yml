@@ -7,20 +7,33 @@ on:
 jobs:
   build_test:
     runs-on: ubuntu-latest
+    env:
+      JRS_DIST_DIR: ${{ github.workspace }}/dist
     steps:
       - name: Check out repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.10'
 
       - name: Install dependencies
         run: pip install tox
 
-      - name: Run tests
+      - name: Run tests and copy package to `dist` directory in repo root
+        run: tox run -e preserve_build
+
+      - name: Fetch name and path of package for upload step
         run: |
-          tox
+          echo "JRS_PACKAGE_FILENAME=$(basename $(ls $JRS_DIST_DIR))" >> $GITHUB_ENV
+          echo "JRS_PACKAGE_PATH=$(readlink -f $(find $JRS_DIST_DIR -type f))" >> $GITHUB_ENV
+
+      - name: Upload package
+        uses: actions/upload-artifact@v3
+        with:
+          name: "${{ env.JRS_PACKAGE_FILENAME }}"
+          path: "${{ env.JRS_PACKAGE_PATH }}"
+          if-no-files-found: error
