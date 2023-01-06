@@ -24,7 +24,7 @@ jobs:
         run: pip install tox
 
       - name: Run tests and copy package to `dist` directory in repo root
-        run: tox run -e preserve_build
+        run: tox run -e test,preserve_build
 
       - name: Fetch name and path of package for upload step
         run: |
