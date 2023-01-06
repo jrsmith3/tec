@@ -2,9 +2,7 @@
 import astropy.constants
 import astropy.units
 import attrs
-import inspect
 import numpy as np
-import scipy.interpolate
 
 
 @attrs.frozen
