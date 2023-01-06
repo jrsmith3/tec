@@ -135,7 +135,7 @@ class Ideal():
             Additional arguments passed to the constructor of this
             class.
 
-        
+
         See also
         --------
         tec.electrode.Metal: For more details on the arguments used to
