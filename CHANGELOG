@@ -1,6 +1,7 @@
 2.0.0
 =====
 * 185: Delete non-updated code.
+* 184: Add `tox` action to launch jupyter notebook (with example).
 * 183: Update `README.md`.
 * 181: Update build & test action to upload artifact.
 * 174: Set default value of `richardson` for `tec.electrode.Metal`.
