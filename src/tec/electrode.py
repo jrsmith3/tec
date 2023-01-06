@@ -7,14 +7,13 @@ Base Library (:mod:`electrode`)
 .. currentmodule:: electrode
 """
 
+import functools
+
 import astropy.constants
 import astropy.units
 import attrs
-import functools
 import ibei
-import itertools
 import numpy as np
-import scipy.optimize
 
 
 def _validate_is_scalar(instance, attribute, value):
