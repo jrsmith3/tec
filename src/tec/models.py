@@ -2,7 +2,6 @@
 import astropy.constants
 import astropy.units
 import attrs
-import numpy as np
 import scipy.integrate
 import scipy.interpolate
 import scipy.optimize
