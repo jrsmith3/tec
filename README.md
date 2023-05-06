@@ -150,8 +150,9 @@ version tag. Version strings formatted as
 (e.g. `v2.0.0.post1`) will only ever appear on the `main` branch,
 never another branch. Version strings formatted as
 ["pre-releases"](https://peps.python.org/pep-0440/#pre-releases) may
-appear on any branch, including `main`; typically such pre-release
-tags should coincide with a final release tag.
+appear on any branch, including `main`; typically release candidate
+pre-release tags (i.e. version strings with the `rc` suffix) should
+coincide with a final release tag on `main`.
 
 Any documentation change by itself will result in an increment of the
 PATCH component of the version string. Post-release version tags
