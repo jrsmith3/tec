@@ -9,6 +9,17 @@ for simulating the performance of TECs.
 
 
 ## Quickstart
+The quickest way to begin exploring the package is to launch a Jupyter
+server via the included `tox` environment, then look at the examples
+in the example notebook located at
+[`doc/examples.ipynb`](doc/examples.ipynb).
+
+```bash
+tox run -e nb
+```
+
+If you are interested in a command-line approach, it is given below.
+
 I have not yet published recent packages to pypi, so the only wayt to
 run the code at this time is to clone the repo and use the source. I
 am using [hatch](https://hatch.pypa.io/latest/) to manage the
@@ -106,7 +117,7 @@ into that virtual environment, then call `pytest` to run the tests.
 
 ```bash
 # Run the tests in your local environment.
-tox
+tox run -e test
 ```
 
 
