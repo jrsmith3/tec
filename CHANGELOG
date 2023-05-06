@@ -3,6 +3,7 @@
 * 185: Delete non-updated code.
 * 184: Add `tox` action to launch jupyter notebook (with example).
 * 183: Update `README.md`.
+* 182: GitHub action to create release upon release tag.
 * 181: Update build & test action to upload artifact.
 * 174: Set default value of `richardson` for `tec.electrode.Metal`.
 * 171: Update TEC class.
