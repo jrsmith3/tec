@@ -117,7 +117,7 @@ into that virtual environment, then call `pytest` to run the tests.
 
 ```bash
 # Run the tests in your local environment.
-tox
+tox run -e test
 ```
 
 
