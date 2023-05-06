@@ -84,6 +84,21 @@ you want an instance with a different value for a property, a new
 instance must be created.
 
 
+## Exploring via Jupyter notebook
+This repo contains an example Jupyter notebook to facilitate exploring
+the package. The notebook is located at
+[`doc/examples.ipynb`](doc/examples.ipynb). This repo also includes a
+`tox` environment to build the `tec` package, install its
+dependencies, install Jupyter and its dependencies, and then run the
+Jupyter server. For more information about `tox`, see below.
+
+The `tox` command is as follows.
+
+```bash
+tox run -e nb
+```
+
+
 ## License
 MIT
 
