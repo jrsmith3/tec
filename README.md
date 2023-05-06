@@ -129,29 +129,41 @@ developer's machine -- see the `tox` config and the automation
 definitions in the `.github` subdirectory for information on how they
 work.
 
-Version numbers are [`PEP-440`](https://peps.python.org/pep-0440/)
-compliant. Versions are indicated by a tagged commit in the repo
-(i.e. a "version tag"). Version tags are formatted as a "version
-string"; version strings include a literal "v" prefix followed by a
-string that can be parsed according to `PEP-440`. For example:
-`v2.0.0` and not simply `2.0.0`. Such version strings will have three
-components, MAJOR.MINOR.PATCH, which follow clauses 1-8 of the
-[semver 2.0.0 specification](https://semver.org). Any documentation
-change by itself will result in an increment of the PATCH component
-of the version string.
 
-All commits to the `main` branch will be tagged releases. There is no
-`dev` branch in this repo. This repo may include post-release
-versions. Such post-release versions correspond to changes to the
-development infrastructure and not functional changes to the
-codebase.
+### Versioning and releases
+Certain commits in the repo correspond to a particular version of the
+software. Such commits are indicated by a "version tag": a signed,
+annotated git tag with a specific format called a "version string." A
+version string begins with a literal "v", and is formatted according
+to [`PEP-440`](https://peps.python.org/pep-0440/). Version strings
+will have three components, MAJOR.MINOR.PATCH, which follow clauses
+1-8 of the [semver 2.0.0 specification](https://semver.org). An
+example of a version string is `v2.0.0`; `2.0.0` could correspond to
+a particular version of the software, but would not be a version
+string since it is missing the "v" prefix.
 
-This repo includes a GitHub workflow to automatically build the
-package, test the package, and create a GitHub release. Version tags
-are manually created by me (Joshua Ryan Smith) in my local clone of
-the repo. Therefore, releasing is semi-automated but is initiated by
-a manual tagging process. I.e. when I want to create a new release, I
-create a version tag in the repo and push that tag -- the GitHub
-workflows take care of the rest. Such version tags should be
-annotated. The tag message should include the list of issues that are
-included in the release.
+All commits on the `main` branch of the repo will be tagged with a
+version tag. Version strings formatted as
+["final releases"](https://peps.python.org/pep-0440/#final-releases)
+(e.g. `v2.0.0`) and
+["post-releases"](https://peps.python.org/pep-0440/#post-releases)
+(e.g. `v2.0.0.post1`) will only ever appear on the `main` branch,
+never another branch. Version strings formatted as
+["pre-releases"](https://peps.python.org/pep-0440/#pre-releases) may
+appear on any branch, including `main`; typically such pre-release
+tags should coincide with a final release tag.
+
+Any documentation change by itself will result in an increment of the
+PATCH component of the version string. Post-release version tags
+correspond to changes to the development infrastructure and not
+functional changes to the codebase.
+
+Version tags are created manually by me (Joshua Ryan Smith) in my
+local clone of the repo. This repo includes automation to create a
+GitHub release when a version tag is pushed. Pre-release version tags
+will result in pre-release releases, while final release version tags
+will result in actual releases. Post-release version tags will not
+result in a GitHub release being created since the functionality of
+the codebase has not been changed. The tag message should include a
+list of issues that are included in the release; copying from the
+`CHANGELOG` is sufficient.
