@@ -9,6 +9,17 @@ for simulating the performance of TECs.
 
 
 ## Quickstart
+The quickest way to begin exploring the package is to launch a Jupyter
+server via the included `tox` environment, then look at the examples
+in the example notebook located at
+[`doc/examples.ipynb`](doc/examples.ipynb).
+
+```bash
+tox run -e nb
+```
+
+If you are interested in a command-line approach, it is given below.
+
 I have not yet published recent packages to pypi, so the only wayt to
 run the code at this time is to clone the repo and use the source. I
 am using [hatch](https://hatch.pypa.io/latest/) to manage the
@@ -82,21 +93,6 @@ Note that `TEC`, model, and electrode instances are static -- once an
 object has been instantiated, its properties cannot be changed. If
 you want an instance with a different value for a property, a new
 instance must be created.
-
-
-## Exploring via Jupyter notebook
-This repo contains an example Jupyter notebook to facilitate exploring
-the package. The notebook is located at
-[`doc/examples.ipynb`](doc/examples.ipynb). This repo also includes a
-`tox` environment to build the `tec` package, install its
-dependencies, install Jupyter and its dependencies, and then run the
-Jupyter server. For more information about `tox`, see below.
-
-The `tox` command is as follows.
-
-```bash
-tox run -e nb
-```
 
 
 ## License
