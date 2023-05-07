@@ -19,8 +19,8 @@ jobs:
       - name: Install dependencies
         run: pip install dunamai
 
-      - name: Get tag name
-        id: tag_name
+      - name: Check if tag name is PEP-440 compliant
+        id: is_pep440_tag_name
         continue-on-error: true
         run: dunamai check --style pep440 $(echo $GITHUB_REF_NAME | sed 's/^v//')
 
@@ -40,9 +40,9 @@ jobs:
         run: echo "artifact_path=$(readlink -f $(ls ${{ steps.download.outputs.download-path }}))" >> $GITHUB_OUTPUT
 
       - name: Create release
-        if: ${{ steps.tag_name.outcome == 'success' }}
+        if: ${{ steps.is_pep440_tag_name.outcome == 'success' }}
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ steps.artifact_fqfn.outputs.artifact_path }}
           prerelease: ${{ steps.is_prerelease.outcome == 'success' }}
-          tag_name: ${{ env.GITHUB_REF_NAME }}
+          is_pep440_tag_name: ${{ env.GITHUB_REF_NAME }}
