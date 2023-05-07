@@ -35,18 +35,16 @@ jobs:
           echo "${{ steps.download.outputs.download-path }}"
           echo "$(ls ${{ steps.download.outputs.download-path }})"
 
-      - name: Create dummy artifact
-        id: dummy_output
-        run: |
-          echo "hello" > hello.txt
-          echo "file_path=$(readlink -f hello.txt)" >> $GITHUB_OUTPUT
+      - name: Set artifact location
+        id: artifact_fqfn
+        run: echo "artifact_path=$(readlink -f $(ls ${{ steps.download.outputs.download-path }}))" >> $GITHUB_OUTPUT
 
-      - name: Print dummy output
-        run: echo "${{ steps.dummy_output.outputs.file_path }}"
+      - name: Display artifact fqfn
+        run echo "${{ steps.artifact_fqfn.outputs.artifact_path }}"
 
       - name: Create release
         if: ${{ steps.tag_name.outcome == 'success' }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.GITHUB_REF_NAME }}
-          files: ${{ steps.dummy_output.outputs.file_path }}
+          files: ${{ steps.artifact_fqfn.outputs.artifact_path }}
