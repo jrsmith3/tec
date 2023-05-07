@@ -1,0 +1,49 @@
+name: Build, test, and upload package artifact
+
+on:
+  workflow_call:
+    outputs:
+      artifact_name:
+        description: "Name of uploaded artifact for subsequent downloading"
+        value: ${{ jobs.build_test.outputs.artifact_name }}
+  push:
+
+
+jobs:
+  build_test:
+    runs-on: ubuntu-latest
+    env:
+      JRS_DIST_DIR: ${{ github.workspace }}/dist
+    outputs:
+      artifact_name: ${{ steps.determine_artifact_name.outputs.artifact_name }}
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install tox
+
+      - name: Run tests and copy package to `dist` directory in repo root
+        run: tox run -e test,preserve_build
+
+      - name: Determine uploaded artifact's name
+        id: determine_artifact_name
+        run: echo "artifact_name=$(basename $(ls $JRS_DIST_DIR))" >> $GITHUB_OUTPUT
+
+      - name: Determine path of package for upload step
+        id: determine_artifact_path
+        run: echo "artifact_path=$(readlink -f $(find $JRS_DIST_DIR -type f))" >> $GITHUB_OUTPUT
+
+      - name: Upload package
+        uses: actions/upload-artifact@v3
+        with:
+          name: "${{ steps.determine_artifact_name.outputs.artifact_name }}"
+          path: "${{ steps.determine_artifact_path.outputs.artifact_path }}"
+          if-no-files-found: error
