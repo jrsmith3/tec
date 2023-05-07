@@ -3,7 +3,7 @@ name: Build, test, and upload package artifact
 on:
   workflow_call:
     outputs:
-      package_artifact_name:
+      artifact_name:
         description: "Name of uploaded artifact for subsequent downloading"
         value: ${{ jobs.build_test.outputs.artifact_name }}
   push:
