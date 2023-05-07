@@ -41,13 +41,6 @@ jobs:
         id: determine_artifact_path
         run: echo "artifact_path=$(readlink -f $(find $JRS_DIST_DIR -type f))" >> $GITHUB_OUTPUT
 
-      - name: Print useful information
-        run: |
-          echo "${{ steps.determine_artifact_name.outputs.artifact_name }}"
-          echo "${{ steps.determine_artifact_path.outputs.artifact_path }}"
-          echo "$(tree $JRS_DIST_DIR)"
-          echo "$(ls -alh $JRS_DIST_DIR)"
-
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
