@@ -43,5 +43,6 @@ jobs:
         if: ${{ steps.tag_name.outcome == 'success' }}
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.GITHUB_REF_NAME }}
           files: ${{ steps.artifact_fqfn.outputs.artifact_path }}
+          prerelease: ${{ steps.is_prerelease.outcome == 'success' }}
+          tag_name: ${{ env.GITHUB_REF_NAME }}
