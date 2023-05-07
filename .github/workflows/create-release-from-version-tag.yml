@@ -32,15 +32,12 @@ jobs:
 
       - name: List download path and files
         run: |
-          echo "${{ steps.download.outputs.download-path }}/*"
-          echo "$(ls ${{ steps.download.outputs.download-path }}/*)"
-
-      - name: Create dummy release
-        run: echo "hello" > hello.txt
+          echo "${{ steps.download.outputs.download-path }}"
+          echo "$(ls ${{ steps.download.outputs.download-path }})"
 
       - name: Create release
         if: ${{ steps.tag_name.outcome == 'success' }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.GITHUB_REF_NAME }}
-          files: hello.txt
+          files: ${{ steps.download.outputs.download-path }}
