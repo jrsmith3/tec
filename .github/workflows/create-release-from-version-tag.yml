@@ -37,6 +37,7 @@ jobs:
           echo "$(ls -alh ${{ steps.download.outputs.download-path }})"
           echo "$(pwd)"
           echo "$(pwd | ls -alh)"
+          echo "$(tree .)"
 
       # - name: Set artifact location
       #   id: artifact_fqfn
