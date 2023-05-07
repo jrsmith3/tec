@@ -173,3 +173,11 @@ result in a GitHub release being created since the functionality of
 the codebase has not been changed. The tag message should include a
 list of issues that are included in the release; copying from the
 `CHANGELOG` is sufficient.
+
+
+## Automation via GitHub actions
+This repo contains several automations located in the
+`.github/workflows` subdirectory. These automations leverage the
+`tox` functionalities described above. See the source of these
+workflows for more details about their behavior, input parameters,
+and return values.
