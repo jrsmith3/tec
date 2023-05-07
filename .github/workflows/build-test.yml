@@ -1,14 +1,21 @@
-name: Build and test package
+name: Build, test, and upload package artifact
 
 on:
   workflow_call:
+    outputs:
+      artifact_name:
+        description: "Name of uploaded artifact for subsequent downloading"
+        value: ${{ jobs.build_test.outputs.artifact_name }}
   push:
+
 
 jobs:
   build_test:
     runs-on: ubuntu-latest
     env:
       JRS_DIST_DIR: ${{ github.workspace }}/dist
+    outputs:
+      artifact_name: ${{ steps.determine_artifact_name.outputs.artifact_name }}
     steps:
       - name: Check out repo
         uses: actions/checkout@v3
@@ -24,16 +31,19 @@ jobs:
         run: pip install tox
 
       - name: Run tests and copy package to `dist` directory in repo root
-        run: tox run -e preserve_build
+        run: tox run -e test,preserve_build
 
-      - name: Fetch name and path of package for upload step
-        run: |
-          echo "JRS_PACKAGE_FILENAME=$(basename $(ls $JRS_DIST_DIR))" >> $GITHUB_ENV
-          echo "JRS_PACKAGE_PATH=$(readlink -f $(find $JRS_DIST_DIR -type f))" >> $GITHUB_ENV
+      - name: Determine uploaded artifact's name
+        id: determine_artifact_name
+        run: echo "artifact_name=$(basename $(ls $JRS_DIST_DIR))" >> $GITHUB_OUTPUT
+
+      - name: Determine path of package for upload step
+        id: determine_artifact_path
+        run: echo "artifact_path=$(readlink -f $(find $JRS_DIST_DIR -type f))" >> $GITHUB_OUTPUT
 
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
-          name: "${{ env.JRS_PACKAGE_FILENAME }}"
-          path: "${{ env.JRS_PACKAGE_PATH }}"
+          name: "${{ steps.determine_artifact_name.outputs.artifact_name }}"
+          path: "${{ steps.determine_artifact_path.outputs.artifact_path }}"
           if-no-files-found: error
