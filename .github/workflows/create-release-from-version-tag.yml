@@ -6,7 +6,7 @@ on:
       - "*"
 
 jobs:
-  build-test:
+  build_test:
     name: Build and test package
     uses: ./.github/workflows/build-test.yml
 
@@ -28,7 +28,7 @@ jobs:
         id: download
         uses: actions/download-artifact@v3
         with:
-          name: ${{ needs.build-test.outputs.artifact_name }}
+          name: ${{ needs.build_test.outputs.artifact_name }}
 
       - name: Print useful information
         run: |
