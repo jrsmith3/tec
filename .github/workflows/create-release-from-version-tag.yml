@@ -30,21 +30,12 @@ jobs:
         with:
           name: ${{ needs.build_test.outputs.artifact_name }}
 
-      - name: Print useful information
-        run: |
-          echo "${{ needs.build_test.outputs.artifact_name }}"
-          echo "${{ steps.download.outputs.download-path }}"
-          echo "$(ls -alh ${{ steps.download.outputs.download-path }})"
-          echo "$(pwd)"
-          echo "$(pwd | ls -alh)"
-          echo "$(tree .)"
+      - name: Set artifact location
+        id: artifact_fqfn
+        run: echo "artifact_path=$(readlink -f $(ls ${{ steps.download.outputs.download-path }}))" >> $GITHUB_OUTPUT
 
-      # - name: Set artifact location
-      #   id: artifact_fqfn
-      #   run: echo "artifact_path=$(readlink -f $(ls ${{ steps.download.outputs.download-path }}))" >> $GITHUB_OUTPUT
-
-      # - name: Display artifact fqfn
-      #   run: echo "${{ steps.artifact_fqfn.outputs.artifact_path }}"
+      - name: Display artifact fqfn
+        run: echo "${{ steps.artifact_fqfn.outputs.artifact_path }}"
 
       # - name: Create release
       #   if: ${{ steps.tag_name.outcome == 'success' }}
