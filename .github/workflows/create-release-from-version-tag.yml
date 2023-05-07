@@ -26,6 +26,7 @@ jobs:
 
       - name: Determine if package is prerelease
         id: is_prerelease
+        continue-on-error: true
         run: python -c "import packaging.version; import sys; sys.exit(1) if not packaging.version.parse(sys.argv[1]).is_prerelease else sys.exit()" ${{ env.GITHUB_REF_NAME }}
 
       - name: Fetch package artifact
