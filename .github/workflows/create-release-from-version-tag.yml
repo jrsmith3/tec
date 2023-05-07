@@ -50,4 +50,4 @@ jobs:
         with:
           files: ${{ steps.artifact_fqfn.outputs.artifact_path }}
           prerelease: ${{ steps.is_prerelease.outcome == 'success' }}
-          is_pep440_tag_name: ${{ env.GITHUB_REF_NAME }}
+          tag_name: ${{ env.GITHUB_REF_NAME }}
