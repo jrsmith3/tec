@@ -45,5 +45,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: "${{ steps.determine_artifact_name.outputs.artifact_name }}"
-          path: "${{ steps.determine_artifact_name.outputs.artifact_path }}"
+          path: "${{ steps.determine_artifact_path.outputs.artifact_path }}"
           if-no-files-found: error
