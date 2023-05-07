@@ -24,10 +24,15 @@ jobs:
         continue-on-error: true
         run: dunamai check --style pep440 $(echo $GITHUB_REF_NAME | sed 's/^v//')
 
-      - name: Determine if package is prerelease
+      - name: Determine if package is pre-release
         id: is_prerelease
         continue-on-error: true
         run: python -c "import packaging.version; import sys; sys.exit(1) if not packaging.version.parse(sys.argv[1]).is_prerelease else sys.exit()" $GITHUB_REF_NAME
+
+      - name: Determine if package is post-release
+        id: is_postrelease
+        continue-on-error: true
+        run: python -c "import packaging.version; import sys; sys.exit(1) if not packaging.version.parse(sys.argv[1]).is_postrelease else sys.exit()" $GITHUB_REF_NAME
 
       - name: Fetch package artifact
         id: download
@@ -40,7 +45,7 @@ jobs:
         run: echo "artifact_path=$(readlink -f $(ls ${{ steps.download.outputs.download-path }}))" >> $GITHUB_OUTPUT
 
       - name: Create release
-        if: ${{ steps.is_pep440_tag_name.outcome == 'success' }}
+        if: ${{ steps.is_pep440_tag_name.outcome == 'success' && steps.is_postrelease.outcome != 'success' }}
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ steps.artifact_fqfn.outputs.artifact_path }}
