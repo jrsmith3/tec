@@ -32,7 +32,7 @@ jobs:
 
       - name: Print useful information
         run: |
-          echo "hello world" > hello.txt
+          echo "${{ needs.build-test.outputs.artifact_name }}"
           echo "${{ steps.download.outputs.download-path }}"
           echo "$(ls -alh ${{ steps.download.outputs.download-path }})"
           echo "$(pwd)"
