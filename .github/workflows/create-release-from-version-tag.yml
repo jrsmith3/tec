@@ -30,21 +30,24 @@ jobs:
         with:
           name: ${{ needs.build-test.outputs.artifact_name }}
 
-      - name: List download path and files
+      - name: Print useful information
         run: |
+          echo "hello world" > hello.txt
           echo "${{ steps.download.outputs.download-path }}"
-          echo "$(ls ${{ steps.download.outputs.download-path }})"
+          echo "$(ls -alh ${{ steps.download.outputs.download-path }})"
+          echo "$(pwd)"
+          echo "$(pwd | ls -alh)"
 
-      - name: Set artifact location
-        id: artifact_fqfn
-        run: echo "artifact_path=$(readlink -f $(ls ${{ steps.download.outputs.download-path }}))" >> $GITHUB_OUTPUT
+      # - name: Set artifact location
+      #   id: artifact_fqfn
+      #   run: echo "artifact_path=$(readlink -f $(ls ${{ steps.download.outputs.download-path }}))" >> $GITHUB_OUTPUT
 
-      - name: Display artifact fqfn
-        run: echo "${{ steps.artifact_fqfn.outputs.artifact_path }}"
+      # - name: Display artifact fqfn
+      #   run: echo "${{ steps.artifact_fqfn.outputs.artifact_path }}"
 
-      - name: Create release
-        if: ${{ steps.tag_name.outcome == 'success' }}
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.GITHUB_REF_NAME }}
-          files: ${{ steps.artifact_fqfn.outputs.artifact_path }}
+      # - name: Create release
+      #   if: ${{ steps.tag_name.outcome == 'success' }}
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: ${{ env.GITHUB_REF_NAME }}
+      #     files: ${{ steps.artifact_fqfn.outputs.artifact_path }}
