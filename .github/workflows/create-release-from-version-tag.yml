@@ -38,8 +38,8 @@ jobs:
       - name: Create list of artifacts to be uploaded to release
         id: artifact_list
         run: |
-          echo "artifacts=$(readlink -f ${{ steps.download.outputs.download-path }})"
-          echo "artifacts=$(readlink -f ${{ steps.download.outputs.download-path }})" >> $GITHUB_OUTPUT
+          echo "artifacts=$(readlink -f ${{ steps.download.outputs.download-path }}/*)"
+          echo "artifacts=$(readlink -f ${{ steps.download.outputs.download-path }}/*)" >> $GITHUB_OUTPUT
 
       - name: Create release
         if: ${{ steps.tag_name.outcome == 'success' }}
