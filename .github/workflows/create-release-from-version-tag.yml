@@ -28,7 +28,7 @@ jobs:
         id: download
         uses: actions/download-artifact@v3
         with:
-          name: dist
+          name: ${{ needs.build-test.outputs.artifact_name }}
 
       - name: Create release
         if: ${{ steps.tag_name.outcome == 'success' }}
