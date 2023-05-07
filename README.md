@@ -109,25 +109,30 @@ pip install tox
 ```
 
 
-To run the tests, just call `tox`. `tox` will install the necessary
-dependencies (e.g. `pytest`) in a virtual environment, build the
-package, install the package that was built (which is
-[a good practice](https://blog.ionelmc.ro/2014/05/25/python-packaging))
-into that virtual environment, then call `pytest` to run the tests.
+I have included several development functionalities for `tox`; see the
+`tox.ini` for full details. Some of the common development
+functionalities are listed below.
 
 ```bash
-# Run the tests in your local environment.
+# Buld package, install pacakge, and run tests locally.
+# (a good practice:
+# https://blog.ionelmc.ro/2014/05/25/python-packaging)
 tox run -e test
+
+
+# Build package and copy build artifact to `tec/dist`.
+tox run -e preserve_build
+
+
+# Build pacakge and copy build artifact to `/tmp/build` by setting the
+# value of the `JRS_DIST_DIR` environment variable.
+JRS_DIST_DIR=/tmp/build tox run -e preserve_build
+
+
+# Build package, run tests, and preserve the package artifact in the 
+# `tec/dist` directory.
+tox run -e test,preserve_build
 ```
-
-
-This repo also features GitHub workflows for continuous integration
-automations. Some of these automations leverage `tox` as well, and
-there are corresponding `tox` environments defined in the `tox.ini`
-file. These `tox` environments are not intended to be run on a
-developer's machine -- see the `tox` config and the automation
-definitions in the `.github` subdirectory for information on how they
-work.
 
 
 ### Versioning and releases
