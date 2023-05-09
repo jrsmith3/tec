@@ -218,14 +218,25 @@ class DimensionlessLangmuirPoissonSoln(dict):
     """
     Numerical solution of Langmuir's dimensionless Poisson's equation.
 
-    The purpose of this class is to provide an API to the solution of Langmuir's dimensionless Poisson's equation :cite:`10.1103/PhysRev.21.419` to provide the appropriate level of simplicity to the user. Via the class methods, the user can access either the dimensionless motive vs. dimensionless position or the dimensionless position vs. dimensionless motive, both of which are necessary in the Langmuir model. This class uses an ode solver to approximate the solution to the ode, then interpolation to return values at arbitrary abscissae -- see the source for details of the ode solver and interpolation algorithm.
+    The purpose of this class is to provide an API to the solution of
+    Langmuir's dimensionless Poisson's
+    equation :cite:`10.1103/PhysRev.21.419` to provide the
+    appropriate level of simplicity to the user. Via the class
+    methods, the user can access either the dimensionless motive vs.
+    dimensionless position or the dimensionless position vs.
+    dimensionless motive, both of which are necessary in the Langmuir
+    model. This class uses an ode solver to approximate the solution
+    to the ode, then interpolation to return values at arbitrary
+    abscissae -- see the source for details of the ode solver and
+    interpolation algorithm.
     """
-
     def __init__(self):
         # Here is the algorithm:
         # 1. Set up the default ode solver parameters.
-        # 2. Check to see if either the rhs or lhs params were passed as arguments. If not, use the default params.
-        # 3. Cat the additional default ode solver parameters to the lhs and rhs set of params.
+        # 2. Check to see if either the rhs or lhs params were passed
+        #    as arguments. If not, use the default params.
+        # 3. Cat the additional default ode solver parameters to the
+        #    lhs and rhs set of params.
         # 4. Solve both the lhs and rhs odes.
         # 5. Create the lhs and rhs interpolation objects.
 
@@ -241,6 +252,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
         # self["rhs"]["position_v_motive"] = \
         #         interpolate.InterpolatedUnivariateSpline(rhs[:,1],rhs[:,0],k=1)
 
+
     def calc_branch(self, endpoint, num_points=1000):
         """
         Numerical solution for either side of the ode.
@@ -249,13 +261,17 @@ class DimensionlessLangmuirPoissonSoln(dict):
         :param int num_points: Number of points for ode solver to use.
         :rtype: Dictionary of interpolation objects.
 
-        This method returns a dictionary with items, "motive_v_position" and "position_v_motive"; each item an interpolation of what its name describes.
+        This method returns a dictionary with
+        items, "motive_v_position" and "position_v_motive"; each item
+        an interpolation of what its name describes.
         """
         ics = np.array([0, 0])
         position_array = np.linspace(0, endpoint, num_points)
         motive_array = integrate.odeint(self.langmuir_poisson_eq, ics, position_array)
 
-        # Create the motive_v_position interpolation, but first check the abscissae (position_array) are monotonically increasing.
+        # Create the motive_v_position interpolation, but first check
+        # the abscissae (position_array) are monotonically
+        # increasing.
         if position_array[0] < position_array[-1]:
             motive_v_position = \
                 interpolate.InterpolatedUnivariateSpline(position_array, motive_array[:, 0])
@@ -263,7 +279,10 @@ class DimensionlessLangmuirPoissonSoln(dict):
             motive_v_position = \
                 interpolate.InterpolatedUnivariateSpline(position_array[::-1], motive_array[::-1, 0])
 
-        # Now create the position_v_motive interpolation but first check the abscissae (motive_array in this case) are monotonically increasing. Use linear interpolation to avoid weirdness near the origin.
+        # Now create the position_v_motive interpolation but first
+        # check the abscissae (motive_array in this case) are
+        # monotonically increasing. Use linear interpolation to avoid
+        # weirdness near the origin.
 
         # I think I don't need the following block.
         if motive_array[0, 0] < motive_array[-1, 0]:
@@ -275,6 +294,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
 
         return {"motive_v_position": motive_v_position, "position_v_motive": position_v_motive}
 
+
     def position(self, motive, branch="lhs"):
         """
         Interpolation of dimensionless position at arbitrary dimensionless motive.
@@ -285,7 +305,10 @@ class DimensionlessLangmuirPoissonSoln(dict):
         :returns: Interpolated position.
         :rtype: float
 
-        The left or right hand side must be specified since the inverse of the solution to Langmuir's dimensionless Poisson's equation is not a single-valued function. Returns NaN if motive is < 0.
+        The left or right hand side must be specified since the
+        inverse of the solution to Langmuir's dimensionless Poisson's
+        equation is not a single-valued function. Returns NaN if
+        motive is < 0.
         """
 
         if type(branch) is not str:
@@ -302,11 +325,14 @@ class DimensionlessLangmuirPoissonSoln(dict):
         else:
             return self[branch]["position_v_motive"](motive)
 
+
     def motive(self, position):
         """
         Value of motive relative to ground for given value(s) of position in J.
 
-        :param position: float or numpy array at which motive is to be evaluated. Returns NaN if position falls outside of the interelectrode space.
+        :param position: float or numpy array at which motive is to be
+          evaluated. Returns NaN if position falls outside of the
+          interelectrode space.
         """
         if position < -2.55389:
             return np.NaN
@@ -314,6 +340,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
             return self["lhs"]["motive_v_position"](position)
         else:
             return self["rhs"]["motive_v_position"](position)
+
 
     def langmuir_poisson_eq(self, motive, position):
         """
@@ -334,14 +361,22 @@ class Langmuir(TECBase):
     """
     Considers space charge, ignores NEA and back emission.
 
-    This class explicitly ignores the fact that either electrode may have NEA and determines the vacuum level of an electrode at the barrier. The model is based on :cite:`10.1103/PhysRev.21.419`.
+    This class explicitly ignores the fact that either electrode may
+    have NEA and determines the vacuum level of an electrode at the
+    barrier. The model is based on :cite:`10.1103/PhysRev.21.419`.
 
     Attributes
     ----------
-    :class:`Langmuir` objects have the same attributes as :class:`tec.TECBase`; "motive_data" is structured specifically for this model and contains the following data. For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+    :class:`Langmuir` objects have the same attributes as
+      :class:`tec.TECBase`; "motive_data" is structured specifically
+      for this model and contains the following data. For brevity,
+      "dimensionless" prefix omitted from "position" and "motive"
+      variable names.
 
-    * saturation_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the saturation point.
-    * critical_pt: Dictionary with keys "output_voltage" [V] and "output_current_density" [A m^-2] at the critical point.
+    * saturation_pt: Dictionary with keys "output_voltage" [V] and
+      "output_current_density" [A m^-2] at the saturation point.
+    * critical_pt: Dictionary with keys "output_voltage" [V] and
+      "output_current_density" [A m^-2] at the critical point.
     * dps: Langmuir's dimensionless Poisson's equation solution object.
 
     Examples and interface testing
@@ -372,7 +407,6 @@ class Langmuir(TECBase):
     >>> type(example_tec["motive_data"]["dps"])
     <class 'tec.dimensionlesslangmuirpoissonsoln.DimensionlessLangmuirPoissonSoln'>
     """
-
     def __init__(self, emitter, collector, **kwargs):
         self.emitter = emitter
         self.collector = collector
@@ -403,6 +437,7 @@ class Langmuir(TECBase):
 
         return result.to("um")
 
+
     def saturation_point_voltage(self):
         """
         Saturation point voltage
@@ -423,6 +458,7 @@ class Langmuir(TECBase):
 
         return voltage.to("V")
 
+
     def saturation_point_current_density(self):
         """
         Saturation point current density
@@ -431,6 +467,7 @@ class Langmuir(TECBase):
         :symbol: :math:`J_{S}`
         """
         return self.emitter.thermoelectron_current_density()
+
 
     def critical_point_voltage(self):
         """
@@ -451,6 +488,7 @@ class Langmuir(TECBase):
 
         return voltage.to("V")
 
+
     def critical_point_current_density(self):
         """
         Critical point current density
@@ -464,6 +502,7 @@ class Langmuir(TECBase):
         output_current_density = units.Quantity(output_current_density, "A cm-2")
 
         return output_current_density
+
 
     def critical_point_target_function(self, current_density):
         """
@@ -492,11 +531,14 @@ class Langmuir(TECBase):
 
         return difference
 
+
     def operating_regime(self):
         """
         String describing regime of electron transport
 
-        This method evaluates the TEC and returns either "accelerating", "space charge limited", or "retarding" to indicate the regime in which the TEC is operating.
+        This method evaluates the TEC and returns
+        either "accelerating", "space charge limited", or "retarding"
+        to indicate the regime in which the TEC is operating.
 
         :returns: `string`.
         """
@@ -542,6 +584,7 @@ class Langmuir(TECBase):
             motive = barrier + self.emitter.motive()
 
         return motive.to("eV")
+
 
     def output_voltage_target_function(self, current_density):
         """
