@@ -206,14 +206,6 @@ class Ideal():
 
 # ====================================================================
 
-# -*- coding: utf-8 -*-
-
-import numpy as np
-from scipy import interpolate, optimize, integrate, special
-from astropy import units, constants
-from tec import TECBase
-
-
 class DimensionlessLangmuirPoissonSoln(dict):
     """
     Numerical solution of Langmuir's dimensionless Poisson's equation.
