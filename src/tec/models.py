@@ -247,7 +247,7 @@ class Langmuir():
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
 
-    def langmuir_poisson_eq(self, motive, position):
+    def _langmuir_poisson_eq(self, motive, position):
         """
         Langmuir's dimensionless Poisson's equation for the ODE solver
         """
