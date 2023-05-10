@@ -204,6 +204,41 @@ class Ideal():
         del args["motive"]
         return Ideal(**args)
 
+
+class Langmuir():
+    """
+    Vacuum TEC with metal electrodes, space charge, no back emission
+
+    This class implements a model of electron transport in a vacuum
+    TEC with metal electrodes that accounts for the negative space
+    charge effect and ignores back emission. The model was first
+    described by Langmuir :cite:`10.1103/PhysRev.21.419`.
+
+
+    Parameters
+    ----------
+    emitter:
+        Emitter electrode.
+    collector:
+        Collector electrode.
+
+
+    Attributes
+    ----------
+    emitter:
+        Same as constructor parameter.
+    collector:
+        Same as constructor parameter.
+    back_emission:
+        Indicates the presence of back emission in the model. Always
+        `False`.
+    motive:
+        A spline to approximate the motive within the interelectrode
+        space at an arbitrary point.
+    """
+    pass
+
+
 # ====================================================================
 
 class DimensionlessLangmuirPoissonSoln(dict):
