@@ -349,7 +349,7 @@ class DimensionlessLangmuirPoissonSoln(dict):
             return np.array([motive[1], 0.5*np.exp(motive[0])*(1+special.erf(motive[0]**0.5))])
 
 
-class Langmuir():
+class LLangmuir():
     """
     Considers space charge, ignores NEA and back emission.
 
