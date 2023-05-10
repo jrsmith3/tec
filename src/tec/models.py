@@ -247,6 +247,22 @@ class Langmuir():
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
 
+    def langmuir_poisson_eq(self, motive, position):
+        """
+        Langmuir's dimensionless Poisson's equation for the ODE solver.
+        """
+
+        # Note:
+        # motive[0] = motive.
+        # motive[1] = motive[0]'
+
+        if position >= 0:
+            return np.array([motive[1], 0.5*np.exp(motive[0])*(1-special.erf(motive[0]**0.5))])
+        if position < 0:
+            return np.array([motive[1], 0.5*np.exp(motive[0])*(1+special.erf(motive[0]**0.5))])
+
+
+
 # ====================================================================
 
 class DimensionlessLangmuirPoissonSoln(dict):
@@ -375,21 +391,6 @@ class DimensionlessLangmuirPoissonSoln(dict):
             return self["lhs"]["motive_v_position"](position)
         else:
             return self["rhs"]["motive_v_position"](position)
-
-
-    def langmuir_poisson_eq(self, motive, position):
-        """
-        Langmuir's dimensionless Poisson's equation for the ODE solver.
-        """
-
-        # Note:
-        # motive[0] = motive.
-        # motive[1] = motive[0]'
-
-        if position >= 0:
-            return np.array([motive[1], 0.5*np.exp(motive[0])*(1-special.erf(motive[0]**0.5))])
-        if position < 0:
-            return np.array([motive[1], 0.5*np.exp(motive[0])*(1+special.erf(motive[0]**0.5))])
 
 
 class LLangmuir():
