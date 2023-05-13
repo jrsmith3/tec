@@ -2,6 +2,7 @@
 import astropy.constants
 import astropy.units
 import attrs
+import numpy as np
 import scipy.integrate
 import scipy.interpolate
 import scipy.optimize
@@ -254,7 +255,33 @@ class Langmuir():
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
 
-    def _langmuir_poisson_eq(self, motive, position):
+    def __attrs_post_init__(self):
+        # Check constraints.
+        _check_default_model_constraints(self)
+
+        # Construct motive.
+        #
+        # The following code is here as an example. It will need to be
+        # heavily rewritten once the overall structure begins to
+        # stabilize.
+
+        initial_conditions = np.array([0, 0])
+
+        # I need to parameterize the following calls.
+        num_points = 1_000
+
+        lhs_endpoint = -2.5538
+        lhs_positions = np.linspace(0, lhs_endpoint, num_points)
+        lhs_motives = integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, lhs_positions)
+        lhs_positions_vs_motives = np.array([lhs_positions, lhs_motives[:,0]])
+
+        rhs_endpoint = 100.
+        rhs_positions = np.linspace(0, rhs_endpoint, num_points)
+        rhs_motives = integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, rhs_positions)
+        rhs_positions_vs_motives = np.array([rhs_positions, rhs_motives[:,0]])
+
+
+    def _langmuirs_dimensionless_poisson_eq(motive, position):
         """
         Langmuir's dimensionless Poisson's equation for the ODE solver
         """
@@ -264,9 +291,9 @@ class Langmuir():
         # motive[1] = motive[0]'
 
         if position >= 0:
-            return np.array([motive[1], 0.5*np.exp(motive[0])*(1-special.erf(motive[0]**0.5))])
+            return np.array([motive[1], 0.5*np.exp(motive[0])*(1-scipy.special.erf(motive[0]**0.5))])
         if position < 0:
-            return np.array([motive[1], 0.5*np.exp(motive[0])*(1+special.erf(motive[0]**0.5))])
+            return np.array([motive[1], 0.5*np.exp(motive[0])*(1+scipy.special.erf(motive[0]**0.5))])
 
 
 
