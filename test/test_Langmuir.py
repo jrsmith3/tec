@@ -1,4 +1,5 @@
 # coding: utf-8
+import astropy.units
 import pytest
 import tec
 
@@ -62,6 +63,28 @@ class TestIdealfrom_argsCases():
         args.update({"collector_" + key: val for key, val in valid_collector_args.items()})
 
         assert isinstance(tec.models.Langmuir.from_args(**args), tec.TEC)
+
+
+class TestLangmuirMethodsConsistency():
+    """
+    Test specific conditions for `Langmuir` object's methods
+    """
+    @pytest.mark.parametrize("current_density", [
+            -0.5,
+            astropy.units.Quantity(-0.5, "A/cm2"),
+            ]
+        )
+    def test_normalization_length_current_density_lt_0_raises(self, valid_langmuir_model, current_density):
+        with pytest.raises(ValueError):
+            norm_l = valid_langmuir_model.normalization_length(current_density)
+
+
+
+@pytest.fixture
+def valid_langmuir_model(valid_emitter, valid_collector):
+    langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=valid_collector)
+
+    return langmuir_model
 
 
 # --------------------------------------------------------------------
