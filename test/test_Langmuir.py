@@ -1,4 +1,5 @@
 # coding: utf-8
+import pytest
 import tec
 
 from contextlib import nullcontext as does_not_raise
@@ -8,6 +9,18 @@ class TestLangmuirConstructorHappyPath():
     def test_params_without_default_values(self, valid_emitter, valid_collector):
         with does_not_raise():
             langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=valid_collector)
+
+
+@pytest.mark.skip(reason="Test needs to be generalized.")
+def test_electrode_args_copied_on_instantiation(valid_emitter, valid_collector):
+    """
+    The `emitter` and `collector` objects passed to the constructor should be copied
+
+    I am not implementing this test because it would be a copy of the
+    test with the same name in `test/test_Ideal.py`. I need to figure
+    out how to generalize it.
+    """
+    raise
 
 
 # --------------------------------------------------------------------
