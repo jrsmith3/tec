@@ -99,6 +99,11 @@ class TestLangmuirMethodsConsistency():
                 norm_l = valid_langmuir_model.normalization_length(current_density)
 
 
+    def test_normalization_length_current_density_incompatible_unit(self, valid_langmuir_model):
+        current_density = astropy.units.m
+
+        with pytest.raises(astropy.units.core.UnitConversionError):
+            norm_l = valid_langmuir_model.normalization_length(current_density)
 
 
 @pytest.fixture
