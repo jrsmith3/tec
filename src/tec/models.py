@@ -296,6 +296,62 @@ class Langmuir():
             return np.array([motive[1], 0.5*np.exp(motive[0])*(1+scipy.special.erf(motive[0]**0.5))])
 
 
+    def normalization_length(self, current_density):
+        """
+        Normalization length for Langmuir solution
+
+        :param current_density: Current density in units of :math:`A cm^{-2}`.
+        :returns: `astropy.units.Quantity` in units of :math:`\mu m`.
+        :symbol: :math:`x_{0}`
+        """
+        # Coerce `current_density` to `astropy.units.Quantity`
+        current_density = units.Quantity(current_density, "A cm-2")
+
+        if current_density < 0:
+            raise ValueError("current_density cannot be negative")
+
+        prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
+
+        if current_density == 0:
+            result = units.Quantity(np.inf, "um")
+        else:
+            result = prefactor * self.emitter.temp**(3./4.) / current_density**(1./2.)
+
+        return result.to("um")
+
+
+    # Probably should be an attribute.
+    def saturation_point_voltage(self):
+        """
+        Saturation point voltage
+
+        :returns: `astropy.units.Quantity` in units of :math:`V`.
+        :symbol: :math:`V_{S}`
+        """
+        # The prefix "dimensionless" is implied in the following
+        # calculations as is the fact that they are taking place
+        # at the saturation point.
+        current_density = self.emitter.thermoelectron_current_density()
+
+        position = self.interelectrode_spacing() / self.normalization_length(current_density)
+
+        motive = self._dps.motive(position)
+
+        voltage = (self.emitter.barrier - self.collector.barrier - (motive * constants.k_B * self.emitter.temp))/constants.e.si
+
+        return voltage.to("V")
+
+
+    # Probably should be an attribute.
+    def saturation_point_current_density(self):
+        """
+        Saturation point current density
+
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{S}`
+        """
+        return self.emitter.thermoelectron_current_density()
+
 
 # ====================================================================
 
@@ -484,61 +540,6 @@ class LLangmuir():
 
 
     # Methods regarding critical and saturation points ---------------
-    def normalization_length(self, current_density):
-        """
-        Normalization length for Langmuir solution
-
-        :param current_density: Current density in units of :math:`A cm^{-2}`.
-        :returns: `astropy.units.Quantity` in units of :math:`\mu m`.
-        :symbol: :math:`x_{0}`
-        """
-        # Coerce `current_density` to `astropy.units.Quantity`
-        current_density = units.Quantity(current_density, "A cm-2")
-
-        if current_density < 0:
-            raise ValueError("current_density cannot be negative")
-
-        prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
-
-        if current_density == 0:
-            result = units.Quantity(np.inf, "um")
-        else:
-            result = prefactor * self.emitter.temp**(3./4.) / current_density**(1./2.)
-
-        return result.to("um")
-
-
-    def saturation_point_voltage(self):
-        """
-        Saturation point voltage
-
-        :returns: `astropy.units.Quantity` in units of :math:`V`.
-        :symbol: :math:`V_{S}`
-        """
-        # The prefix "dimensionless" is implied in the following
-        # calculations as is the fact that they are taking place
-        # at the saturation point.
-        current_density = self.emitter.thermoelectron_current_density()
-
-        position = self.interelectrode_spacing() / self.normalization_length(current_density)
-
-        motive = self._dps.motive(position)
-
-        voltage = (self.emitter.barrier - self.collector.barrier - (motive * constants.k_B * self.emitter.temp))/constants.e.si
-
-        return voltage.to("V")
-
-
-    def saturation_point_current_density(self):
-        """
-        Saturation point current density
-
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J_{S}`
-        """
-        return self.emitter.thermoelectron_current_density()
-
-
     def critical_point_voltage(self):
         """
         Critical point voltage
