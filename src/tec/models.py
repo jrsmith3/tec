@@ -257,6 +257,7 @@ class Langmuir():
 
     # Fix
     dimensionless_motive_vs_distance_rhs: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
+    dimensionless_distance_vs_motive_lhs: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
 
     def __attrs_post_init__(self):
@@ -278,6 +279,11 @@ class Langmuir():
         lhs_positions = np.linspace(0, lhs_endpoint, num_points)
         lhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, lhs_positions)
         lhs_positions_vs_motives = np.array([lhs_positions, lhs_motives[:,0]])
+
+        dimensionless_distance_vs_motive_lhs = scipy.interpolate.UnivariateSpline(lhs_motives[:,0], lhs_positions, k=1, ext="raise")
+
+        object.__setattr__(self, "dimensionless_distance_vs_motive_lhs", dimensionless_distance_vs_motive_lhs)
+
 
         rhs_endpoint = 1000.
         rhs_positions = np.linspace(0, rhs_endpoint, num_points)
@@ -438,18 +444,18 @@ class Langmuir():
         return output_current_density
 
 
-    def critical_point_target_function(self, current_density):
+    def _critical_point_target_function(self, current_density: np.typing.ArrayLike) -> np.ndarray:
         """
-        Difference between two methods of calculating dimensionless distance
+        Target function to determine critical point current density
 
-        :returns: `float`.
+        Parameters
+        ----------
+        current_density
+            Assumed to be in units of A/cm2.
         """
         current_density = units.Quantity(current_density, "A cm-2")
 
-        # The prefix "dimensionless" is implied in the following
-        # calculations.
-        position1 = -self.interelectrode_spacing() / self.normalization_length(current_density)
-        position1 = position1.value
+        position1 = -(self.interelectrode_spacing() / self.normalization_length(current_density)).value
 
         if current_density == 0:
             motive = np.inf
@@ -459,7 +465,7 @@ class Langmuir():
         if motive < 0:
             raise ValueError("current_density greater than tec's emitter saturation current density")
 
-        position2 = self._dps.position(motive)
+        position2 = self.dimensionless_distance_vs_motive_lhs(motive)
 
         difference = position1 - position2
 
