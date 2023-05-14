@@ -106,6 +106,11 @@ class TestLangmuirMethodsConsistency():
             norm_l = valid_langmuir_model.normalization_length(current_density)
 
 
+    def test_saturation_point_voltage_does_not_raise(self, valid_langmuir_model):
+        with does_not_raise():
+            saturation_point_voltage = valid_langmuir_model.saturation_point_voltage()
+
+
 @pytest.fixture
 def valid_langmuir_model(valid_emitter, valid_collector):
     langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=valid_collector)
