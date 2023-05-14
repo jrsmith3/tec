@@ -281,7 +281,7 @@ class Langmuir():
         rhs_positions_vs_motives = np.array([rhs_positions, rhs_motives[:,0]])
 
 
-    def _langmuirs_dimensionless_poisson_eq(motive: np.typing.ArrayLike, position: np.typing.ArrayLike) np.ndarray:
+    def _langmuirs_dimensionless_poisson_eq(motive: np.typing.ArrayLike, position: np.typing.ArrayLike) -> np.ndarray:
         """
         Langmuir's dimensionless Poisson's equation for the ODE solver
         """
