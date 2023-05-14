@@ -454,6 +454,84 @@ class Langmuir():
         return difference
 
 
+    def operating_regime(self):
+        """
+        String describing regime of electron transport
+
+        This method evaluates the TEC and returns
+        either "accelerating", "space charge limited", or "retarding"
+        to indicate the regime in which the TEC is operating.
+
+        :returns: `string`.
+        """
+        if self.output_voltage() < self.saturation_point_voltage():
+            regime = "accelerating"
+        elif self.output_voltage() > self.critical_point_voltage():
+            regime = "retarding"
+        else:
+            regime = "space charge limited"
+
+        return regime
+
+
+    def max_motive(self):
+        """
+        Value of maximum motive relative to electrical ground
+
+        :returns: `astropy.units.Quantity` in units of :math:`eV`.
+        :symbol: :math:`\psi_{m}`
+        """
+        regime = self.operating_regime()
+        if regime == "accelerating":
+            motive = self.emitter.motive()
+        elif regime == "retarding":
+            motive = self.collector.motive()
+        else:
+            # Space charge limited mode.
+            spcd = self.saturation_point_current_density()
+            spcd = spcd.value
+
+            cpcd = self.critical_point_current_density()
+            cpcd = cpcd.value
+
+            if spcd == cpcd:
+                output_current_density = self.saturation_point_current_density()
+            else:
+                output_current_density = optimize.brentq(self.output_voltage_target_function, spcd, cpcd)
+                output_current_density = units.Quantity(output_current_density, "A cm-2")
+
+            barrier = constants.k_B * self.emitter.temp * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
+
+            motive = barrier + self.emitter.motive()
+
+        return motive.to("eV")
+
+
+    def output_voltage_target_function(self, current_density):
+        """
+        Target function for the output voltage rootfinder.
+        """
+        # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
+        current_density = units.Quantity(current_density, "A cm-2")
+
+
+        # The `em_motive` calculation below could be broken into
+        # its own method because its used several places.
+        em_motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
+        em_position = self._dps.position(em_motive)
+
+        normalization_length = self.normalization_length(current_density)
+
+        co_position = self.interelectrode_spacing() / normalization_length + em_position
+        co_motive = self._dps.motive(co_position)
+
+        target_voltage = ((self.emitter.barrier + em_motive * constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * constants.k_B * self.emitter.temp)) / constants.e.si
+
+        difference = self.output_voltage() - target_voltage
+
+        return difference.to("V").value
+
+
 # ====================================================================
 
 class DimensionlessLangmuirPoissonSoln(dict):
@@ -638,86 +716,6 @@ class LLangmuir():
         self.emitter = emitter
         self.collector = collector
         self._dps = DimensionlessLangmuirPoissonSoln()
-
-
-    # Methods regarding critical and saturation points ---------------
-    def operating_regime(self):
-        """
-        String describing regime of electron transport
-
-        This method evaluates the TEC and returns
-        either "accelerating", "space charge limited", or "retarding"
-        to indicate the regime in which the TEC is operating.
-
-        :returns: `string`.
-        """
-        if self.output_voltage() < self.saturation_point_voltage():
-            regime = "accelerating"
-        elif self.output_voltage() > self.critical_point_voltage():
-            regime = "retarding"
-        else:
-            regime = "space charge limited"
-
-        return regime
-
-
-    # Methods regarding motive ---------------------------------------
-    def max_motive(self):
-        """
-        Value of maximum motive relative to electrical ground
-
-        :returns: `astropy.units.Quantity` in units of :math:`eV`.
-        :symbol: :math:`\psi_{m}`
-        """
-        regime = self.operating_regime()
-        if regime == "accelerating":
-            motive = self.emitter.motive()
-        elif regime == "retarding":
-            motive = self.collector.motive()
-        else:
-            # Space charge limited mode.
-            spcd = self.saturation_point_current_density()
-            spcd = spcd.value
-
-            cpcd = self.critical_point_current_density()
-            cpcd = cpcd.value
-
-            if spcd == cpcd:
-                output_current_density = self.saturation_point_current_density()
-            else:
-                output_current_density = optimize.brentq(self.output_voltage_target_function, spcd, cpcd)
-                output_current_density = units.Quantity(output_current_density, "A cm-2")
-
-            barrier = constants.k_B * self.emitter.temp * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
-
-            motive = barrier + self.emitter.motive()
-
-        return motive.to("eV")
-
-
-    def output_voltage_target_function(self, current_density):
-        """
-        Target function for the output voltage rootfinder.
-        """
-        # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-        current_density = units.Quantity(current_density, "A cm-2")
-
-
-        # The `em_motive` calculation below could be broken into
-        # its own method because its used several places.
-        em_motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
-        em_position = self._dps.position(em_motive)
-
-        normalization_length = self.normalization_length(current_density)
-
-        co_position = self.interelectrode_spacing() / normalization_length + em_position
-        co_motive = self._dps.motive(co_position)
-
-        target_voltage = ((self.emitter.barrier + em_motive * constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * constants.k_B * self.emitter.temp)) / constants.e.si
-
-        difference = self.output_voltage() - target_voltage
-
-        return difference.to("V").value
 
 
     # Methods regarding current and power -----------------------------
