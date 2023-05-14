@@ -391,7 +391,7 @@ class Langmuir():
         return self.emitter.thermoelectron_current_density()
 
 
-    def critical_point_voltage(self):
+    def critical_point_voltage(self) -> astropy.units.Quantity[astropy.units.V]:
         """
         Critical point voltage
 
@@ -411,7 +411,7 @@ class Langmuir():
         return voltage.to("V")
 
 
-    def critical_point_current_density(self):
+    def critical_point_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Critical point current density
 
