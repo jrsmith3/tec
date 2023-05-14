@@ -48,6 +48,22 @@ class TestLangmuirConstructorParamsOutsideConstraints():
         raise
 
 
+@pytest.mark.xfail(reason="Method needs to be implemented.")
+class TestIdealfrom_argsCases():
+    """
+    I'm not implemeting these tests yet because they should be common
+    across all the classes found in `tec.models`.
+
+    I may need to write more of these tests; `test/test_Ideal.py` has
+    some.
+    """
+    def test_returns_TEC(self, valid_emitter_args, valid_collector_args):
+        args = dict({"emitter_" + key: val for key, val in valid_emitter_args.items()})
+        args.update({"collector_" + key: val for key, val in valid_collector_args.items()})
+
+        assert isinstance(tec.models.Langmuir.from_args(**args), tec.TEC)
+
+
 # --------------------------------------------------------------------
 # em_params = {"temp": 1000.,
 #              "barrier": 2.,
