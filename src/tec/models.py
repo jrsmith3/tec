@@ -337,12 +337,6 @@ class Langmuir():
             Current density of device.
 
 
-        Returns
-        -------
-        astropy.units.Quantity[astropy.units.um]
-            Normalization length.
-
-
         Raises
         ------
         ValueError
@@ -371,12 +365,6 @@ class Langmuir():
 
         Corresponds to the quantity represented by :math:`V_{S}` in
         :cite:`9780262080606` section 10.3.1.
-
-
-        Returns
-        -------
-        astropy.units.Quantity[astropy.units.V]
-            Output voltage of saturation point.
         """
         # The prefix "dimensionless" is implied in the following
         # calculations as is the fact that they are taking place
@@ -399,12 +387,6 @@ class Langmuir():
 
         Corresponds to the quantity represented by :math:`V_{S}` in
         :cite:`9780262080606` section 10.3.1.
-
-
-        Returns
-        -------
-        astropy.units.Quantity["A/cm2"]
-            Output current density of saturation point.
         """
         return self.emitter.thermoelectron_current_density()
 
