@@ -466,38 +466,22 @@ class Langmuir():
         return difference
 
 
-    def operating_regime(self):
-        """
-        String describing regime of electron transport
-
-        This method evaluates the TEC and returns
-        either "accelerating", "space charge limited", or "retarding"
-        to indicate the regime in which the TEC is operating.
-
-        :returns: `string`.
-        """
-        if self.output_voltage() < self.saturation_point_voltage():
-            regime = "accelerating"
-        elif self.output_voltage() > self.critical_point_voltage():
-            regime = "retarding"
-        else:
-            regime = "space charge limited"
-
-        return regime
-
-
-    def max_motive(self):
+    def max_motive(self) -> astropy.units.Quantity[astropy.units.eV]:
         """
         Value of maximum motive relative to electrical ground
 
         :returns: `astropy.units.Quantity` in units of :math:`eV`.
         :symbol: :math:`\psi_{m}`
         """
-        regime = self.operating_regime()
-        if regime == "accelerating":
+        # Accelerating regime
+        if self.output_voltage() < self.saturation_point_voltage():
             motive = self.emitter.motive()
-        elif regime == "retarding":
+
+        # Retarding regime
+        elif self.output_voltage() > self.critical_point_voltage():
             motive = self.collector.motive()
+
+        # Space charge limiting regime
         else:
             # Space charge limited mode.
             spcd = self.saturation_point_current_density()
