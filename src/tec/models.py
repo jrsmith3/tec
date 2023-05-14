@@ -321,7 +321,7 @@ class Langmuir():
 
 
     # Probably should be an attribute.
-    def saturation_point_voltage(self):
+    def saturation_point_voltage(self) -> astropy.units.Quantity[astropy.units.V]:
         """
         Saturation point voltage
 
@@ -343,7 +343,7 @@ class Langmuir():
 
 
     # Probably should be an attribute.
-    def saturation_point_current_density(self):
+    def saturation_point_current_density(self) -> astropy.units.Quantity["A/cm2"]:
         """
         Saturation point current density
 
