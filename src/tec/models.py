@@ -296,7 +296,7 @@ class Langmuir():
             return np.array([motive[1], 0.5*np.exp(motive[0])*(1+scipy.special.erf(motive[0]**0.5))])
 
 
-    def normalization_length(self, current_density):
+    def normalization_length(self, current_density: float | astropy.units.Quantity["A/cm2"]) -> astropy.units.Quantity[astropy.units.um]:
         """
         Normalization length for Langmuir solution
 
