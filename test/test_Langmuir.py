@@ -23,6 +23,31 @@ def test_electrode_args_copied_on_instantiation(valid_emitter, valid_collector):
     raise
 
 
+@pytest.mark.skip(reason="Tests need to be generalized.")
+class TestLangmuirConstructorParamsOutsideConstraints():
+    """
+    I'm not implemeting these tests yet because they should be common
+    across all the classes found in `tec.models`.
+    """
+    def test_emitter_temperature_lt_collector_temperature(self, valid_emitter_args, valid_collector_args):
+        raise
+
+    def test_emitter_temperature_eq_collector_temperature(self, valid_emitter_args, valid_collector_args):
+        raise
+
+    def test_emitter_barrier_lt_collector_barrier(self, valid_emitter_args, valid_collector_args):
+        raise
+
+    def test_emitter_barrier_eq_collector_barrier(self, valid_emitter_args, valid_collector_args):
+        raise
+
+    def test_emitter_position_gt_collector_position(self, valid_emitter_args, valid_collector_args):
+        raise
+
+    def test_emitter_position_eq_collector_position(self, valid_emitter_args, valid_collector_args):
+        raise
+
+
 # --------------------------------------------------------------------
 # em_params = {"temp": 1000.,
 #              "barrier": 2.,
