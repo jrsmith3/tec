@@ -343,8 +343,14 @@ class Langmuir():
         """
         Saturation point voltage
 
-        :returns: `astropy.units.Quantity` in units of :math:`V`.
-        :symbol: :math:`V_{S}`
+        Corresponds to the quantity represented by :math:`V_{S}` in
+        :cite:`9780262080606` section 10.3.1.
+
+
+        Returns
+        -------
+        astropy.units.Quantity[astropy.units.V]
+            Output voltage of saturation point.
         """
         # The prefix "dimensionless" is implied in the following
         # calculations as is the fact that they are taking place
