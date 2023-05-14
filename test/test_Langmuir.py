@@ -80,6 +80,13 @@ class TestLangmuirMethodsConsistency():
 
 
 
+def test_normalization_length_current_density_eq_0(self, valid_langmuir_model):
+    pass
+
+def test_normalization_length_current_density_gt_0(self, valid_langmuir_model):
+    pass
+
+
 @pytest.fixture
 def valid_langmuir_model(valid_emitter, valid_collector):
     langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=valid_collector)
