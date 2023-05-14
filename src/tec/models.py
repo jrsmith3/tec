@@ -323,6 +323,18 @@ class Langmuir():
         return (self.collector.position - self.emitter.position).to(astropy.units.um)
 
 
+    def output_voltage(self) -> astropy.units.Quantity[astropy.units.V]:
+        """
+        Voltage difference between collector and emitter
+
+        Warnings
+        --------
+        This method is identical to `tec.TEC.interelectrode_spacing`.
+        I have implemented it here because other methods rely on it.
+        """
+        return (self.collector.voltage - self.emitter.voltage).to(astropy.units.V)
+
+
     def normalization_length(self, current_density: float | astropy.units.Quantity["A/cm2"]) -> astropy.units.Quantity[astropy.units.um]:
         """
         Coefficient to convert dimensionless to dimensioned positions
