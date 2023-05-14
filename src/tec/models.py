@@ -255,6 +255,9 @@ class Langmuir():
     back_emission: bool = attrs.field(default=False, init=False)
     motive: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
 
+    # Fix
+    dimensionless_motive_vs_distance_rhs: scipy.interpolate.UnivariateSpline = attrs.field(init=False)
+
 
     def __attrs_post_init__(self):
         # Check constraints.
@@ -269,17 +272,21 @@ class Langmuir():
         initial_conditions = np.array([0, 0])
 
         # I need to parameterize the following calls.
-        num_points = 1_000
+        num_points = 10_000
 
         lhs_endpoint = -2.5538
         lhs_positions = np.linspace(0, lhs_endpoint, num_points)
         lhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, lhs_positions)
         lhs_positions_vs_motives = np.array([lhs_positions, lhs_motives[:,0]])
 
-        rhs_endpoint = 100.
+        rhs_endpoint = 1000.
         rhs_positions = np.linspace(0, rhs_endpoint, num_points)
         rhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, rhs_positions)
         rhs_positions_vs_motives = np.array([rhs_positions, rhs_motives[:,0]])
+
+        dimensionless_motive_vs_distance_rhs = scipy.interpolate.UnivariateSpline(rhs_positions, rhs_motives[:,0], k=1, ext="raise")
+
+        object.__setattr__(self, "dimensionless_motive_vs_distance_rhs", dimensionless_motive_vs_distance_rhs)
 
 
     def _langmuirs_dimensionless_poisson_eq(self, motive: np.typing.ArrayLike, position: np.typing.ArrayLike) -> np.ndarray:
@@ -372,9 +379,9 @@ class Langmuir():
 
         position = self.interelectrode_spacing() / self.normalization_length(current_density)
 
-        motive = self._dps.motive(position)
+        motive = self.dimensionless_motive_vs_distance_rhs(position)
 
-        voltage = (self.emitter.barrier - self.collector.barrier - (motive * constants.k_B * self.emitter.temp))/constants.e.si
+        voltage = (self.emitter.barrier - self.collector.barrier - (motive * astropy.constants.k_B * self.emitter.temperature))/astropy.constants.e.si
 
         return voltage.to("V")
 
