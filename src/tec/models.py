@@ -3,6 +3,7 @@ import astropy.constants
 import astropy.units
 import attrs
 import numpy as np
+import numpy.typing
 import scipy.integrate
 import scipy.interpolate
 import scipy.optimize
@@ -272,16 +273,16 @@ class Langmuir():
 
         lhs_endpoint = -2.5538
         lhs_positions = np.linspace(0, lhs_endpoint, num_points)
-        lhs_motives = integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, lhs_positions)
+        lhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, lhs_positions)
         lhs_positions_vs_motives = np.array([lhs_positions, lhs_motives[:,0]])
 
         rhs_endpoint = 100.
         rhs_positions = np.linspace(0, rhs_endpoint, num_points)
-        rhs_motives = integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, rhs_positions)
+        rhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, rhs_positions)
         rhs_positions_vs_motives = np.array([rhs_positions, rhs_motives[:,0]])
 
 
-    def _langmuirs_dimensionless_poisson_eq(motive: np.typing.ArrayLike, position: np.typing.ArrayLike) -> np.ndarray:
+    def _langmuirs_dimensionless_poisson_eq(self, motive: np.typing.ArrayLike, position: np.typing.ArrayLike) -> np.ndarray:
         """
         Langmuir's dimensionless Poisson's equation for the ODE solver
         """
