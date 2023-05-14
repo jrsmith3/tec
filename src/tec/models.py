@@ -297,6 +297,19 @@ class Langmuir():
             return np.array([motive[1], 0.5*np.exp(motive[0])*(1+scipy.special.erf(motive[0]**0.5))])
 
 
+    def interelectrode_spacing(self) -> astropy.units.Quantity[astropy.units.um]:
+        """
+        Distance between collector and emitter
+
+
+        Warnings
+        --------
+        This method is identical to `tec.TEC.interelectrode_spacing`.
+        I have implemented it here because other methods rely on it.
+        """
+        return (self.collector.position - self.emitter.position).to(astropy.units.um)
+
+
     def normalization_length(self, current_density: float | astropy.units.Quantity["A/cm2"]) -> astropy.units.Quantity[astropy.units.um]:
         """
         Coefficient to convert dimensionless to dimensioned positions
