@@ -280,7 +280,7 @@ class Langmuir():
         lhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, lhs_positions)
         lhs_positions_vs_motives = np.array([lhs_positions, lhs_motives[:,0]])
 
-        dimensionless_distance_vs_motive_lhs = scipy.interpolate.UnivariateSpline(lhs_motives[:,0], lhs_positions, k=1, ext="raise")
+        dimensionless_distance_vs_motive_lhs = scipy.interpolate.UnivariateSpline(lhs_motives[:,0], lhs_positions, k=1, ext="const")
 
         object.__setattr__(self, "dimensionless_distance_vs_motive_lhs", dimensionless_distance_vs_motive_lhs)
 
@@ -406,7 +406,7 @@ class Langmuir():
 
         motive = np.log(self.emitter.thermoelectron_current_density() / output_current_density)
 
-        voltage = (self.emitter.barrier - self.collector.barrier + (motive * constants.k_B * self.emitter.temp))/constants.e.si
+        voltage = (self.emitter.barrier - self.collector.barrier + (motive * astropy.constants.k_B * self.emitter.temperature))/astropy.constants.e.si
 
         return voltage.to("V")
 
@@ -420,8 +420,8 @@ class Langmuir():
         """
         # Rootfinder to get critical point output current density.
         current_density_hi_limit = self.emitter.thermoelectron_current_density()
-        output_current_density = optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
-        output_current_density = units.Quantity(output_current_density, "A cm-2")
+        output_current_density = scipy.optimize.brentq(self._critical_point_target_function, current_density_hi_limit.value, 0)
+        output_current_density = astropy.units.Quantity(output_current_density, "A cm-2")
 
         return output_current_density
 
@@ -435,7 +435,7 @@ class Langmuir():
         current_density
             Assumed to be in units of A/cm2.
         """
-        current_density = units.Quantity(current_density, "A cm-2")
+        current_density = astropy.units.Quantity(current_density, "A cm-2")
 
         position1 = -(self.interelectrode_spacing() / self.normalization_length(current_density)).value
 
