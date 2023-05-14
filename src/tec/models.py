@@ -391,8 +391,14 @@ class Langmuir():
         """
         Saturation point current density
 
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J_{S}`
+        Corresponds to the quantity represented by :math:`V_{S}` in
+        :cite:`9780262080606` section 10.3.1.
+
+
+        Returns
+        -------
+        astropy.units.Quantity["A/cm2"]
+            Output current density of saturation point.
         """
         return self.emitter.thermoelectron_current_density()
 
