@@ -79,9 +79,17 @@ class TestLangmuirMethodsConsistency():
             norm_l = valid_langmuir_model.normalization_length(current_density)
 
 
+    @pytest.mark.parametrize("current_density", [
+            0.,
+            astropy.units.Quantity(0., "A/cm2"),
+            ]
+        )
+    def test_normalization_length_current_density_eq_0_does_not_raise(self, valid_langmuir_model, current_density):
+        with does_not_raise():
+                norm_l = valid_langmuir_model.normalization_length(current_density)
 
-def test_normalization_length_current_density_eq_0(self, valid_langmuir_model):
-    pass
+
+
 
 def test_normalization_length_current_density_gt_0(self, valid_langmuir_model):
     pass
