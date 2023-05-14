@@ -395,8 +395,8 @@ class Langmuir():
         """
         Critical point voltage
 
-        :returns: `astropy.units.Quantity` in units of :math:`V`.
-        :symbol: :math:`V_{R}`
+        Corresponds to the quantity represented by :math:`V_{R}` in
+        :cite:`9780262080606` section 10.3.1.
         """
         # The prefix "dimensionless" is implied in the following
         # calculations.
@@ -415,8 +415,8 @@ class Langmuir():
         """
         Critical point current density
 
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J_{R}`
+        Corresponds to the quantity represented by :math:`V_{R}` in
+        :cite:`9780262080606` section 10.3.1.
         """
         # Rootfinder to get critical point output current density.
         current_density_hi_limit = self.emitter.thermoelectron_current_density()
