@@ -326,14 +326,14 @@ class Langmuir():
             raise ValueError("current_density cannot be negative")
 
         # Coerce `current_density` to `astropy.units.Quantity`
-        current_density = units.Quantity(current_density, "A cm-2")
+        current_density = astropy.units.Quantity(current_density, "A cm-2")
 
-        prefactor = ((constants.eps0**2 * constants.k_B**3)/(2 * np.pi * constants.m_e * constants.e.si**2))**(1./4.)
+        prefactor = ((astropy.constants.eps0**2 * astropy.constants.k_B**3)/(2 * np.pi * astropy.constants.m_e * astropy.constants.e.si**2))**(1./4.)
 
         if current_density == 0:
-            result = units.Quantity(np.inf, "um")
+            result = astropy.units.Quantity(np.inf, "um")
         else:
-            result = prefactor * self.emitter.temp**(3./4.) / current_density**(1./2.)
+            result = prefactor * self.emitter.temperature**(3./4.) / current_density**(1./2.)
 
         return result.to("um")
 
