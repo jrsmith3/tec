@@ -403,6 +403,69 @@ class Langmuir():
         return self.emitter.thermoelectron_current_density()
 
 
+    def critical_point_voltage(self):
+        """
+        Critical point voltage
+
+        :returns: `astropy.units.Quantity` in units of :math:`V`.
+        :symbol: :math:`V_{R}`
+        """
+        # The prefix "dimensionless" is implied in the following
+        # calculations.
+        output_current_density = self.critical_point_current_density()
+
+        position = -self.interelectrode_spacing() / self.normalization_length(output_current_density)
+
+        motive = np.log(self.emitter.thermoelectron_current_density() / output_current_density)
+
+        voltage = (self.emitter.barrier - self.collector.barrier + (motive * constants.k_B * self.emitter.temp))/constants.e.si
+
+        return voltage.to("V")
+
+
+    def critical_point_current_density(self):
+        """
+        Critical point current density
+
+        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
+        :symbol: :math:`J_{R}`
+        """
+        # Rootfinder to get critical point output current density.
+        current_density_hi_limit = self.emitter.thermoelectron_current_density()
+        output_current_density = optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
+        output_current_density = units.Quantity(output_current_density, "A cm-2")
+
+        return output_current_density
+
+
+    def critical_point_target_function(self, current_density):
+        """
+        Difference between two methods of calculating dimensionless distance
+
+        :returns: `float`.
+        """
+        current_density = units.Quantity(current_density, "A cm-2")
+
+        # The prefix "dimensionless" is implied in the following
+        # calculations.
+        position1 = -self.interelectrode_spacing() / self.normalization_length(current_density)
+        position1 = position1.value
+
+        if current_density == 0:
+            motive = np.inf
+        else:
+            motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
+
+        if motive < 0:
+            raise ValueError("current_density greater than tec's emitter saturation current density")
+
+        position2 = self._dps.position(motive)
+
+        difference = position1 - position2
+
+        return difference
+
+
 # ====================================================================
 
 class DimensionlessLangmuirPoissonSoln(dict):
@@ -590,69 +653,6 @@ class LLangmuir():
 
 
     # Methods regarding critical and saturation points ---------------
-    def critical_point_voltage(self):
-        """
-        Critical point voltage
-
-        :returns: `astropy.units.Quantity` in units of :math:`V`.
-        :symbol: :math:`V_{R}`
-        """
-        # The prefix "dimensionless" is implied in the following
-        # calculations.
-        output_current_density = self.critical_point_current_density()
-
-        position = -self.interelectrode_spacing() / self.normalization_length(output_current_density)
-
-        motive = np.log(self.emitter.thermoelectron_current_density() / output_current_density)
-
-        voltage = (self.emitter.barrier - self.collector.barrier + (motive * constants.k_B * self.emitter.temp))/constants.e.si
-
-        return voltage.to("V")
-
-
-    def critical_point_current_density(self):
-        """
-        Critical point current density
-
-        :returns: `astropy.units.Quantity` in units of :math:`A cm^{-2}`.
-        :symbol: :math:`J_{R}`
-        """
-        # Rootfinder to get critical point output current density.
-        current_density_hi_limit = self.emitter.thermoelectron_current_density()
-        output_current_density = optimize.brentq(self.critical_point_target_function, current_density_hi_limit.value, 0)
-        output_current_density = units.Quantity(output_current_density, "A cm-2")
-
-        return output_current_density
-
-
-    def critical_point_target_function(self, current_density):
-        """
-        Difference between two methods of calculating dimensionless distance
-
-        :returns: `float`.
-        """
-        current_density = units.Quantity(current_density, "A cm-2")
-
-        # The prefix "dimensionless" is implied in the following
-        # calculations.
-        position1 = -self.interelectrode_spacing() / self.normalization_length(current_density)
-        position1 = position1.value
-
-        if current_density == 0:
-            motive = np.inf
-        else:
-            motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
-
-        if motive < 0:
-            raise ValueError("current_density greater than tec's emitter saturation current density")
-
-        position2 = self._dps.position(motive)
-
-        difference = position1 - position2
-
-        return difference
-
-
     def operating_regime(self):
         """
         String describing regime of electron transport
