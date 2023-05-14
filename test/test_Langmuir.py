@@ -126,6 +126,11 @@ class TestLangmuirMethodsConsistency():
             critical_point_current_density = valid_langmuir_model.critical_point_current_density()
 
 
+    def test_max_motive_does_not_raise(self, valid_langmuir_model):
+        with does_not_raise():
+            max_motive = valid_langmuir_model.max_motive()
+
+
 @pytest.fixture
 def valid_langmuir_model(valid_emitter, valid_collector):
     langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=valid_collector)
