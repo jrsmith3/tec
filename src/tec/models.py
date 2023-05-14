@@ -298,11 +298,28 @@ class Langmuir():
 
     def normalization_length(self, current_density: float | astropy.units.Quantity["A/cm2"]) -> astropy.units.Quantity[astropy.units.um]:
         """
-        Normalization length for Langmuir solution
+        Coefficient to convert dimensionless to dimensioned positions
 
-        :param current_density: Current density in units of :math:`A cm^{-2}`.
-        :returns: `astropy.units.Quantity` in units of :math:`\mu m`.
-        :symbol: :math:`x_{0}`
+        Corresponds to the quantity represented by :math:`x_{0}` in
+        :cite:`9780262080606` section 10.3.1.
+
+
+        Parameters
+        ----------
+        current_density : float | astropy.units.Quantity["A/cm2"]
+            Current density of device.
+
+
+        Returns
+        -------
+        astropy.units.Quantity[astropy.units.um]
+            Normalization length.
+
+
+        Raises
+        ------
+        ValueError
+            If ``current_density`` param <= 0
         """
         # Coerce `current_density` to `astropy.units.Quantity`
         current_density = units.Quantity(current_density, "A cm-2")
