@@ -285,12 +285,12 @@ class Langmuir():
         object.__setattr__(self, "dimensionless_distance_vs_motive_lhs", dimensionless_distance_vs_motive_lhs)
 
 
-        rhs_endpoint = 1000.
+        rhs_endpoint = 100.
         rhs_positions = np.linspace(0, rhs_endpoint, num_points)
         rhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, rhs_positions)
         rhs_positions_vs_motives = np.array([rhs_positions, rhs_motives[:,0]])
 
-        dimensionless_motive_vs_distance_rhs = scipy.interpolate.UnivariateSpline(rhs_positions, rhs_motives[:,0], k=1, ext="raise")
+        dimensionless_motive_vs_distance_rhs = scipy.interpolate.UnivariateSpline(rhs_positions, rhs_motives[:,0])
 
         object.__setattr__(self, "dimensionless_motive_vs_distance_rhs", dimensionless_motive_vs_distance_rhs)
 
