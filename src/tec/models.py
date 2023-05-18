@@ -318,9 +318,11 @@ class Langmuir():
         # motive[1] = motive[0]'
 
         if position >= 0:
-            return np.array([motive[1], 0.5*np.exp(motive[0])*(1-scipy.special.erf(motive[0]**0.5))])
+            result = np.array([motive[1], 0.5*np.exp(motive[0])*(1-scipy.special.erf(motive[0]**0.5))])
         if position < 0:
-            return np.array([motive[1], 0.5*np.exp(motive[0])*(1+scipy.special.erf(motive[0]**0.5))])
+            result = np.array([motive[1], 0.5*np.exp(motive[0])*(1+scipy.special.erf(motive[0]**0.5))])
+
+        return result
 
 
     def interelectrode_spacing(self) -> astropy.units.Quantity[astropy.units.um]:
