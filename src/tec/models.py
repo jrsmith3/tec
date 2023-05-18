@@ -207,7 +207,7 @@ class Ideal():
 
     def copy(self) -> "tec.models.Ideal":
         """
-        Copy of Metal object
+        Copy of `Ideal` object
         """
         args = attrs.asdict(self, recurse=False)
         del args["motive"]
