@@ -245,6 +245,13 @@ class Langmuir():
     motive:
         A spline to approximate the motive within the interelectrode
         space at an arbitrary point.
+
+
+    Raises
+    ------
+    ValueError
+        If a position outside the interelectrode space is passed to
+        the `motive` method.
     """
     emitter: electrode.Metal = attrs.field(
         converter = lambda x: x.copy()
