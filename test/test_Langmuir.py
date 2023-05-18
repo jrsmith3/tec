@@ -50,7 +50,7 @@ class TestLangmuirConstructorParamsOutsideConstraints():
 
 
 @pytest.mark.xfail(reason="Method needs to be implemented.")
-class TestIdealfrom_argsCases():
+class TestLangmuirfrom_argsCases():
     """
     I'm not implemeting these tests yet because they should be common
     across all the classes found in `tec.models`.
