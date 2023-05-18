@@ -484,10 +484,7 @@ class Langmuir():
     @property
     def max_motive(self) -> astropy.units.Quantity[astropy.units.eV]:
         """
-        Value of maximum motive relative to electrical ground
-
-        :returns: `astropy.units.Quantity` in units of :math:`eV`.
-        :symbol: :math:`\psi_{m}`
+        Documented in class docstring
         """
         # Accelerating regime
         if self.output_voltage() < self.saturation_point_voltage():
