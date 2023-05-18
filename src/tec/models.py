@@ -245,6 +245,12 @@ class Langmuir():
     motive:
         A spline to approximate the motive within the interelectrode
         space at an arbitrary point.
+    max_motive:
+        Value of maximum motive. Corresponds to the
+        quantity :math:`\psi_{m}` in :cite:`9780262080606` section
+        10.3.1.
+    max_motive_position:
+        Position of maximum motive within the interelectrode space.
 
 
     Raises
