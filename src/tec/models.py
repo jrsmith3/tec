@@ -466,6 +466,7 @@ class Langmuir():
         return difference
 
 
+    @property
     def max_motive(self) -> astropy.units.Quantity[astropy.units.eV]:
         """
         Value of maximum motive relative to electrical ground
@@ -493,10 +494,10 @@ class Langmuir():
             if spcd == cpcd:
                 output_current_density = self.saturation_point_current_density()
             else:
-                output_current_density = optimize.brentq(self._output_voltage_target_function, spcd, cpcd)
-                output_current_density = units.Quantity(output_current_density, "A cm-2")
+                output_current_density = scipy.optimize.brentq(self._output_voltage_target_function, spcd, cpcd)
+                output_current_density = astropy.units.Quantity(output_current_density, "A cm-2")
 
-            barrier = constants.k_B * self.emitter.temp * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
+            barrier = astropy.constants.k_B * self.emitter.temperature * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
 
             motive = barrier + self.emitter.motive()
 
@@ -508,7 +509,7 @@ class Langmuir():
         Target function for the output voltage rootfinder.
         """
         # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
-        current_density = units.Quantity(current_density, "A cm-2")
+        current_density = astropy.units.Quantity(current_density, "A cm-2")
 
 
         # The `em_motive` calculation below could be broken into
@@ -521,7 +522,7 @@ class Langmuir():
         co_position = self.interelectrode_spacing() / normalization_length + em_position
         co_motive = self._dps.motive(co_position)
 
-        target_voltage = ((self.emitter.barrier + em_motive * constants.k_B * self.emitter.temp) - (self.collector.barrier + co_motive * constants.k_B * self.emitter.temp)) / constants.e.si
+        target_voltage = ((self.emitter.barrier + em_motive * astropy.constants.k_B * self.emitter.temperature) - (self.collector.barrier + co_motive * astropy.constants.k_B * self.emitter.temperature)) / astropy.constants.e.si
 
         difference = self.output_voltage() - target_voltage
 
