@@ -527,12 +527,12 @@ class Langmuir():
         # The `em_motive` calculation below could be broken into
         # its own method because its used several places.
         em_motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
-        em_position = self._dps.position(em_motive)
+        em_position = self.dimensionless_distance_vs_motive_lhs(em_motive)
 
         normalization_length = self.normalization_length(current_density)
 
         co_position = self.interelectrode_spacing() / normalization_length + em_position
-        co_motive = self._dps.motive(co_position)
+        co_motive = self.dimensionless_motive_vs_distance_rhs(co_position)
 
         target_voltage = ((self.emitter.barrier + em_motive * astropy.constants.k_B * self.emitter.temperature) - (self.collector.barrier + co_motive * astropy.constants.k_B * self.emitter.temperature)) / astropy.constants.e.si
 
@@ -548,5 +548,4 @@ class Langmuir():
         Copy of Langmuir object
         """
         args = attrs.asdict(self, recurse=False)
-        del args["motive"]
-        return Langmuir(**args)
+        return Langmuir(emitter=args["emitter"], collector=args["collector"])
