@@ -528,6 +528,17 @@ class Langmuir():
         return difference.to("V").value
 
 
+    # FIXME: this is a hack, as is `tec.models.Ideal.copy`. These
+    # methods should be generalized.
+    def copy(self) -> "tec.models.Langmuir":
+        """
+        Copy of Langmuir object
+        """
+        args = attrs.asdict(self, recurse=False)
+        del args["motive"]
+        return Langmuir(**args)
+
+
 # ====================================================================
 
 class DimensionlessLangmuirPoissonSoln(dict):
