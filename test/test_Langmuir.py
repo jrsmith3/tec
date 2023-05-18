@@ -106,6 +106,10 @@ class TestLangmuirMethodsConsistency():
             norm_l = valid_langmuir_model.normalization_length(current_density)
 
 
+class TestLangmuirMethodsHappyPath():
+    """
+    Methods should just run without raising any exceptions
+    """
     def test_saturation_point_voltage_does_not_raise(self, valid_langmuir_model):
         with does_not_raise():
             saturation_point_voltage = valid_langmuir_model.saturation_point_voltage()
