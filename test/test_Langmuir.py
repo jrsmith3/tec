@@ -130,9 +130,37 @@ class TestLangmuirMethodsHappyPath():
             critical_point_current_density = valid_langmuir_model.critical_point_current_density()
 
 
-    def test_max_motive_does_not_raise(self, valid_langmuir_model):
+    def test_max_motive_does_not_raise_output_voltage_lt_saturation_point_voltage(self, valid_emitter, valid_collector_args):
+        valid_collector_args["voltage"] = astropy.units.Quantity(-60., astropy.units.V)
+        collector = tec.electrode.Metal(**valid_collector_args)
+        langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=collector)
+
+        assert langmuir_model.collector.voltage < langmuir_model.saturation_point_voltage()
+
         with does_not_raise():
-            max_motive = valid_langmuir_model.max_motive()
+            max_motive = langmuir_model.max_motive
+
+
+    def test_max_motive_does_not_raise_output_voltage_gt_critical_point_voltage(self, valid_emitter, valid_collector_args):
+        valid_collector_args["voltage"] = astropy.units.Quantity(3., astropy.units.V)
+        collector = tec.electrode.Metal(**valid_collector_args)
+        langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=collector)
+
+        assert langmuir_model.collector.voltage > langmuir_model.critical_point_voltage()
+
+        with does_not_raise():
+            max_motive = langmuir_model.max_motive
+
+
+    def test_max_motive_does_not_raise_output_voltage_in_retarding_regime(self, valid_emitter, valid_collector_args):
+        valid_collector_args["voltage"] = 1.
+        collector = tec.electrode.Metal(**valid_collector_args)
+        langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=collector)
+
+        assert langmuir_model.saturation_point_voltage() < langmuir_model.collector.voltage < langmuir_model.critical_point_voltage()
+
+        with does_not_raise():
+            max_motive = langmuir_model.max_motive
 
 
 @pytest.fixture
