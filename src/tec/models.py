@@ -534,6 +534,21 @@ class Langmuir():
         return result.value
 
 
+    @property
+    def max_motive_position(self) -> astropy.units.Quantity[astropy.units.um]:
+        """
+        Documented in class docstring
+        """
+        dimensionless_emitter_motive = (self.max_motive - self.emitter.barrier)/(astropy.constants.k_B * self.emitter.temperature)
+        dimensionless_emitter_position = self.dimensionless_distance_vs_motive_lhs(dimensionless_emitter_motive.value)
+
+        output_current_density = self.emitter.thermoelectron_current_density() * np.exp(-dimensionless_emitter_motive)
+
+        postition = dimensionless_emitter_position * self.normalization_length(output_current_density)
+
+        return position.to("um")
+
+
     # FIXME: this is a hack, as is `tec.models.Ideal.copy`. These
     # methods should be generalized.
     def copy(self) -> "tec.models.Langmuir":
