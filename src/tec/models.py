@@ -515,7 +515,7 @@ class Langmuir():
 
     def _output_voltage_target_function(self, current_density):
         """
-        Target function for the output voltage rootfinder.
+        Target function for the output voltage rootfinder
         """
         # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
         current_density = astropy.units.Quantity(current_density, "A cm-2")
