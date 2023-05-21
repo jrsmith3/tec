@@ -513,7 +513,7 @@ class Langmuir():
         return motive.to("eV")
 
 
-    def _output_voltage_target_function(self, current_density):
+    def _output_voltage_target_function(self, current_density: np.typing.ArrayLike) -> np.ndarray:
         """
         Target function for the output voltage rootfinder
         """
