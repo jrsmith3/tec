@@ -517,25 +517,21 @@ class Langmuir():
         """
         Target function for the output voltage rootfinder
         """
-        # For brevity, "dimensionless" prefix omitted from "position" and "motive" variable names.
         current_density = astropy.units.Quantity(current_density, "A cm-2")
-
-
-        # The `em_motive` calculation below could be broken into
-        # its own method because its used several places.
-        em_motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
-        em_position = self.dimensionless_distance_vs_motive_lhs(em_motive)
-
         normalization_length = self.normalization_length(current_density)
 
-        co_position = self.interelectrode_spacing() / normalization_length + em_position
-        co_motive = self.dimensionless_motive_vs_distance_rhs(co_position)
+        dimensionless_emitter_motive = np.log(self.emitter.thermoelectron_current_density() / current_density)
+        dimensionless_emitter_position = self.dimensionless_distance_vs_motive_lhs(dimensionless_emitter_motive.value)
 
-        target_voltage = ((self.emitter.barrier + em_motive * astropy.constants.k_B * self.emitter.temperature) - (self.collector.barrier + co_motive * astropy.constants.k_B * self.emitter.temperature)) / astropy.constants.e.si
+        dimensionless_collector_position = (self.interelectrode_spacing() / normalization_length) + dimensionless_emitter_position
+        dimensionless_collector_motive = self.dimensionless_motive_vs_distance_rhs(dimensionless_collector_position.value)
+
+        target_voltage = ((self.emitter.barrier + dimensionless_emitter_motive * astropy.constants.k_B * self.emitter.temperature) - (self.collector.barrier + dimensionless_collector_motive * astropy.constants.k_B * self.emitter.temperature)) / astropy.constants.e.si
 
         difference = self.output_voltage() - target_voltage
+        result = difference.to("V")
 
-        return difference.to("V").value
+        return result.value
 
 
     # FIXME: this is a hack, as is `tec.models.Ideal.copy`. These
