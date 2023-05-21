@@ -163,6 +163,15 @@ class TestLangmuirMethodsHappyPath():
             max_motive = langmuir_model.max_motive
 
 
+def test_motive_outside_interelectrode_space_raises_valueerror_position_lt_emitter_position(valid_langmuir_model):
+    position = valid_langmuir_model.emitter.position - 1 * valid_langmuir_model.emitter.position.unit
+
+    assert position < valid_langmuir_model.emitter.position
+
+    with pytest.raises(ValueError):
+        motive = valid_langmuir_model.motive(position)
+
+
 @pytest.fixture
 def valid_langmuir_model(valid_emitter, valid_collector):
     langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=valid_collector)
