@@ -497,17 +497,14 @@ class Langmuir():
         # Space charge limiting regime
         else:
             # Space charge limited mode.
-            spcd = self.saturation_point_current_density()
-            spcd = spcd.value
+            saturation_point_current_density = self.saturation_point_current_density().value
+            critical_point_current_density = self.critical_point_current_density().value
 
-            cpcd = self.critical_point_current_density()
-            cpcd = cpcd.value
-
-            if spcd == cpcd:
+            if saturation_point_current_density == critical_point_current_density:
                 output_current_density = self.saturation_point_current_density()
             else:
-                output_current_density = scipy.optimize.brentq(self._output_voltage_target_function, spcd, cpcd)
-                output_current_density = astropy.units.Quantity(output_current_density, "A cm-2")
+                value = scipy.optimize.brentq(self._output_voltage_target_function, saturation_point_current_density, critical_point_current_density)
+                output_current_density = astropy.units.Quantity(value, "A cm-2")
 
             barrier = astropy.constants.k_B * self.emitter.temperature * np.log(self.emitter.thermoelectron_current_density() / output_current_density)
 
