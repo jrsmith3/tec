@@ -297,6 +297,10 @@ class Langmuir():
 
         object.__setattr__(self, "dimensionless_motive_vs_distance_rhs", dimensionless_motive_vs_distance_rhs)
 
+        motive = self._motive
+
+        object.__setattr__(self, "motive", motive)
+
 
     @classmethod
     def langmuirs_dimensionless_poisson_eq_solution(cls, endpoint: float, num_points: int=10_000) -> np.ndarray:
@@ -518,6 +522,39 @@ class Langmuir():
         difference = position1 - position2
 
         return difference
+
+
+    @property
+    def _motive(self) -> scipy.interpolate.UnivariateSpline:
+        """
+        Documented in class docstring
+        """
+        initial_conditions = np.array([0, 0])
+
+        # I need to parameterize the following calls.
+        negative_solution = self.langmuirs_dimensionless_poisson_eq_solution(-2.5538)
+        positive_solution = self.langmuirs_dimensionless_poisson_eq_solution(100.)
+        solution = np.vstack((np.flipud(negative_solution)[:-1, :], positive_solution))
+
+        solution_interpolation = scipy.interpolate.UnivariateSpline(solution[:, 0], solution[:, 1], ext="raise")
+
+        current_density = self.emitter.thermoelectron_current_density() * np.exp(-self.max_motive/(astropy.constants.k_B * self.emitter.temperature))
+
+        emitter_dimensionless_position = (self.emitter.position - self.max_motive_position)/self.normalization_length(current_density)
+        collector_dimensionless_position = (self.collector.position - self.max_motive_position)/self.normalization_length(current_density)
+
+        # I need to parameterize the call to `np.linspace`.
+        num_points = 10_000
+
+        dimensionless_positions = np.linspace(emitter_dimensionless_position, collector_dimensionless_position, num_points)
+        dimensionless_motives = solution_interpolation(dimensionless_positions)
+
+        motives = self.max_motive - (astropy.constants.k_B * self.emitter.temperature * dimensionless_motives)
+        positions = np.linspace(self.emitter.position, self.collector.position, num_points)
+
+        result = scipy.interpolate.UnivariateSpline(positions, motives, ext="raise")
+
+        return result
 
 
     @property
