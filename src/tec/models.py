@@ -544,7 +544,7 @@ class Langmuir():
 
         output_current_density = self.emitter.thermoelectron_current_density() * np.exp(-dimensionless_emitter_motive)
 
-        postition = dimensionless_emitter_position * self.normalization_length(output_current_density)
+        position = dimensionless_emitter_position * self.normalization_length(output_current_density)
 
         return position.to("um")
 
