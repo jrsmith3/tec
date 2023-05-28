@@ -286,13 +286,13 @@ class Langmuir():
         initial_conditions = np.array([0, 0])
 
         # I need to parameterize the following calls.
-        negative_solution = self.langmuirs_dimensionless_poisson_eq_solution(-2.5538)
-        dimensionless_distance_vs_motive_lhs = scipy.interpolate.UnivariateSpline(negative_solution[:, 1], negative_solution[:, 0], k=1, ext="const")
+        negative_solution = self.langmuirs_dimensionless_poisson_eq_solution(endpoint=-2.5538, num_points=1000)
+        dimensionless_distance_vs_motive_lhs = scipy.interpolate.UnivariateSpline(negative_solution[:, 1], negative_solution[:, 0], s=0, ext="const")
 
         object.__setattr__(self, "dimensionless_distance_vs_motive_lhs", dimensionless_distance_vs_motive_lhs)
 
 
-        positive_solution = self.langmuirs_dimensionless_poisson_eq_solution(100.)
+        positive_solution = self.langmuirs_dimensionless_poisson_eq_solution(endpoint=100.)
         dimensionless_motive_vs_distance_rhs = scipy.interpolate.UnivariateSpline(positive_solution[:, 0], positive_solution[:, 1])
 
         object.__setattr__(self, "dimensionless_motive_vs_distance_rhs", dimensionless_motive_vs_distance_rhs)
