@@ -131,7 +131,7 @@ class TestLangmuirMethodsHappyPath():
 
 
     def test_max_motive_does_not_raise_output_voltage_lt_saturation_point_voltage(self, valid_emitter, valid_collector_args):
-        valid_collector_args["voltage"] = astropy.units.Quantity(-60., astropy.units.V)
+        valid_collector_args["voltage"] = astropy.units.Quantity(-90., astropy.units.V)
         collector = tec.electrode.Metal(**valid_collector_args)
         langmuir_model = tec.models.Langmuir(emitter=valid_emitter, collector=collector)
 
