@@ -589,19 +589,28 @@ class Langmuir():
         return motive.to("eV")
 
 
-    def _output_voltage_target_function(self, current_density: np.typing.ArrayLike) -> np.ndarray:
+    def _output_voltage_target_function(self, current_density: float) -> float:
         """
         Target function for the output voltage rootfinder
+
+
+        Parameters
+        ----------
+        current_density: float
+            Current density with implicit units of A cm^2.
         """
         target_voltage = self._output_voltage_from_current(current_density)
 
         difference = self.output_voltage() - target_voltage
-        result = difference.to("V")
+        result = difference.to("V").value
 
-        return result.value
+        return result
 
 
-    def _output_voltage_from_current(self, current_density: np.typing.ArrayLike) -> np.ndarray:
+    def _output_voltage_from_current(self, current_density: float | astropy.units.Quantity["A cm2"]) -> astropy.units.Quantity[astropy.units.eV]:
+        """
+        Output voltage corresponding to given current density
+        """
         current_density = astropy.units.Quantity(current_density, "A cm-2")
         normalization_length = self.normalization_length(current_density)
 
