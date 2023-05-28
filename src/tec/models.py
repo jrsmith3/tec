@@ -261,7 +261,7 @@ class Langmuir():
     """
     emitter: electrode.Metal = attrs.field(
         converter = lambda x: x.copy()
-        )
+        ) 
     collector: electrode.Metal = attrs.field(
         converter = lambda x: x.copy()
         )
@@ -286,29 +286,68 @@ class Langmuir():
         initial_conditions = np.array([0, 0])
 
         # I need to parameterize the following calls.
-        num_points = 10_000
-
-        lhs_endpoint = -2.5538
-        lhs_positions = np.linspace(0, lhs_endpoint, num_points)
-        lhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, lhs_positions)
-        lhs_positions_vs_motives = np.array([lhs_positions, lhs_motives[:,0]])
-
-        dimensionless_distance_vs_motive_lhs = scipy.interpolate.UnivariateSpline(lhs_motives[:,0], lhs_positions, k=1, ext="const")
+        negative_solution = self.langmuirs_dimensionless_poisson_eq_solution(-2.5538)
+        dimensionless_distance_vs_motive_lhs = scipy.interpolate.UnivariateSpline(negative_solution[:, 1], negative_solution[:, 0], k=1, ext="const")
 
         object.__setattr__(self, "dimensionless_distance_vs_motive_lhs", dimensionless_distance_vs_motive_lhs)
 
 
-        rhs_endpoint = 100.
-        rhs_positions = np.linspace(0, rhs_endpoint, num_points)
-        rhs_motives = scipy.integrate.odeint(self._langmuirs_dimensionless_poisson_eq, initial_conditions, rhs_positions)
-        rhs_positions_vs_motives = np.array([rhs_positions, rhs_motives[:,0]])
-
-        dimensionless_motive_vs_distance_rhs = scipy.interpolate.UnivariateSpline(rhs_positions, rhs_motives[:,0])
+        positive_solution = self.langmuirs_dimensionless_poisson_eq_solution(100.)
+        dimensionless_motive_vs_distance_rhs = scipy.interpolate.UnivariateSpline(positive_solution[:, 0], positive_solution[:, 1])
 
         object.__setattr__(self, "dimensionless_motive_vs_distance_rhs", dimensionless_motive_vs_distance_rhs)
 
 
-    def _langmuirs_dimensionless_poisson_eq(self, motive: np.typing.ArrayLike, position: np.typing.ArrayLike) -> np.ndarray:
+    @classmethod
+    def langmuirs_dimensionless_poisson_eq_solution(cls, endpoint: float, num_points: int=10_000) -> np.ndarray:
+        """
+        Numerical solution to Langmuir's dimensionless Poisson's equation
+
+        Computes the numerical solution to Langmuir's dimensionless
+        Poisson's equation first given
+        in :cite:`10.1103/PhysRev.21.419`. The integration is
+        performed from zero to the specified endpoint.
+
+
+        Parameters
+        ----------
+        endpoint: float
+            Value to which integration should be carried out.
+
+        num_points: int
+            Number of steps to be taken in the ODE solver.
+
+
+        Returns
+        -------
+        numpy.ndarray: Array including both the abscissae and
+            ordinates for the solution to the ODE. The shape is 3
+            columns by a number of rows equal to `num_points`. The
+            column of index 0 contains the abscissae, the column of
+            index 1 contains the values of the solution of the ODE,
+            and the column of index 1 contains the values of the
+            first derivative of the solution.
+
+
+        Raises
+        ------
+        ValueError: If `endpoint` < -2.5538 (the asymptote of the
+            solution)
+        """
+        if (endpoint < -2.5538):
+            raise ValueError("Endpoint outside of solution asymptote.")
+
+        initial_conditions = np.array([0, 0])
+        positions = np.linspace(0, endpoint, num_points)
+        ode_solution = scipy.integrate.odeint(cls._langmuirs_dimensionless_poisson_eq, initial_conditions, positions)
+
+        result = np.column_stack((positions, ode_solution))
+
+        return result
+
+
+    @staticmethod
+    def _langmuirs_dimensionless_poisson_eq(motive: np.typing.ArrayLike, position: np.typing.ArrayLike) -> np.ndarray:
         """
         Langmuir's dimensionless Poisson's equation for the ODE solver
         """
