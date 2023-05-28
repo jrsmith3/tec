@@ -593,6 +593,15 @@ class Langmuir():
         """
         Target function for the output voltage rootfinder
         """
+        target_voltage = self._output_voltage_from_current(current_density)
+
+        difference = self.output_voltage() - target_voltage
+        result = difference.to("V")
+
+        return result.value
+
+
+    def _output_voltage_from_current(self, current_density: np.typing.ArrayLike) -> np.ndarray:
         current_density = astropy.units.Quantity(current_density, "A cm-2")
         normalization_length = self.normalization_length(current_density)
 
@@ -604,10 +613,7 @@ class Langmuir():
 
         target_voltage = ((self.emitter.barrier + dimensionless_emitter_motive * astropy.constants.k_B * self.emitter.temperature) - (self.collector.barrier + dimensionless_collector_motive * astropy.constants.k_B * self.emitter.temperature)) / astropy.constants.e.si
 
-        difference = self.output_voltage() - target_voltage
-        result = difference.to("V")
-
-        return result.value
+        return target_voltage.to("V")
 
 
     @property
