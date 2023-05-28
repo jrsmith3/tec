@@ -293,7 +293,7 @@ class Langmuir():
 
 
         positive_solution = self.langmuirs_dimensionless_poisson_eq_solution(endpoint=100.)
-        dimensionless_motive_vs_distance_rhs = scipy.interpolate.UnivariateSpline(positive_solution[:, 0], positive_solution[:, 1])
+        dimensionless_motive_vs_distance_rhs = scipy.interpolate.UnivariateSpline(positive_solution[:, 0], positive_solution[:, 1], s=0)
 
         object.__setattr__(self, "dimensionless_motive_vs_distance_rhs", dimensionless_motive_vs_distance_rhs)
 
