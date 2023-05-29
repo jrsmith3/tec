@@ -5,7 +5,6 @@ import tec
 
 
 collect_ignore = [
-    "test_Langmuir.py",
     "test_SC.py",
 ]
 
