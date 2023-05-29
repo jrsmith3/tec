@@ -529,22 +529,21 @@ class Langmuir():
         """
         Documented in class docstring
         """
-        initial_conditions = np.array([0, 0])
-
         # I need to parameterize the following calls.
-        negative_solution = self.langmuirs_dimensionless_poisson_eq_solution(-2.5538)
-        positive_solution = self.langmuirs_dimensionless_poisson_eq_solution(100.)
+        negative_solution = self.langmuirs_dimensionless_poisson_eq_solution(endpoint=-2.5538, num_points=1_000)
+        positive_solution = self.langmuirs_dimensionless_poisson_eq_solution(endpoint=100.)
         solution = np.vstack((np.flipud(negative_solution)[:-1, :], positive_solution))
 
-        solution_interpolation = scipy.interpolate.UnivariateSpline(solution[:, 0], solution[:, 1], ext="raise")
+        solution_interpolation = scipy.interpolate.UnivariateSpline(solution[:, 0], solution[:, 1], s=0, ext="raise")
 
-        current_density = self.emitter.thermoelectron_current_density() * np.exp(-self.max_motive/(astropy.constants.k_B * self.emitter.temperature))
+        space_charge_barrier = self.max_motive - self.emitter.barrier
+        current_density = self.emitter.thermoelectron_current_density() * np.exp(-space_charge_barrier/(astropy.constants.k_B * self.emitter.temperature))
 
         emitter_dimensionless_position = (self.emitter.position - self.max_motive_position)/self.normalization_length(current_density)
         collector_dimensionless_position = (self.collector.position - self.max_motive_position)/self.normalization_length(current_density)
 
         # I need to parameterize the call to `np.linspace`.
-        num_points = 10_000
+        num_points = 1_000
 
         dimensionless_positions = np.linspace(emitter_dimensionless_position, collector_dimensionless_position, num_points)
         dimensionless_motives = solution_interpolation(dimensionless_positions)
@@ -552,7 +551,7 @@ class Langmuir():
         motives = self.max_motive - (astropy.constants.k_B * self.emitter.temperature * dimensionless_motives)
         positions = np.linspace(self.emitter.position, self.collector.position, num_points)
 
-        result = scipy.interpolate.UnivariateSpline(positions, motives, ext="raise")
+        result = scipy.interpolate.UnivariateSpline(positions, motives, s=0, ext="raise")
 
         return result
 
