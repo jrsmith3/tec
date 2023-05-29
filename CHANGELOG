@@ -1,5 +1,6 @@
 2.0.0
 =====
+* 195: Update `tec.models.Langmuir` class.
 * 193: Fix bug in create GitHub release action.
 * 185: Delete non-updated code.
 * 184: Add `tox` action to launch jupyter notebook (with example).
