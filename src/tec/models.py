@@ -620,6 +620,9 @@ class Langmuir():
         dimensionless_collector_position = (self.interelectrode_spacing() / normalization_length) + dimensionless_emitter_position
         dimensionless_collector_motive = self.dimensionless_motive_vs_distance_rhs(dimensionless_collector_position.value)
 
+        # The following functionality is used in a few locations
+        # (`critical_point_voltage`, `saturation_point_voltage`) and
+        # should be broken out into its own method.
         target_voltage = ((self.emitter.barrier + dimensionless_emitter_motive * astropy.constants.k_B * self.emitter.temperature) - (self.collector.barrier + dimensionless_collector_motive * astropy.constants.k_B * self.emitter.temperature)) / astropy.constants.e.si
 
         return target_voltage.to("V")
